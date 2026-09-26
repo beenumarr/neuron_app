@@ -14,6 +14,8 @@ class AppColors {
   static const Color orangeLight = Color(0x1FF5A524);
   static const Color danger = Color(0xFFFF5A5F);
   static const Color dangerLight = Color(0x1FFF5A5F);
+  static const Color rose = danger;
+  static const Color roseLight = dangerLight;
   static const Color purple = Color(0xFF8B5CF6);
   static const Color purpleLight = Color(0x1F8B5CF6);
   static const Color sky = Color(0xFF38BDF8);

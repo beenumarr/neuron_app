@@ -25,6 +25,7 @@ class ApiEndpoints {
   static const String scannerMealsToday = '/api/v1/scanner/meals/today';
   static const String scannerMealsHistory = '/api/v1/scanner/meals/history';
   static const String scannerLogMeal = '/api/v1/scanner/meals';
+  static String scannerLogMealFromScan(String scanId) => '/api/v1/scanner/$scanId/log-meal';
 
   // Progress
   static const String progressWeeklyReport = '/api/v1/progress/weekly-report';

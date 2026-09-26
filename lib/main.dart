@@ -14,6 +14,7 @@ import 'modules/chat/services/chat_api_service.dart';
 import 'modules/health/controllers/home_controller.dart';
 import 'modules/health/controllers/onboarding_controller.dart';
 import 'modules/health/services/health_api_service.dart';
+import 'modules/scanner/controllers/scanner_controller.dart';
 import 'modules/scanner/services/meal_api_service.dart';
 
 void main() async {
@@ -77,6 +78,10 @@ void main() async {
     chatApiService: chatApiService,
   );
 
+  final scannerController = ScannerController(
+    mealApiService: mealApiService,
+  );
+
   // Initialize existing auth session asynchronously in the background
   authController.initialize();
 
@@ -93,6 +98,7 @@ void main() async {
         ChangeNotifierProvider<OnboardingController>.value(value: onboardingController),
         ChangeNotifierProvider<HomeController>.value(value: homeController),
         ChangeNotifierProvider<ChatController>.value(value: chatController),
+        ChangeNotifierProvider<ScannerController>.value(value: scannerController),
       ],
       child: const NeuronApp(),
     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../chat/views/chat_screen.dart';
+import '../../scanner/views/scanner_screen.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
 
@@ -36,12 +37,7 @@ class _MainScreenState extends State<MainScreen> {
         index: _currentTab,
         children: [
           HomeScreen(onNavigateTab: _onTabTapped),
-          _buildPlaceholderTab(
-            title: 'Multimodal Food Scanner',
-            phase: 'Phase 3: Image Capture & Analysis',
-            icon: Icons.qr_code_scanner_rounded,
-            description: 'Snap or upload a photo of your meal to identify ingredients, calculate nutrition, and evaluate clinical safety verdicts.',
-          ),
+          ScannerScreen(onNavigateTab: _onTabTapped),
           const ChatScreen(),
           _buildPlaceholderTab(
             title: 'Progress & Weekly Reports',
