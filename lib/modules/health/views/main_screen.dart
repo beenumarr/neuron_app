@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../chat/views/chat_screen.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
 
@@ -41,12 +42,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icons.qr_code_scanner_rounded,
             description: 'Snap or upload a photo of your meal to identify ingredients, calculate nutrition, and evaluate clinical safety verdicts.',
           ),
-          _buildPlaceholderTab(
-            title: 'NEURON AI Companion',
-            phase: 'Phase 4: Clinical AI Chat',
-            icon: Icons.chat_bubble_outline_rounded,
-            description: 'Conversational clinical health assistant answering questions about your meals, symptoms, and nutrition goals.',
-          ),
+          const ChatScreen(),
           _buildPlaceholderTab(
             title: 'Progress & Weekly Reports',
             phase: 'Phase 5: Synthesis & Analytics',

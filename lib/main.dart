@@ -9,6 +9,8 @@ import 'core/storage/token_storage.dart';
 import 'core/theme/app_theme.dart';
 import 'modules/auth/controllers/auth_controller.dart';
 import 'modules/auth/services/auth_api_service.dart';
+import 'modules/chat/controllers/chat_controller.dart';
+import 'modules/chat/services/chat_api_service.dart';
 import 'modules/health/controllers/home_controller.dart';
 import 'modules/health/controllers/onboarding_controller.dart';
 import 'modules/health/services/health_api_service.dart';
@@ -52,6 +54,8 @@ void main() async {
   final healthApiService = HealthApiService(apiClient: apiClient);
   final mealApiService = MealApiService(apiClient: apiClient);
 
+  final chatApiService = ChatApiService(apiClient: apiClient);
+
   // Initialize controllers
   authController = AuthController(
     authApiService: authApiService,
@@ -69,6 +73,10 @@ void main() async {
     mealApiService: mealApiService,
   );
 
+  final chatController = ChatController(
+    chatApiService: chatApiService,
+  );
+
   // Initialize existing auth session asynchronously in the background
   authController.initialize();
 
@@ -80,9 +88,11 @@ void main() async {
         Provider<AuthApiService>.value(value: authApiService),
         Provider<HealthApiService>.value(value: healthApiService),
         Provider<MealApiService>.value(value: mealApiService),
+        Provider<ChatApiService>.value(value: chatApiService),
         ChangeNotifierProvider<AuthController>.value(value: authController),
         ChangeNotifierProvider<OnboardingController>.value(value: onboardingController),
         ChangeNotifierProvider<HomeController>.value(value: homeController),
+        ChangeNotifierProvider<ChatController>.value(value: chatController),
       ],
       child: const NeuronApp(),
     ),
