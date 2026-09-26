@@ -12,14 +12,16 @@ class OnboardingController extends ChangeNotifier {
 
   // Onboarding Biometric Form State
   String _name = '';
-  int? _age = 26;
+  int? _age = 30;
   String _gender = 'male';
-  double? _weightKg = 72.0;
-  double? _heightCm = 175.0;
+  double? _weightKg = 70.0;
+  double? _heightCm = 170.0;
+
+  final Set<String> _selectedGoals = {'Eat healthier'};
   final Set<String> _selectedConditions = {};
   final Set<String> _selectedAllergies = {};
-  final Set<String> _selectedDietaryPreferences = {};
-  String _selectedGoal = 'Improve Energy & Health';
+  final Set<String> _selectedDietaryPreferences = {'No restrictions'};
+  String _activityLevel = 'Moderate';
 
   OnboardingController({
     required this.healthApiService,
@@ -34,10 +36,12 @@ class OnboardingController extends ChangeNotifier {
   String get gender => _gender;
   double? get weightKg => _weightKg;
   double? get heightCm => _heightCm;
+
+  Set<String> get selectedGoals => _selectedGoals;
   Set<String> get selectedConditions => _selectedConditions;
   Set<String> get selectedAllergies => _selectedAllergies;
   Set<String> get selectedDietaryPreferences => _selectedDietaryPreferences;
-  String get selectedGoal => _selectedGoal;
+  String get activityLevel => _activityLevel;
 
   double? get calculatedBmi {
     if (_weightKg != null && _heightCm != null && _heightCm! > 0) {
@@ -81,26 +85,61 @@ class OnboardingController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleCondition(String condition) {
-    if (_selectedConditions.contains(condition)) {
-      _selectedConditions.remove(condition);
+  void toggleGoal(String goal) {
+    if (_selectedGoals.contains(goal)) {
+      if (_selectedGoals.length > 1) {
+        _selectedGoals.remove(goal);
+      }
     } else {
-      _selectedConditions.add(condition);
+      _selectedGoals.add(goal);
     }
+    notifyListeners();
+  }
+
+  void toggleCondition(String condition) {
+    if (condition == 'None') {
+      _selectedConditions.clear();
+      _selectedConditions.add('None');
+    } else {
+      _selectedConditions.remove('None');
+      if (_selectedConditions.contains(condition)) {
+        _selectedConditions.remove(condition);
+      } else {
+        _selectedConditions.add(condition);
+      }
+    }
+    notifyListeners();
+  }
+
+  void clearConditions() {
+    _selectedConditions.clear();
+    _selectedConditions.add('None');
     notifyListeners();
   }
 
   void toggleDiet(String diet) {
-    if (_selectedDietaryPreferences.contains(diet)) {
-      _selectedDietaryPreferences.remove(diet);
+    if (diet == 'No restrictions') {
+      _selectedDietaryPreferences.clear();
+      _selectedDietaryPreferences.add('No restrictions');
     } else {
-      _selectedDietaryPreferences.add(diet);
+      _selectedDietaryPreferences.remove('No restrictions');
+      if (_selectedDietaryPreferences.contains(diet)) {
+        _selectedDietaryPreferences.remove(diet);
+      } else {
+        _selectedDietaryPreferences.add(diet);
+      }
     }
     notifyListeners();
   }
 
-  void setGoal(String goal) {
-    _selectedGoal = goal;
+  void clearDiets() {
+    _selectedDietaryPreferences.clear();
+    _selectedDietaryPreferences.add('No restrictions');
+    notifyListeners();
+  }
+
+  void setActivityLevel(String level) {
+    _activityLevel = level;
     notifyListeners();
   }
 
@@ -110,16 +149,32 @@ class OnboardingController extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final userName = _name.isNotEmpty
+          ? _name
+          : (authController.currentUser?.email.split('@').first ?? 'User');
+
+      final activeConditions = _selectedConditions
+          .where((c) => c != 'None')
+          .toList();
+
+      final activeDiets = _selectedDietaryPreferences
+          .where((d) => d != 'No restrictions')
+          .toList();
+
+      final activeGoal = _selectedGoals.isNotEmpty
+          ? _selectedGoals.join(', ')
+          : 'Healthy Living';
+
       final payload = OnboardingPayload(
-        name: _name.isNotEmpty ? _name : 'Alex Johnson',
-        age: _age ?? 26,
-        gender: _gender,
-        weightKg: _weightKg ?? 72.0,
-        heightCm: _heightCm ?? 175.0,
-        conditions: _selectedConditions.toList(),
+        name: userName,
+        age: _age ?? 30,
+        gender: _gender.toLowerCase(),
+        weightKg: _weightKg ?? 70.0,
+        heightCm: _heightCm ?? 170.0,
+        conditions: activeConditions,
         allergies: _selectedAllergies.toList(),
-        dietaryPreferences: _selectedDietaryPreferences.toList(),
-        goal: _selectedGoal,
+        dietaryPreferences: activeDiets,
+        goal: activeGoal,
       );
 
       final profile = await healthApiService.completeOnboarding(payload);
@@ -129,6 +184,7 @@ class OnboardingController extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
+      debugPrint('[OnboardingController] submitOnboarding error: $e');
       _errorMessage = e.toString();
       _isLoading = false;
       notifyListeners();
