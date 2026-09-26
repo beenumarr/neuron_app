@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const AppLogo(size: 96, cornerRadius: 32),
+                    const AppLogo(size: 104),
                     const SizedBox(height: 24),
                     Text(
                       'NEURON',
