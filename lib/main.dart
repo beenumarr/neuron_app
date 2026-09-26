@@ -9,8 +9,10 @@ import 'core/storage/token_storage.dart';
 import 'core/theme/app_theme.dart';
 import 'modules/auth/controllers/auth_controller.dart';
 import 'modules/auth/services/auth_api_service.dart';
+import 'modules/health/controllers/home_controller.dart';
 import 'modules/health/controllers/onboarding_controller.dart';
 import 'modules/health/services/health_api_service.dart';
+import 'modules/scanner/services/meal_api_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +50,7 @@ void main() async {
   // Initialize API services
   final authApiService = AuthApiService(apiClient: apiClient);
   final healthApiService = HealthApiService(apiClient: apiClient);
+  final mealApiService = MealApiService(apiClient: apiClient);
 
   // Initialize controllers
   authController = AuthController(
@@ -61,6 +64,11 @@ void main() async {
     authController: authController,
   );
 
+  final homeController = HomeController(
+    healthApiService: healthApiService,
+    mealApiService: mealApiService,
+  );
+
   // Initialize existing auth session asynchronously in the background
   authController.initialize();
 
@@ -71,8 +79,10 @@ void main() async {
         Provider<ApiClient>.value(value: apiClient),
         Provider<AuthApiService>.value(value: authApiService),
         Provider<HealthApiService>.value(value: healthApiService),
+        Provider<MealApiService>.value(value: mealApiService),
         ChangeNotifierProvider<AuthController>.value(value: authController),
         ChangeNotifierProvider<OnboardingController>.value(value: onboardingController),
+        ChangeNotifierProvider<HomeController>.value(value: homeController),
       ],
       child: const NeuronApp(),
     ),

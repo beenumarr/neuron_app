@@ -2,6 +2,7 @@ import '../../../core/network/api_client.dart';
 import '../../../core/network/api_endpoints.dart';
 import '../models/health_profile_model.dart';
 import '../models/onboarding_payload.dart';
+import '../models/risk_assessment_model.dart';
 
 class HealthApiService {
   final ApiClient apiClient;
@@ -30,6 +31,14 @@ class HealthApiService {
       ApiEndpoints.healthProfile,
       data: updates,
       parser: (data) => HealthProfileModel.fromJson(data as Map<String, dynamic>),
+    );
+    return response.data!;
+  }
+
+  Future<RiskAssessmentModel> getRiskAssessment() async {
+    final response = await apiClient.get<RiskAssessmentModel>(
+      ApiEndpoints.healthRiskAssessment,
+      parser: (data) => RiskAssessmentModel.fromJson(data as Map<String, dynamic>),
     );
     return response.data!;
   }

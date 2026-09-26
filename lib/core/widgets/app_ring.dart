@@ -99,3 +99,60 @@ class _RingPainter extends CustomPainter {
         oldDelegate.trackColor != trackColor;
   }
 }
+
+class MacroRing extends StatelessWidget {
+  final String label;
+  final num value;
+  final String unit;
+  final Color color;
+  final int pct;
+
+  const MacroRing({
+    super.key,
+    required this.label,
+    required this.value,
+    this.unit = '',
+    required this.color,
+    required this.pct,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppRing(
+          value: pct.toDouble(),
+          max: 100,
+          size: 56,
+          strokeWidth: 5,
+          color: color,
+          trackColor: color.withValues(alpha: 0.14),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                label == 'Calories' ? '$value' : '$value$unit',
+                style: TextStyle(
+                  color: color,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: const TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+}

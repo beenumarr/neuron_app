@@ -7,7 +7,7 @@ import '../../modules/auth/views/register_screen.dart';
 import '../../modules/auth/views/reset_password_screen.dart';
 import '../../modules/auth/views/splash_screen.dart';
 import '../../modules/auth/views/welcome_screen.dart';
-import '../../modules/health/views/home_screen.dart';
+import '../../modules/health/views/main_screen.dart';
 import '../../modules/health/views/onboarding_complete_screen.dart';
 import '../../modules/health/views/onboarding_screen.dart';
 import '../../modules/health/views/onboarding_setup_screen.dart';
@@ -100,7 +100,11 @@ class AppRouter {
         ),
         GoRoute(
           path: '/home',
-          builder: (context, state) => const HomeScreen(),
+          builder: (context, state) => const MainScreen(),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const MainScreen(initialTab: 4),
         ),
       ],
     );
