@@ -14,8 +14,6 @@ class ProgressScreen extends StatefulWidget {
 }
 
 class _ProgressScreenState extends State<ProgressScreen> {
-  String _selectedPeriod = 'Week';
-
   @override
   void initState() {
     super.initState();
@@ -31,19 +29,23 @@ class _ProgressScreenState extends State<ProgressScreen> {
     final isGenerating = progressController.isGeneratingReport;
     final report = progressController.latestReport;
 
-    // Real metrics with fallback to design prototype if user hasn't logged meals yet
-    final realMealsCount = progressController.totalMealsCount;
-    final hasRealData = realMealsCount > 0;
+    final selectedPeriod = progressController.selectedPeriod;
 
-    final carbs = hasRealData ? progressController.totalCarbs : 210.0;
-    final protein = hasRealData ? progressController.totalProtein : 82.0;
-    final fat = hasRealData ? progressController.totalFat : 58.0;
-    final totalCalories = hasRealData
-        ? progressController.totalCalories
-        : 1842.0;
+    // Real dynamic metrics
+    final totalMeals = progressController.totalMealsCount;
+    final carbs = progressController.totalCarbs;
+    final protein = progressController.totalProtein;
+    final fat = progressController.totalFat;
+    final totalCalories = progressController.totalCalories;
 
-    final currentScore = progressController.healthScore;
+    final healthScore = progressController.healthScore;
+    final healthScoreSeries = progressController.healthScoreChartSeries;
+    final calorieSeries = progressController.calorieChartSeries;
     final riskFlags = progressController.riskFlags;
+
+    final streak = progressController.streakDays;
+    final avgScore = progressController.averageHealthScore;
+    final goalsMet = progressController.goalsMetPercentage;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
@@ -58,18 +60,28 @@ class _ProgressScreenState extends State<ProgressScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 1. Top Header: "Progress" + Segmented Pill ["Week", "Month", "3M"]
-                _buildHeader(),
+                _buildHeader(progressController, selectedPeriod),
                 const SizedBox(height: 16),
 
                 if (isLoading)
                   _buildLoadingSkeleton()
                 else ...[
-                  // 2. Card 1: Health Score Line Chart Card
-                  _buildHealthScoreCard(currentScore),
+                  // 2. Card 1: Dynamic Health Score Line Chart Card
+                  _buildHealthScoreCard(
+                    score: healthScore,
+                    series: healthScoreSeries,
+                    deltaString: progressController.healthScoreDeltaString,
+                    statusLabel: progressController.healthStatusLabel,
+                    isImproving: progressController.isImproving,
+                  ),
                   const SizedBox(height: 14),
 
                   // 3. Row of 3 Metric Cards: Streak, Avg Score, Goals Met
-                  _buildThreeMetricsRow(currentScore, realMealsCount),
+                  _buildThreeMetricsRow(
+                    streak: streak,
+                    avgScore: avgScore,
+                    goalsMet: goalsMet,
+                  ),
                   const SizedBox(height: 14),
 
                   // 4. Card 2: Nutrition Breakdown (Donut Chart + Macros)
@@ -78,14 +90,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     protein: protein,
                     fat: fat,
                     totalCalories: totalCalories,
+                    totalMeals: totalMeals,
                   ),
                   const SizedBox(height: 14),
 
                   // 5. Card 3: Calorie Intake Area Chart
-                  _buildCalorieIntakeCard(progressController),
+                  _buildCalorieIntakeCard(calorieSeries),
                   const SizedBox(height: 16),
 
-                  // 6. Clinical Weekly AI Report Card (Real synthesis & recommendations)
+                  // 6. Clinical Weekly AI Report Card
                   _buildWeeklyAiReportSection(
                     progressController: progressController,
                     report: report,
@@ -103,7 +116,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 
   // ── Header with segmented selector ─────────────────────────────────────────
-  Widget _buildHeader() {
+  Widget _buildHeader(ProgressController controller, String selectedPeriod) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -126,9 +139,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: ['Week', 'Month', '3M'].map((period) {
-              final isSelected = _selectedPeriod == period;
+              final isSelected = selectedPeriod == period;
               return GestureDetector(
-                onTap: () => setState(() => _selectedPeriod = period),
+                onTap: () => controller.setPeriod(period),
                 behavior: HitTestBehavior.opaque,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -154,11 +167,13 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 
   // ── Card 1: Health Score Line Chart ───────────────────────────────────────
-  Widget _buildHealthScoreCard(int currentScore) {
-    // 7-day health score trajectory matching design prototype
-    // Anchors to real current score on the last day
-    final scores = [72.0, 78.0, 81.0, 75.0, 83.0, 79.0, currentScore.toDouble()];
-
+  Widget _buildHealthScoreCard({
+    required int score,
+    required ChartSeries series,
+    required String deltaString,
+    required String statusLabel,
+    required bool isImproving,
+  }) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -198,7 +213,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        '$currentScore',
+                        '$score',
                         style: const TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 24,
@@ -206,12 +221,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        '↑ 21%',
+                      Text(
+                        deltaString,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.brand,
+                          color: isImproving ? AppColors.brand : AppColors.orange,
                         ),
                       ),
                     ],
@@ -221,22 +236,24 @@ class _ProgressScreenState extends State<ProgressScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: AppColors.brandLight,
+                  color: isImproving ? AppColors.brandLight : AppColors.orangeLight,
                   borderRadius: BorderRadius.circular(99),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.trending_up_rounded,
+                      isImproving
+                          ? Icons.trending_up_rounded
+                          : Icons.trending_flat_rounded,
                       size: 13,
-                      color: AppColors.brand,
+                      color: isImproving ? AppColors.brand : AppColors.orange,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
-                      'Improving',
+                      statusLabel,
                       style: TextStyle(
-                        color: AppColors.brand,
+                        color: isImproving ? AppColors.brand : AppColors.orange,
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                       ),
@@ -254,8 +271,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
             width: double.infinity,
             child: CustomPaint(
               painter: _HealthScoreLineChartPainter(
-                scores: scores,
-                days: const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                scores: series.values,
+                days: series.labels,
                 lineColor: AppColors.brand,
                 textColor: AppColors.textSecondary,
               ),
@@ -267,11 +284,13 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 
   // ── Row of 3 Metric Cards: Streak, Avg Score, Goals Met ───────────────────
-  Widget _buildThreeMetricsRow(int currentScore, int mealsLogged) {
-    // Calculated active days or design defaults
-    final streak = mealsLogged > 0 ? '${math.max(mealsLogged, 1)} days' : '12 days';
-    final avgScore = ((currentScore * 0.9 + 72) / 2).toStringAsFixed(1);
-    final goalsMet = mealsLogged > 0 ? '90%' : '85%';
+  Widget _buildThreeMetricsRow({
+    required int streak,
+    required String avgScore,
+    required int goalsMet,
+  }) {
+    final streakText = '$streak ${streak == 1 ? "day" : "days"}';
+    final goalsMetText = '$goalsMet%';
 
     return Row(
       children: [
@@ -279,7 +298,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           child: _buildSingleMetricCard(
             icon: Icons.star_border_rounded,
             iconColor: AppColors.orange,
-            value: streak,
+            value: streakText,
             label: 'Streak',
           ),
         ),
@@ -297,7 +316,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           child: _buildSingleMetricCard(
             icon: Icons.track_changes_rounded,
             iconColor: AppColors.brand,
-            value: goalsMet,
+            value: goalsMetText,
             label: 'Goals Met',
           ),
         ),
@@ -358,7 +377,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
     required double protein,
     required double fat,
     required double totalCalories,
+    required int totalMeals,
   }) {
+    final hasMeals = totalMeals > 0 && (carbs > 0 || protein > 0 || fat > 0);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -377,13 +399,27 @@ class _ProgressScreenState extends State<ProgressScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Nutrition Breakdown',
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Nutrition Breakdown',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              if (hasMeals)
+                Text(
+                  '$totalMeals ${totalMeals == 1 ? "meal" : "meals"} logged',
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 16),
           Row(
@@ -394,13 +430,36 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 height: 116,
                 child: CustomPaint(
                   painter: _DonutChartPainter(
-                    carbs: carbs,
-                    protein: protein,
-                    fat: fat,
+                    carbs: hasMeals ? carbs : 0,
+                    protein: hasMeals ? protein : 0,
+                    fat: hasMeals ? fat : 0,
                     carbsColor: AppColors.orange,
                     proteinColor: AppColors.indigo,
                     fatColor: AppColors.danger,
                   ),
+                  child: !hasMeals
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.restaurant_outlined,
+                                size: 20,
+                                color: AppColors.textSecondary.withValues(alpha: 0.5),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'No meals',
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  color: AppColors.textSecondary.withValues(alpha: 0.7),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : null,
                 ),
               ),
               const SizedBox(width: 18),
@@ -443,6 +502,25 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
             ],
           ),
+          if (!hasMeals) ...[
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.border.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Text(
+                'Log your meals in the Scan tab to see real clinical macro distribution.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -486,15 +564,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 
   // ── Card 3: Calorie Intake Area Chart ─────────────────────────────────────
-  Widget _buildCalorieIntakeCard(ProgressController controller) {
-    // 7-day calorie curve from logged data or design prototype
-    final weekCals = [1950.0, 2100.0, 1800.0, 2200.0, 1750.0, 2050.0, 1842.0];
-
-    // If meals logged today, update the last day with real calories
-    if (controller.pastWeekMeals.isNotEmpty) {
-      weekCals[6] = controller.totalCalories > 0 ? controller.totalCalories : 1842.0;
-    }
-
+  Widget _buildCalorieIntakeCard(ChartSeries series) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -537,14 +607,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
           ),
           const SizedBox(height: 16),
 
-          // Area Chart with Green Wave Gradient
+          // Area Chart with Dynamic Green Wave Gradient
           SizedBox(
             height: 130,
             width: double.infinity,
             child: CustomPaint(
               painter: _CalorieAreaChartPainter(
-                calories: weekCals,
-                days: const ['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                calories: series.values,
+                days: series.labels,
                 brandColor: AppColors.brand,
                 textColor: AppColors.textSecondary,
               ),
@@ -742,7 +812,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CUSTOM PAINTERS: Pixel-perfect replica of Recharts Monotone Line & Area
+// CUSTOM PAINTERS: Dynamic Monotone Cubic Splines & Donut Chart
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _HealthScoreLineChartPainter extends CustomPainter {
@@ -765,14 +835,21 @@ class _HealthScoreLineChartPainter extends CustomPainter {
     final chartWidth = size.width - leftPadding;
     final chartHeight = size.height - bottomPadding;
 
-    const minY = 60.0;
-    const maxY = 100.0;
+    if (scores.isEmpty) return;
+
+    final minScore = scores.reduce(math.min);
+    final maxScore = scores.reduce(math.max);
+
+    // Dynamic clean domain around scores or standard 60-100
+    final minY = math.max(40.0, math.min(60.0, minScore - 10));
+    final maxY = math.min(100.0, math.max(100.0, maxScore + 5));
 
     // Draw Y-axis labels: 100, 90, 80, 70, 60
     final yLabels = [100, 90, 80, 70, 60];
     final textPainter = TextPainter(textDirection: TextDirection.ltr);
 
     for (final label in yLabels) {
+      if (label < minY || label > maxY) continue;
       final normY = (maxY - label) / (maxY - minY);
       final y = normY * chartHeight;
 
@@ -791,13 +868,12 @@ class _HealthScoreLineChartPainter extends CustomPainter {
       );
     }
 
-    if (scores.isEmpty) return;
-
     // Calculate (x, y) coordinates for data points
     final points = <Offset>[];
-    final stepX = chartWidth / (scores.length - 1);
+    final count = scores.length;
+    final stepX = count > 1 ? chartWidth / (count - 1) : chartWidth;
 
-    for (int i = 0; i < scores.length; i++) {
+    for (int i = 0; i < count; i++) {
       final x = leftPadding + (i * stepX);
       final clampedScore = scores[i].clamp(minY, maxY);
       final y = ((maxY - clampedScore) / (maxY - minY)) * chartHeight;
@@ -819,6 +895,13 @@ class _HealthScoreLineChartPainter extends CustomPainter {
         canvas,
         Offset(points[i].dx - textPainter.width / 2, size.height - bottomPadding + 6),
       );
+    }
+
+    if (points.length < 2) {
+      if (points.isNotEmpty) {
+        canvas.drawCircle(points.first, 4.0, Paint()..color = lineColor);
+      }
+      return;
     }
 
     // Build smooth cubic bezier monotone path
@@ -884,22 +967,33 @@ class _DonutChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final total = carbs + protein + fat;
-    if (total <= 0) return;
-
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2 - 10;
     const strokeWidth = 20.0;
-
     final rect = Rect.fromCircle(center: center, radius: radius);
+
+    if (total <= 0) {
+      // Draw subtle placeholder ring when no meals are logged
+      final emptyPaint = Paint()
+        ..color = const Color(0xFFE2E8F0)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round;
+      canvas.drawCircle(center, radius, emptyPaint);
+      return;
+    }
 
     final slices = [
       {'val': carbs, 'color': carbsColor},
       {'val': protein, 'color': proteinColor},
       {'val': fat, 'color': fatColor},
-    ];
+    ].where((s) => (s['val'] as double) > 0).toList();
+
+    if (slices.isEmpty) return;
 
     const gap = 0.08; // gap in radians between arcs
-    final availableAngle = (2 * math.pi) - (slices.length * gap);
+    final effectiveGap = slices.length > 1 ? gap : 0.0;
+    final availableAngle = (2 * math.pi) - (slices.length * effectiveGap);
 
     double startAngle = -math.pi / 2; // Start from top
 
@@ -915,8 +1009,8 @@ class _DonutChartPainter extends CustomPainter {
         ..strokeCap = StrokeCap.round
         ..isAntiAlias = true;
 
-      canvas.drawArc(rect, startAngle + (gap / 2), sweepAngle, false, paint);
-      startAngle += sweepAngle + gap;
+      canvas.drawArc(rect, startAngle + (effectiveGap / 2), sweepAngle, false, paint);
+      startAngle += sweepAngle + effectiveGap;
     }
   }
 
@@ -945,16 +1039,30 @@ class _CalorieAreaChartPainter extends CustomPainter {
 
     if (calories.isEmpty) return;
 
-    final minCal = calories.reduce(math.min) * 0.9;
-    final maxCal = calories.reduce(math.max) * 1.05;
+    final maxCal = calories.reduce(math.max);
+    final minCal = calories.reduce(math.min);
 
     final points = <Offset>[];
-    final stepX = chartWidth / (calories.length - 1);
+    final stepX = calories.length > 1 ? chartWidth / (calories.length - 1) : chartWidth;
 
-    for (int i = 0; i < calories.length; i++) {
-      final x = i * stepX;
-      final y = chartHeight - (((calories[i] - minCal) / (maxCal - minCal)) * (chartHeight * 0.65) + 15);
-      points.add(Offset(x, y));
+    if (maxCal <= 0) {
+      // Draw flat baseline when all logged calories are zero
+      final flatY = chartHeight - 10;
+      for (int i = 0; i < calories.length; i++) {
+        points.add(Offset(i * stepX, flatY));
+      }
+    } else {
+      // Calculate dynamic normalized height
+      final effectiveMin = minCal * 0.85;
+      final effectiveMax = math.max(maxCal * 1.08, 2200.0);
+      final range = effectiveMax - effectiveMin;
+
+      for (int i = 0; i < calories.length; i++) {
+        final x = i * stepX;
+        final norm = range > 0 ? (calories[i] - effectiveMin) / range : 0.0;
+        final y = chartHeight - (norm * (chartHeight * 0.75) + 12);
+        points.add(Offset(x, y));
+      }
     }
 
     // Build smooth cubic bezier curve
@@ -986,7 +1094,7 @@ class _CalorieAreaChartPainter extends CustomPainter {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        brandColor.withValues(alpha: 0.22),
+        brandColor.withValues(alpha: maxCal > 0 ? 0.22 : 0.06),
         brandColor.withValues(alpha: 0.0),
       ],
     );

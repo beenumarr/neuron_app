@@ -123,12 +123,13 @@ class MealApiService {
   Future<List<MealModel>> getMealsHistory({
     DateTime? startDate,
     DateTime? endDate,
+    int pageSize = 100,
   }) async {
     final paginated = await getMealsHistoryPaginated(
       startDate: startDate,
       endDate: endDate,
       page: 1,
-      pageSize: 50,
+      pageSize: pageSize,
     );
     return paginated.items;
   }
