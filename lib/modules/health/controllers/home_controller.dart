@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../../scanner/models/meal_model.dart';
 import '../../scanner/services/meal_api_service.dart';
+import '../models/health_profile_model.dart';
 import '../models/risk_assessment_model.dart';
 import '../services/health_api_service.dart';
 
@@ -65,19 +66,77 @@ class HomeController extends ChangeNotifier {
   int get fatPct =>
       ((totalFat / fatGoal) * 100).clamp(0, 100).toInt();
 
-  // Dynamic AI Insight from NRS Risk Flag or nutrition balance
-  String get aiInsightText {
+  // Danger / Risk Level from Health Score
+  String get dangerLevelLabel {
+    final score = healthScore;
+    if (score >= 85) return 'Optimal';
+    if (score >= 70) return 'Healthy';
+    if (score >= 50) return 'Moderate';
+    return 'Attention';
+  }
+
+  // Short, personalized AI Insight based on user profile and daily progress
+  String getShortAiInsight([HealthProfileModel? profile]) {
+    // 1. Today's nutrition progress insights
+    if (_todayMeals.isNotEmpty) {
+      if (totalCalories >= calorieGoal) {
+        return "Calorie target reached for today. Focus on hydration!";
+      }
+      if (totalProtein < 35 && totalCalories > 600) {
+        return "Add some lean protein to your next meal to hit your daily target.";
+      }
+      if (_todayMeals.length >= 2) {
+        return "Great logging consistency today! Keep meals balanced.";
+      }
+    }
+
+    // 2. Health profile conditions insight
+    if (profile != null && profile.conditions.isNotEmpty) {
+      final conds = profile.conditions.map((c) => c.toLowerCase()).toList();
+      if (conds.any((c) => c.contains('diabet') || c.contains('sugar'))) {
+        return "Focus on low-GI whole foods and steady hydration today.";
+      }
+      if (conds.any((c) => c.contains('hypertens') || c.contains('pressure') || c.contains('heart'))) {
+        return "Keep meals low in sodium and stay active with light walking today.";
+      }
+      if (conds.any((c) => c.contains('cholesterol'))) {
+        return "Choose heart-healthy unsaturated fats and fiber-rich greens today.";
+      }
+    }
+
+    // 3. Clinical Risk Flag recommendation (condensed to 1 concise sentence)
     if (_riskAssessment != null && _riskAssessment!.riskFlags.isNotEmpty) {
       final flag = _riskAssessment!.riskFlags.first;
-      return flag.recommendation.isNotEmpty ? flag.recommendation : flag.description;
+      final raw = flag.recommendation.isNotEmpty ? flag.recommendation : flag.description;
+      if (raw.isNotEmpty) {
+        final parts = raw.split(RegExp(r'\.|\n'));
+        final firstSentence = parts.firstWhere((p) => p.trim().isNotEmpty, orElse: () => raw).trim();
+        if (firstSentence.length > 85) {
+          final commaIdx = firstSentence.indexOf(',');
+          if (commaIdx > 25 && commaIdx < 70) {
+            return "${firstSentence.substring(0, commaIdx)}. Stay consistent!";
+          }
+          return "${firstSentence.substring(0, 80).trim()}...";
+        }
+        return "$firstSentence.";
+      }
     }
 
-    if (totalProtein < 30 && _todayMeals.isNotEmpty) {
-      return "You're running low on protein today. Adding eggs, Greek yogurt, or grilled chicken will support muscle recovery.";
+    // 4. Goal-based default
+    if (profile?.goal != null && profile!.goal!.isNotEmpty) {
+      final goal = profile.goal!.toLowerCase();
+      if (goal.contains('weight') || goal.contains('loss')) {
+        return "Prioritize nutrient-dense foods and stay active to support your deficit.";
+      }
+      if (goal.contains('muscle') || goal.contains('gain')) {
+        return "Pair your training with adequate protein and hydration today.";
+      }
     }
 
-    return "Maintain consistent hydration and balanced macros throughout the day to optimize your daily health score.";
+    return "Maintain consistent hydration and balanced macros to optimize your health.";
   }
+
+  String get aiInsightText => getShortAiInsight();
 
   Future<void> fetchDashboardData({bool silent = false}) async {
     if (!silent) {

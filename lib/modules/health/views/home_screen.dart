@@ -28,9 +28,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour >= 5 && hour < 12) return 'Good morning';
+    if (hour >= 12 && hour < 17) return 'Good afternoon';
+    if (hour >= 17 && hour < 22) return 'Good evening';
+    return 'Hello';
+  }
+
+  String _getFirstName(String fullName) {
+    final trimmed = fullName.trim();
+    if (trimmed.isEmpty) return 'Alex';
+    final first = trimmed.split(RegExp(r'\s+')).first;
+    if (first.isEmpty) return 'Alex';
+    return first[0].toUpperCase() + (first.length > 1 ? first.substring(1) : '');
+  }
+
+  String _getBmiCategory(double bmi) {
+    if (bmi < 18.5) return 'Underweight';
+    if (bmi < 25.0) return 'Normal';
+    if (bmi < 30.0) return 'Overweight';
+    return 'Obese';
   }
 
   String _getFormattedDate() {
@@ -270,10 +286,20 @@ class _HomeScreenState extends State<HomeScreen> {
     final user = authController.currentUser;
     final profile = authController.healthProfile;
 
-    final displayName = (profile?.name != null && profile!.name!.trim().isNotEmpty)
+    final rawName = (profile?.name != null && profile!.name!.trim().isNotEmpty)
         ? profile.name!.trim()
         : (user?.email.split('@').first ?? 'Alex');
-    final initialLetter = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'A';
+    final firstName = _getFirstName(rawName);
+    final initialLetter = firstName.isNotEmpty ? firstName[0].toUpperCase() : 'A';
+
+    // Calculate BMI
+    double? bmi = profile?.bmi;
+    if (bmi == null && profile?.weightKg != null && profile?.heightCm != null && profile!.heightCm! > 0) {
+      final hM = profile.heightCm! / 100.0;
+      bmi = profile.weightKg! / (hM * hM);
+    }
+    final displayBmi = bmi != null ? bmi.toStringAsFixed(1) : '22.5';
+    final bmiCategory = profile?.bmiCategory ?? (bmi != null ? _getBmiCategory(bmi) : 'Normal');
 
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
@@ -287,32 +313,38 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Header Row
+                // Top Header Row (Expanded to avoid any overflow)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _getFormattedDate(),
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 12,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _getFormattedDate(),
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${_getGreeting()}, $displayName 👋',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
+                          const SizedBox(height: 2),
+                          Text(
+                            '${_getGreeting()}, $firstName 👋',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         // Server configuration quick access button
                         GestureDetector(
@@ -372,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Daily Health Score Hero Card (Gradient Green)
+                // Hero Card: Real BMI & Health Score / Danger Gauge (Gradient Green)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
@@ -396,76 +428,120 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Daily Health Score',
-                                style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.75),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  Text(
-                                    '${homeController.healthScore}',
-                                    style: const TextStyle(
-                                      fontSize: 44,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.white,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                  Text(
-                                    ' /100',
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.6),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.verified_rounded,
-                                    size: 13,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Body Mass Index (BMI)',
+                                  style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.8),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'NRS Clinical Assessment',
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.85),
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Text(
+                                      displayBmi,
+                                      style: const TextStyle(
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                        height: 1.0,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    const SizedBox(width: 8),
+                                    Flexible(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.2),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          bmiCategory,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.verified_rounded,
+                                      size: 13,
+                                      color: Colors.white.withValues(alpha: 0.85),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Target: 18.5 – 24.9',
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(alpha: 0.85),
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          // Health Score Ring Gauge
+                          const SizedBox(width: 12),
+                          // Health Score / Danger Level Ring Gauge
                           AppRing(
                             value: homeController.healthScore.toDouble(),
                             max: 100,
-                            size: 92,
+                            size: 94,
                             strokeWidth: 7,
-                            color: Colors.white,
+                            color: homeController.healthScore < 50
+                                ? const Color(0xFFFFD54F)
+                                : Colors.white,
                             trackColor: Colors.white.withValues(alpha: 0.2),
-                            child: Text(
-                              homeController.healthScoreLabel,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                              ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '${homeController.healthScore}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w900,
+                                    height: 1.0,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  homeController.dangerLevelLabel,
+                                  style: TextStyle(
+                                    color: homeController.healthScore < 50
+                                        ? const Color(0xFFFFD54F)
+                                        : Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 0.2,
+                                  ),
+                                ),
+                                Text(
+                                  'Health Score',
+                                  style: TextStyle(
+                                    color: Colors.white.withValues(alpha: 0.75),
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -507,7 +583,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                // NEURON AI Insight Card
+                // NEURON AI Insight Card (Short & personalized)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -543,11 +619,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              homeController.aiInsightText,
+                              homeController.getShortAiInsight(profile),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: AppColors.textPrimary,
                                 fontSize: 13,
-                                height: 1.5,
+                                height: 1.4,
                               ),
                             ),
                           ],
