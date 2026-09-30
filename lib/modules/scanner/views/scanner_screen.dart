@@ -358,7 +358,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                       ),
                                       child: Text(
                                         isScanning
-                                            ? 'Analyzing food with NEURON AI…'
+                                            ? 'Analyzing food with NORI AI…'
                                             : 'Position meal within frame',
                                         style: const TextStyle(
                                           color: Colors.white,
@@ -455,7 +455,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                     ),
                                     const SizedBox(height: 20),
 
-                                    // What NEURON scans card
+                                    // What NORI scans card
                                     Container(
                                       width: double.infinity,
                                       padding: const EdgeInsets.all(16),
@@ -483,7 +483,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                           ),
                                           const SizedBox(height: 4),
                                           const Text(
-                                            'NEURON AI identifies Nigerian and continental dishes, calculates calories and macronutrients, and returns a tailored clinical safety verdict.',
+                                            'NORI AI identifies Nigerian and continental dishes, calculates calories and macronutrients, and returns a tailored clinical safety verdict.',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontSize: 12,

@@ -98,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     const AppLogo(size: 104),
                     const SizedBox(height: 24),
                     Text(
-                      'NEURON',
+                      'NORI',
                       style: AppTypography.display.copyWith(
                         letterSpacing: -0.8,
                       ),

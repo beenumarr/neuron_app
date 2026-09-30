@@ -110,7 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               child: Row(
                 children: [
-                  // NEURON AI Avatar with Brand Gradient
+                  // NORI AI Avatar with Brand Gradient
                   Container(
                     width: 40,
                     height: 40,
@@ -135,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'NEURON AI',
+                          'NORI AI',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -287,7 +287,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               maxLines: 4,
                               minLines: 1,
                               decoration: const InputDecoration(
-                                hintText: 'Ask NEURON anything…',
+                                hintText: 'Ask NORI anything…',
                                 hintStyle: TextStyle(
                                   fontSize: 13,
                                   color: AppColors.textMuted,

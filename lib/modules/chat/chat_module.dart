@@ -1,4 +1,4 @@
-// NEURON AI Companion Chat Module
+// NORI AI Companion Chat Module
 // Fully wired to backend /api/v1/chat/*
 
 export 'controllers/chat_controller.dart';

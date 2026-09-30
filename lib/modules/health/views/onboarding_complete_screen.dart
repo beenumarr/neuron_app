@@ -41,7 +41,7 @@ class OnboardingCompleteScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Welcome to NEURON. Your AI health companion is ready to help you achieve a healthier lifestyle.',
+                'Welcome to NORI. Your AI health companion is ready to help you achieve a healthier lifestyle.',
                 textAlign: TextAlign.center,
                 style: AppTypography.body.copyWith(
                   fontSize: 14,

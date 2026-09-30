@@ -9,7 +9,7 @@ import 'package:neuron_app/modules/auth/models/auth_payloads.dart';
 import 'package:neuron_app/modules/health/models/onboarding_payload.dart';
 
 void main() {
-  test('AppColors brand color conforms to NEURON design specs', () {
+  test('AppColors brand color conforms to NORI design specs', () {
     expect(AppColors.brand, const Color(0xFF18B97A));
     expect(AppColors.brandDark, const Color(0xFF129863));
     expect(AppColors.backgroundPage, const Color(0xFFF7F9FC));

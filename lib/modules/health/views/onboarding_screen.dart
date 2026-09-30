@@ -30,7 +30,7 @@ class OnboardingScreen extends StatefulWidget {
       description: 'Instantly identify foods, calories, nutrients, and whether they are suitable for your health conditions.',
     ),
     OnboardingStepItem(
-      headline: 'Chat With NEURON',
+      headline: 'Chat With NORI',
       description: 'Ask questions about nutrition, medical conditions, healthy eating, or meal planning anytime.',
     ),
     OnboardingStepItem(

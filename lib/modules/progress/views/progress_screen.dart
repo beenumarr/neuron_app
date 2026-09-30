@@ -681,7 +681,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         ),
                       ),
                       Text(
-                        'Synthesized by NEURON Dietitian',
+                        'Synthesized by NORI Dietitian',
                         style: TextStyle(
                           fontSize: 10,
                           color: AppColors.textSecondary,

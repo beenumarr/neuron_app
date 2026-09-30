@@ -163,7 +163,7 @@ class ConversationListSheet extends StatelessWidget {
                               ),
                               const SizedBox(height: 6),
                               const Text(
-                                'Send a message below to start your first session with NEURON AI.',
+                                'Send a message below to start your first session with NORI AI.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12,

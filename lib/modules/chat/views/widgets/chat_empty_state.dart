@@ -37,7 +37,7 @@ class ChatEmptyState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // NEURON AI Glowing Avatar
+            // NORI AI Glowing Avatar
             Container(
               width: 68,
               height: 68,
@@ -64,7 +64,7 @@ class ChatEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Chat with NEURON',
+              'Chat with NORI',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

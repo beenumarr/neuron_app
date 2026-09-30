@@ -1,4 +1,4 @@
-// NEURON Progress & Analytics Module
+// NORI Progress & Analytics Module
 // Configured to mirror backend: /api/v1/progress/*
 library;
 

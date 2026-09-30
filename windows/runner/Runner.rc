@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "neuron_app" "\0"
+            VALUE "FileDescription", "NORI" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "neuron_app" "\0"
+            VALUE "InternalName", "nori_app" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "neuron_app.exe" "\0"
-            VALUE "ProductName", "neuron_app" "\0"
+            VALUE "OriginalFilename", "nori_app.exe" "\0"
+            VALUE "ProductName", "NORI" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

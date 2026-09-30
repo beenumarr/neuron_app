@@ -1,6 +1,6 @@
-# neuron_app
+# NORI App
 
-A new Flutter project.
+NORI is an AI-powered health and nutrition intelligence platform designed to help people make better health and dietary decisions.
 
 ## Getting Started
 

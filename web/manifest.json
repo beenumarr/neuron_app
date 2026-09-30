@@ -1,11 +1,11 @@
 {
-    "name": "neuron_app",
-    "short_name": "neuron_app",
+    "name": "NORI",
+    "short_name": "NORI",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "NORI is an AI-powered health and nutrition intelligence platform designed to help people make better health and dietary decisions.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

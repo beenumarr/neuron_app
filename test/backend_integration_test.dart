@@ -35,7 +35,7 @@ void main() {
     final healthService = HealthApiService(apiClient: apiClient);
 
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final testEmail = 'alex.test$timestamp@neuron.ai';
+    final testEmail = 'alex.test$timestamp@nori.ai';
     const testPassword = 'Password123!';
 
     // 1. Register

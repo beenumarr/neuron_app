@@ -17,27 +17,37 @@ class TokenStorage {
   String? _cachedRefreshToken;
   bool _isOnboarded = false;
 
-  static const String _keyAccessToken = 'neuron_access_token';
-  static const String _keyRefreshToken = 'neuron_refresh_token';
-  static const String _keyUserEmail = 'neuron_user_email';
-  static const String _keyUserId = 'neuron_user_id';
-  static const String _keyOnboarded = 'neuron_onboarding_completed';
-  static const String _keyCustomBaseUrl = 'neuron_custom_base_url';
+  static const String _keyAccessToken = 'nori_access_token';
+  static const String _keyRefreshToken = 'nori_refresh_token';
+  static const String _keyUserEmail = 'nori_user_email';
+  static const String _keyUserId = 'nori_user_id';
+  static const String _keyOnboarded = 'nori_onboarding_completed';
+  static const String _keyCustomBaseUrl = 'nori_custom_base_url';
+
+  // Legacy keys for seamless backwards-compatible migration
+  static const String _legacyKeyAccessToken = 'neuron_access_token';
+  static const String _legacyKeyRefreshToken = 'neuron_refresh_token';
+  static const String _legacyKeyUserEmail = 'neuron_user_email';
+  static const String _legacyKeyUserId = 'neuron_user_id';
+  static const String _legacyKeyOnboarded = 'neuron_onboarding_completed';
+  static const String _legacyKeyCustomBaseUrl = 'neuron_custom_base_url';
 
   Future<void> init() async {
     try {
-      _cachedAccessToken = await _secureStorage.read(key: _keyAccessToken);
-      _cachedRefreshToken = await _secureStorage.read(key: _keyRefreshToken);
+      _cachedAccessToken = await _secureStorage.read(key: _keyAccessToken) ??
+          await _secureStorage.read(key: _legacyKeyAccessToken);
+      _cachedRefreshToken = await _secureStorage.read(key: _keyRefreshToken) ??
+          await _secureStorage.read(key: _legacyKeyRefreshToken);
     } catch (e) {
       debugPrint('[TokenStorage] Secure storage read error, falling back to SharedPreferences: $e');
       final prefs = await SharedPreferences.getInstance();
-      _cachedAccessToken = prefs.getString(_keyAccessToken);
-      _cachedRefreshToken = prefs.getString(_keyRefreshToken);
+      _cachedAccessToken = prefs.getString(_keyAccessToken) ?? prefs.getString(_legacyKeyAccessToken);
+      _cachedRefreshToken = prefs.getString(_keyRefreshToken) ?? prefs.getString(_legacyKeyRefreshToken);
     }
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      _isOnboarded = prefs.getBool(_keyOnboarded) ?? false;
+      _isOnboarded = prefs.getBool(_keyOnboarded) ?? prefs.getBool(_legacyKeyOnboarded) ?? false;
     } catch (_) {}
   }
 
@@ -78,12 +88,12 @@ class TokenStorage {
 
   Future<String?> getUserEmail() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyUserEmail);
+    return prefs.getString(_keyUserEmail) ?? prefs.getString(_legacyKeyUserEmail);
   }
 
   Future<String?> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyUserId);
+    return prefs.getString(_keyUserId) ?? prefs.getString(_legacyKeyUserId);
   }
 
   Future<void> setOnboardingCompleted(bool completed) async {
@@ -94,7 +104,7 @@ class TokenStorage {
 
   Future<String?> getCustomBaseUrl() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyCustomBaseUrl);
+    return prefs.getString(_keyCustomBaseUrl) ?? prefs.getString(_legacyKeyCustomBaseUrl);
   }
 
   Future<void> saveCustomBaseUrl(String url) async {
@@ -110,6 +120,8 @@ class TokenStorage {
     try {
       await _secureStorage.delete(key: _keyAccessToken);
       await _secureStorage.delete(key: _keyRefreshToken);
+      await _secureStorage.delete(key: _legacyKeyAccessToken);
+      await _secureStorage.delete(key: _legacyKeyRefreshToken);
     } catch (_) {}
 
     try {
@@ -119,6 +131,13 @@ class TokenStorage {
       await prefs.remove(_keyUserId);
       await prefs.remove(_keyUserEmail);
       await prefs.remove(_keyOnboarded);
+      await prefs.remove(_keyCustomBaseUrl);
+      await prefs.remove(_legacyKeyAccessToken);
+      await prefs.remove(_legacyKeyRefreshToken);
+      await prefs.remove(_legacyKeyUserId);
+      await prefs.remove(_legacyKeyUserEmail);
+      await prefs.remove(_legacyKeyOnboarded);
+      await prefs.remove(_legacyKeyCustomBaseUrl);
     } catch (_) {}
   }
 }

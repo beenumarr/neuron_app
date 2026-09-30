@@ -111,28 +111,31 @@ void main() async {
         ChangeNotifierProvider<ScannerController>.value(value: scannerController),
         ChangeNotifierProvider<ProgressController>.value(value: progressController),
       ],
-      child: const NeuronApp(),
+      child: const NoriApp(),
     ),
   );
 }
 
-class NeuronApp extends StatefulWidget {
-  const NeuronApp({super.key});
+class NoriApp extends StatefulWidget {
+  const NoriApp({super.key});
 
   @override
-  State<NeuronApp> createState() => _NeuronAppState();
+  State<NoriApp> createState() => _NoriAppState();
 }
 
-class _NeuronAppState extends State<NeuronApp> {
+class _NoriAppState extends State<NoriApp> {
   late final _router = AppRouter.createRouter(context.read<AuthController>());
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'NEURON',
+      title: 'NORI',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routerConfig: _router,
     );
   }
 }
+
+// Backward compatibility alias
+typedef NeuronApp = NoriApp;

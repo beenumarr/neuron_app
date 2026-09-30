@@ -87,7 +87,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      user?.email ?? 'patient@neuron.ai',
+                      user?.email ?? 'patient@nori.ai',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.white.withValues(alpha: 0.7),

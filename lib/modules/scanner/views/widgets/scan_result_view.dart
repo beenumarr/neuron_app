@@ -201,7 +201,7 @@ class ScanResultView extends StatelessWidget {
           ),
           const SizedBox(height: 18),
 
-          // NEURON Recommendation Box (Exact Rules Engine Verdict Reason)
+          // NORI Recommendation Box (Exact Rules Engine Verdict Reason)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
@@ -224,7 +224,7 @@ class ScanResultView extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'NEURON Clinical Assessment',
+                      'NORI Clinical Assessment',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,

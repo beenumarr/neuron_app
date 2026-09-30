@@ -583,7 +583,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                // NEURON AI Insight Card (Short & personalized)
+                // NORI AI Insight Card (Short & personalized)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -610,7 +610,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'NEURON AI Insight',
+                              'NORI AI Insight',
                               style: TextStyle(
                                 color: AppColors.indigo,
                                 fontSize: 12,

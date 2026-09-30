@@ -2,7 +2,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 
 class AppConfig {
-  static const String appName = 'NEURON';
+  static const String appName = 'NORI';
   static const String appTagline = 'Your AI Health & Nutrition Companion';
 
   // Remote production server URL for when the backend is hosted online
