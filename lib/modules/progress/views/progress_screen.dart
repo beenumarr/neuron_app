@@ -5,10 +5,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/nori_brand_widgets.dart';
 import '../controllers/progress_controller.dart';
-import '../models/weekly_report_model.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -30,8 +28,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
   Widget build(BuildContext context) {
     final progressController = context.watch<ProgressController>();
     final isLoading = progressController.isLoading;
-    final isGenerating = progressController.isGeneratingReport;
-    final report = progressController.latestReport;
 
     final selectedPeriod = progressController.selectedPeriod;
 
@@ -45,7 +41,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
     final healthScore = progressController.healthScore;
     final healthScoreSeries = progressController.healthScoreChartSeries;
     final calorieSeries = progressController.calorieChartSeries;
-    final riskFlags = progressController.riskFlags;
 
     final streak = progressController.streakDays;
     final avgScore = progressController.averageHealthScore;
@@ -102,14 +97,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   _buildCalorieIntakeCard(calorieSeries),
                   const SizedBox(height: 16),
 
-                  // 6. Clinical Weekly AI Report Card
-                  _buildWeeklyAiReportSection(
-                    progressController: progressController,
-                    report: report,
-                    isGenerating: isGenerating,
-                    riskFlags: riskFlags,
-                  ),
-                  const SizedBox(height: 14),
+                  // "Where we stop" Clinical Disclaimer
                   const NoriDisclaimerCard(),
                   const SizedBox(height: 24),
                 ],
@@ -624,160 +612,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  // ── Card 4: Weekly AI Clinical Report ─────────────────────────────────────
-  Widget _buildWeeklyAiReportSection({
-    required ProgressController progressController,
-    required WeeklyReportModel? report,
-    required bool isGenerating,
-    required List riskFlags,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.line),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.ink.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(
-                      color: AppColors.mint,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      LucideIcons.sparkles,
-                      size: 16,
-                      color: AppColors.teal,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Weekly AI Clinical Report',
-                        style: GoogleFonts.sora(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.ink,
-                        ),
-                      ),
-                      Text(
-                        'Synthesized by nori dietitian',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          color: AppColors.mute,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              if (report != null && !isGenerating)
-                IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18, color: AppColors.mute),
-                  tooltip: 'Re-generate Report',
-                  onPressed: () => progressController.generateReportNow(),
-                ),
-            ],
-          ),
-          const SizedBox(height: 14),
-
-          if (isGenerating)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      width: 28,
-                      height: 28,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        valueColor: AlwaysStoppedAnimation(AppColors.teal),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Synthesizing weekly clinical report...',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: AppColors.mute,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          else if (report == null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'No report synthesized yet for this week. Tap below to analyze your logged meals against clinical guidelines.',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: AppColors.mute,
-                    height: 1.4,
-                  ),
-                ),
-                const SizedBox(height: 14),
-                AppButton(
-                  title: 'Synthesize Weekly Report',
-                  icon: LucideIcons.sparkles,
-                  onPressed: () => progressController.generateReportNow(),
-                ),
-              ],
-            )
-          else ...[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.mint,
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Text(
-                report.formattedDateRange,
-                style: GoogleFonts.inter(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.teal,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              report.reportText,
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                color: AppColors.ink,
-                height: 1.5,
-              ),
-            ),
-          ],
         ],
       ),
     );

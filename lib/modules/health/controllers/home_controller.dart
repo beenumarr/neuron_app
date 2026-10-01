@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../scanner/models/meal_model.dart';
 import '../../scanner/services/meal_api_service.dart';
 import '../models/health_profile_model.dart';
@@ -75,6 +77,180 @@ class HomeController extends ChangeNotifier {
     return 'Attention';
   }
 
+  // ── Habit Tracking: Water, Steps, Sleep (AI-Calibrated) ───────────────────
+  int _waterCups = 0;
+  double _waterTargetLiters = 2.5;
+  String _waterAiReason = 'Calibrated by nori for standard metabolic and kidney baseline.';
+
+  int _stepsCount = 0;
+  int _stepsGoal = 8000;
+  String _stepsAiReason = 'Calibrated by nori for daily cardiovascular and glucose baseline.';
+
+  double _sleepHours = 0.0;
+  double _sleepGoalHours = 8.0;
+  String _sleepAiReason = 'Calibrated by nori for standard cellular recovery and immune maintenance.';
+
+  // Water Getters
+  int get waterCups => _waterCups;
+  double get waterIntakeLiters => double.parse((_waterCups * 0.25).toStringAsFixed(2));
+  double get waterTargetLiters => _waterTargetLiters;
+  int get waterTargetCups => (_waterTargetLiters / 0.25).round();
+  double get waterProgressPct =>
+      _waterTargetLiters > 0 ? (waterIntakeLiters / _waterTargetLiters).clamp(0.0, 1.0) : 0.0;
+  String get waterAiReason => _waterAiReason;
+
+  // Steps Getters
+  int get stepsCount => _stepsCount;
+  int get stepsGoal => _stepsGoal;
+  double get stepsProgressPct =>
+      _stepsGoal > 0 ? (stepsCount / _stepsGoal).clamp(0.0, 1.0) : 0.0;
+  String get stepsAiReason => _stepsAiReason;
+
+  // Sleep Getters
+  double get sleepHours => _sleepHours;
+  double get sleepGoalHours => _sleepGoalHours;
+  double get sleepProgressPct =>
+      _sleepGoalHours > 0 ? (sleepHours / _sleepGoalHours).clamp(0.0, 1.0) : 0.0;
+  String get sleepAiReason => _sleepAiReason;
+
+  // Calibrate AI Targets from Profile
+  void calibrateAiTargets(HealthProfileModel? profile) {
+    if (profile == null) return;
+
+    // 1. Water Calibration (Clinical benchmark: ~35ml/kg)
+    if (profile.weightKg != null && profile.weightKg! > 0) {
+      double base = (profile.weightKg! * 35) / 1000.0;
+      final goal = profile.goal?.toLowerCase() ?? '';
+      if (goal.contains('weight') || goal.contains('muscle') || goal.contains('energy') || goal.contains('active')) {
+        base += 0.3;
+      }
+      _waterTargetLiters = double.parse(base.clamp(1.8, 3.8).toStringAsFixed(1));
+      _waterAiReason = 'Calibrated by nori for your ${profile.weightKg!.round()}kg frame: 35ml/kg cellular hydration standard.';
+    } else {
+      _waterTargetLiters = 2.5;
+      _waterAiReason = 'Calibrated by nori for balanced metabolic and kidney hydration.';
+    }
+
+    // 2. Steps Calibration (Conditions + Goals)
+    final conditions = profile.conditions.map((c) => c.toLowerCase()).toList();
+    final goal = profile.goal?.toLowerCase() ?? '';
+
+    if (conditions.any((c) => c.contains('diabet') || c.contains('sugar') || c.contains('hypertens') || c.contains('pressure'))) {
+      _stepsGoal = 8500;
+      _stepsAiReason = 'Calibrated by nori to improve insulin sensitivity and lower arterial tension.';
+    } else if (goal.contains('weight') || goal.contains('fat') || goal.contains('loss')) {
+      _stepsGoal = 10000;
+      _stepsAiReason = 'Calibrated by nori for sustained daily NEAT energy expenditure and fat oxidation.';
+    } else if (goal.contains('muscle') || goal.contains('gain') || goal.contains('strength')) {
+      _stepsGoal = 7500;
+      _stepsAiReason = 'Calibrated by nori for conditioning without compromising muscle glycogen recovery.';
+    } else if (goal.contains('heart') || conditions.any((c) => c.contains('cholesterol'))) {
+      _stepsGoal = 9000;
+      _stepsAiReason = 'Calibrated by nori for endothelial flexibility and lipid management.';
+    } else {
+      _stepsGoal = 8000;
+      _stepsAiReason = 'Calibrated by nori for baseline metabolic vitality and steady circulation.';
+    }
+
+    // 3. Sleep Calibration (Recovery & Glycemic Control)
+    if (conditions.any((c) => c.contains('hypertens') || c.contains('diabet') || c.contains('heart'))) {
+      _sleepGoalHours = 8.0;
+      _sleepAiReason = 'Calibrated by nori: 8.0 hrs restorative sleep reduces sympathetic tone & morning BP surges.';
+    } else if (goal.contains('muscle') || goal.contains('strength')) {
+      _sleepGoalHours = 8.5;
+      _sleepAiReason = 'Calibrated by nori: 8.5 hrs maximizes growth hormone secretion during deep slow-wave sleep.';
+    } else if (goal.contains('weight') || goal.contains('fat')) {
+      _sleepGoalHours = 8.0;
+      _sleepAiReason = 'Calibrated by nori: 8.0 hrs balances leptin and ghrelin to curb late-day appetite surges.';
+    } else if (profile.age != null && profile.age! >= 60) {
+      _sleepGoalHours = 7.5;
+      _sleepAiReason = 'Calibrated by nori for restorative circadian rhythms and cognitive retention.';
+    } else {
+      _sleepGoalHours = 8.0;
+      _sleepAiReason = 'Calibrated by nori for cellular DNA repair, neuro-clearing, and immune support.';
+    }
+  }
+
+  String get _todayKey {
+    final now = DateTime.now();
+    return "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+  }
+
+  Future<void> loadHabits([HealthProfileModel? profile]) async {
+    calibrateAiTargets(profile);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _waterCups = prefs.getInt('habits_water_$_todayKey') ?? 0;
+      _stepsCount = prefs.getInt('habits_steps_$_todayKey') ?? 0;
+      _sleepHours = prefs.getDouble('habits_sleep_$_todayKey') ?? 0.0;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('[HomeController] Error loading habits: $e');
+    }
+  }
+
+  Future<void> addWaterCup() async {
+    _waterCups = (_waterCups + 1).clamp(0, 24);
+    notifyListeners();
+    _saveHabit('habits_water_$_todayKey', _waterCups);
+  }
+
+  Future<void> removeWaterCup() async {
+    if (_waterCups > 0) {
+      _waterCups -= 1;
+      notifyListeners();
+      _saveHabit('habits_water_$_todayKey', _waterCups);
+    }
+  }
+
+  Future<void> setWaterCups(int cups) async {
+    _waterCups = cups.clamp(0, 24);
+    notifyListeners();
+    _saveHabit('habits_water_$_todayKey', _waterCups);
+  }
+
+  Future<void> addSteps(int delta) async {
+    _stepsCount = (_stepsCount + delta).clamp(0, 60000);
+    notifyListeners();
+    _saveHabit('habits_steps_$_todayKey', _stepsCount);
+  }
+
+  Future<void> setSteps(int steps) async {
+    _stepsCount = steps.clamp(0, 60000);
+    notifyListeners();
+    _saveHabit('habits_steps_$_todayKey', _stepsCount);
+  }
+
+  Future<void> addSleepMinutes(int minutes) async {
+    _sleepHours = double.parse((_sleepHours + (minutes / 60.0)).clamp(0.0, 16.0).toStringAsFixed(1));
+    notifyListeners();
+    _saveHabitDouble('habits_sleep_$_todayKey', _sleepHours);
+  }
+
+  Future<void> setSleepHours(double hours) async {
+    _sleepHours = double.parse(hours.clamp(0.0, 16.0).toStringAsFixed(1));
+    notifyListeners();
+    _saveHabitDouble('habits_sleep_$_todayKey', _sleepHours);
+  }
+
+  Future<void> _saveHabit(String key, int value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(key, value);
+    } catch (e) {
+      debugPrint('[HomeController] Error saving habit $key: $e');
+    }
+  }
+
+  Future<void> _saveHabitDouble(String key, double value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setDouble(key, value);
+    } catch (e) {
+      debugPrint('[HomeController] Error saving habit $key: $e');
+    }
+  }
+
   // Short, personalized AI Insight based on user profile and daily progress
   String getShortAiInsight([HealthProfileModel? profile]) {
     // 1. Today's nutrition progress insights
@@ -138,12 +314,14 @@ class HomeController extends ChangeNotifier {
 
   String get aiInsightText => getShortAiInsight();
 
-  Future<void> fetchDashboardData({bool silent = false}) async {
+  Future<void> fetchDashboardData({HealthProfileModel? profile, bool silent = false}) async {
     if (!silent) {
       _isLoading = true;
       _errorMessage = null;
       notifyListeners();
     }
+
+    await loadHabits(profile);
 
     try {
       final results = await Future.wait([

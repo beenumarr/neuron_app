@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -10,6 +11,7 @@ import '../../../core/widgets/server_config_dialog.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../../scanner/models/meal_model.dart';
 import '../controllers/home_controller.dart';
+import '../models/health_profile_model.dart';
 
 class HomeScreen extends StatefulWidget {
   final void Function(int tabIndex)? onNavigateTab;
@@ -25,7 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeController>().fetchDashboardData();
+      final profile = context.read<AuthController>().healthProfile;
+      context.read<HomeController>().fetchDashboardData(profile: profile);
     });
   }
 
@@ -308,8 +311,8 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColors.backgroundPage,
       body: SafeArea(
         child: RefreshIndicator(
-          color: AppColors.brand,
-          onRefresh: () => homeController.fetchDashboardData(silent: true),
+          color: AppColors.teal,
+          onRefresh: () => homeController.fetchDashboardData(profile: profile, silent: true),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -666,104 +669,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                // Water Intake Card (v2 Sky / Teal theme)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundCard,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: AppColors.line),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.ink.withValues(alpha: 0.03),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(LucideIcons.droplets, size: 16, color: AppColors.teal),
-                              const SizedBox(width: 6),
-                              Text(
-                                'Water Intake',
-                                style: GoogleFonts.sora(
-                                  color: AppColors.ink,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            '1.6L / 2.5L',
-                            style: GoogleFonts.inter(
-                              color: AppColors.teal,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      // Progress track
-                      Container(
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: AppColors.sky,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: FractionallySizedBox(
-                            widthFactor: 0.64,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                gradient: const LinearGradient(
-                                  colors: [AppColors.teal, AppColors.green],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      // 8 water cups
-                      Row(
-                        children: List.generate(8, (i) {
-                          final isFilled = i < 5;
-                          return Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 2),
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: isFilled
-                                    ? AppColors.sky
-                                    : AppColors.backgroundPage,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: isFilled ? AppColors.teal.withValues(alpha: 0.2) : AppColors.line,
-                                ),
-                              ),
-                              child: Icon(
-                                LucideIcons.droplets,
-                                size: 12,
-                                color: isFilled ? AppColors.teal : AppColors.textMuted,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
+                // Habits & Recovery (Interactive Water + AI Steps & Sleep)
+                _buildHabitsAndRecoverySection(context, homeController, profile),
                 const SizedBox(height: 18),
 
                 // Quick Actions
@@ -1056,6 +963,835 @@ class _HomeScreenState extends State<HomeScreen> {
               fontWeight: FontWeight.w700,
               color: AppColors.teal,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Habits & Recovery Section (Water, Steps, Sleep) ───────────────────────
+  Widget _buildHabitsAndRecoverySection(
+    BuildContext context,
+    HomeController homeController,
+    HealthProfileModel? profile,
+  ) {
+    final waterCups = homeController.waterCups;
+    final targetCups = homeController.waterTargetCups;
+    final displayCupsCount = math.max(8, targetCups);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Habits & Recovery',
+              style: GoogleFonts.sora(
+                color: AppColors.ink,
+                fontSize: 14.5,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+              decoration: BoxDecoration(
+                color: AppColors.mint,
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: AppColors.line),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      color: AppColors.amber,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    'AI-Calibrated',
+                    style: GoogleFonts.inter(
+                      color: AppColors.teal,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        // 1. Interactive Water Intake Card
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundCard,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: AppColors.line),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.ink.withValues(alpha: 0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: AppColors.sky,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(LucideIcons.droplets, size: 16, color: AppColors.teal),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Water Intake',
+                        style: GoogleFonts.sora(
+                          color: AppColors.ink,
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '${homeController.waterIntakeLiters.toStringAsFixed(2)}L / ${homeController.waterTargetLiters}L',
+                        style: GoogleFonts.sora(
+                          color: AppColors.teal,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '($waterCups/$targetCups)',
+                        style: GoogleFonts.inter(
+                          color: AppColors.mute,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+
+              // AI Reason Capsule
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.cleanWhite,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColors.line),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 2.0),
+                      child: Icon(LucideIcons.sparkles, size: 11, color: AppColors.amber),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        homeController.waterAiReason,
+                        style: GoogleFonts.inter(
+                          fontSize: 10.5,
+                          color: AppColors.ink,
+                          height: 1.35,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Progress Bar
+              ClipRRect(
+                borderRadius: BorderRadius.circular(999),
+                child: Container(
+                  height: 8,
+                  width: double.infinity,
+                  color: AppColors.sky,
+                  child: FractionallySizedBox(
+                    alignment: Alignment.centerLeft,
+                    widthFactor: homeController.waterProgressPct,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppColors.teal, AppColors.green],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Interactive Cups Row
+              Row(
+                children: List.generate(displayCupsCount, (i) {
+                  final isFilled = i < waterCups;
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (i + 1 == waterCups) {
+                          homeController.removeWaterCup();
+                        } else {
+                          homeController.setWaterCups(i + 1);
+                        }
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: isFilled ? AppColors.sky : AppColors.cleanWhite,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: isFilled ? AppColors.teal : AppColors.line,
+                            width: isFilled ? 1.4 : 1.0,
+                          ),
+                        ),
+                        child: Icon(
+                          LucideIcons.droplets,
+                          size: 13,
+                          color: isFilled ? AppColors.teal : AppColors.mute.withValues(alpha: 0.4),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 12),
+
+              // Quick Log Action Buttons
+              Row(
+                children: [
+                  // Minus Button
+                  GestureDetector(
+                    onTap: () => homeController.removeWaterCup(),
+                    child: Container(
+                      width: 38,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColors.cleanWhite,
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: AppColors.line),
+                      ),
+                      child: const Icon(LucideIcons.minus, size: 16, color: AppColors.ink),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // + 250ml Cup Button
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => homeController.addWaterCup(),
+                      child: Container(
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: AppColors.mint,
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(color: AppColors.line),
+                        ),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(LucideIcons.plus, size: 14, color: AppColors.teal),
+                            const SizedBox(width: 4),
+                            Text(
+                              '+ 250ml (Cup)',
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.teal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // + 500ml Bottle Button
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        homeController.addWaterCup();
+                        homeController.addWaterCup();
+                      },
+                      child: Container(
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: AppColors.teal,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(LucideIcons.plus, size: 14, color: Colors.white),
+                            const SizedBox(width: 4),
+                            Text(
+                              '+ 500ml (Bottle)',
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // 2. Steps & Sleep Cards (Side-by-side)
+        Row(
+          children: [
+            // STEPS CARD
+            Expanded(
+              child: GestureDetector(
+                onTap: () => _showLogStepsDialog(context, homeController),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundCard,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: AppColors.line),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.ink.withValues(alpha: 0.03),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: AppColors.mint,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(LucideIcons.footprints, size: 15, color: AppColors.teal),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.cleanWhite,
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(color: AppColors.line),
+                            ),
+                            child: Text(
+                              '${(homeController.stepsProgressPct * 100).toInt()}%',
+                              style: GoogleFonts.inter(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.teal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Steps',
+                        style: GoogleFonts.inter(
+                          color: AppColors.mute,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        homeController.stepsCount.toString().replaceAllMapped(
+                              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                              (m) => '${m[1]},',
+                            ),
+                        style: GoogleFonts.sora(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Goal: ${homeController.stepsGoal.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')}',
+                        style: GoogleFonts.inter(
+                          fontSize: 10.5,
+                          color: AppColors.mute,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Progress bar
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: Container(
+                          height: 6,
+                          width: double.infinity,
+                          color: AppColors.cleanWhite,
+                          child: FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: homeController.stepsProgressPct,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [AppColors.teal, AppColors.green],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Quick Add buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => homeController.addSteps(500),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: AppColors.cleanWhite,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: AppColors.line),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '+500',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.teal,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => homeController.addSteps(1000),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: AppColors.mint,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '+1k',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.teal,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+
+            // SLEEP CARD
+            Expanded(
+              child: GestureDetector(
+                onTap: () => _showLogSleepDialog(context, homeController),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundCard,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: AppColors.line),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.ink.withValues(alpha: 0.03),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: AppColors.sky,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(LucideIcons.moon, size: 15, color: AppColors.teal),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.cleanWhite,
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(color: AppColors.line),
+                            ),
+                            child: Text(
+                              homeController.sleepHours >= homeController.sleepGoalHours ? 'Restored' : 'Tracked',
+                              style: GoogleFonts.inter(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: homeController.sleepHours >= homeController.sleepGoalHours ? AppColors.green : AppColors.mute,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Sleep & Rest',
+                        style: GoogleFonts.inter(
+                          color: AppColors.mute,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${homeController.sleepHours.toStringAsFixed(1)} hrs',
+                        style: GoogleFonts.sora(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Goal: ${homeController.sleepGoalHours.toStringAsFixed(1)} hrs',
+                        style: GoogleFonts.inter(
+                          fontSize: 10.5,
+                          color: AppColors.mute,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Progress bar
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: Container(
+                          height: 6,
+                          width: double.infinity,
+                          color: AppColors.cleanWhite,
+                          child: FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: homeController.sleepProgressPct,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [Color(0xFF4A7C94), AppColors.teal],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Quick Add buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => homeController.addSleepMinutes(30),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: AppColors.cleanWhite,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: AppColors.line),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '+30m',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.teal,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => homeController.addSleepMinutes(60),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: AppColors.mint,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '+1h',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.teal,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _showLogStepsDialog(BuildContext context, HomeController homeController) {
+    final controller = TextEditingController(text: '${homeController.stepsCount}');
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.backgroundCard,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: AppColors.line),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(color: AppColors.mint, borderRadius: BorderRadius.circular(8)),
+              child: const Icon(LucideIcons.footprints, size: 18, color: AppColors.teal),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'Log Steps',
+              style: GoogleFonts.sora(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.ink),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.cleanWhite,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.line),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 2.0),
+                    child: Icon(LucideIcons.sparkles, size: 12, color: AppColors.amber),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      homeController.stepsAiReason,
+                      style: GoogleFonts.inter(fontSize: 11, color: AppColors.ink, height: 1.4),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text('Today\'s Step Count', style: GoogleFonts.inter(fontSize: 12, color: AppColors.mute, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 6),
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              style: GoogleFonts.sora(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.ink),
+              decoration: InputDecoration(
+                hintText: 'e.g. 8500',
+                filled: true,
+                fillColor: AppColors.cleanWhite,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.line)),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.line)),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.teal, width: 1.5)),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('Cancel', style: GoogleFonts.inter(color: AppColors.mute, fontWeight: FontWeight.w600)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final steps = int.tryParse(controller.text.trim());
+              if (steps != null) {
+                homeController.setSteps(steps);
+              }
+              Navigator.of(ctx).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.teal,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+            ),
+            child: Text('Save', style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLogSleepDialog(BuildContext context, HomeController homeController) {
+    final controller = TextEditingController(text: '${homeController.sleepHours}');
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.backgroundCard,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: AppColors.line),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(color: AppColors.sky, borderRadius: BorderRadius.circular(8)),
+              child: const Icon(LucideIcons.moon, size: 18, color: AppColors.teal),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'Log Sleep',
+              style: GoogleFonts.sora(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.ink),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.cleanWhite,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.line),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 2.0),
+                    child: Icon(LucideIcons.sparkles, size: 12, color: AppColors.amber),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      homeController.sleepAiReason,
+                      style: GoogleFonts.inter(fontSize: 11, color: AppColors.ink, height: 1.4),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text('Sleep Duration (Hours)', style: GoogleFonts.inter(fontSize: 12, color: AppColors.mute, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 6),
+            TextField(
+              controller: controller,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              style: GoogleFonts.sora(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.ink),
+              decoration: InputDecoration(
+                hintText: 'e.g. 7.5',
+                filled: true,
+                fillColor: AppColors.cleanWhite,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.line)),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.line)),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.teal, width: 1.5)),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('Cancel', style: GoogleFonts.inter(color: AppColors.mute, fontWeight: FontWeight.w600)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final hours = double.tryParse(controller.text.trim());
+              if (hours != null) {
+                homeController.setSleepHours(hours);
+              }
+              Navigator.of(ctx).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.teal,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+            ),
+            child: Text('Save', style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
           ),
         ],
       ),
