@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../controllers/scanner_controller.dart';
@@ -93,7 +94,7 @@ class MealHistoryView extends StatelessWidget {
                     color: AppColors.brandLight,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.add_rounded, size: 18, color: AppColors.brand),
+                  child: const Icon(LucideIcons.plus, size: 18, color: AppColors.brand),
                 ),
                 onPressed: () {
                   ManualMealDialog.show(
@@ -147,7 +148,7 @@ class MealHistoryView extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
-                                Icons.restaurant_rounded,
+                                LucideIcons.utensils,
                                 size: 28,
                                 color: AppColors.brand,
                               ),
@@ -321,7 +322,7 @@ class MealHistoryView extends StatelessWidget {
               children: [
                 TextButton.icon(
                   onPressed: currentPage > 1 ? () => scannerController.goToPage(currentPage - 1) : null,
-                  icon: const Icon(Icons.arrow_back_rounded, size: 16),
+                  icon: const Icon(LucideIcons.arrowLeft, size: 16),
                   label: const Text('Previous', style: TextStyle(fontSize: 12)),
                 ),
                 Text(
@@ -337,7 +338,7 @@ class MealHistoryView extends StatelessWidget {
                       ? () => scannerController.goToPage(currentPage + 1)
                       : null,
                   label: const Text('Next', style: TextStyle(fontSize: 12)),
-                  icon: const Icon(Icons.arrow_forward_rounded, size: 16),
+                  icon: const Icon(LucideIcons.arrowRight, size: 16),
                 ),
               ],
             ),

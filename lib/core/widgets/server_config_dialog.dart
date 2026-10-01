@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../config/app_config.dart';
@@ -163,10 +164,10 @@ class _ServerConfigDialogState extends State<ServerConfigDialog> {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: AppColors.brandLight,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
-                    Icons.dns_rounded,
+                    LucideIcons.server,
                     color: AppColors.brand,
                     size: 22,
                   ),
@@ -286,7 +287,7 @@ class _ServerConfigDialogState extends State<ServerConfigDialog> {
                 child: Row(
                   children: [
                     Icon(
-                      _testSuccess ? Icons.check_circle : Icons.error_outline,
+                      _testSuccess ? LucideIcons.checkCircle : LucideIcons.alertCircle,
                       color: _testSuccess ? AppColors.brand : AppColors.danger,
                       size: 18,
                     ),

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -244,8 +245,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   children: [
                     Icon(
                       isImproving
-                          ? Icons.trending_up_rounded
-                          : Icons.trending_flat_rounded,
+                          ? LucideIcons.trendingUp
+                          : LucideIcons.minus,
                       size: 13,
                       color: isImproving ? AppColors.brand : AppColors.orange,
                     ),
@@ -296,7 +297,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
       children: [
         Expanded(
           child: _buildSingleMetricCard(
-            icon: Icons.star_border_rounded,
+            icon: LucideIcons.star,
             iconColor: AppColors.orange,
             value: streakText,
             label: 'Streak',
@@ -305,7 +306,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         const SizedBox(width: 10),
         Expanded(
           child: _buildSingleMetricCard(
-            icon: Icons.show_chart_rounded,
+            icon: LucideIcons.lineChart,
             iconColor: AppColors.indigo,
             value: avgScore,
             label: 'Avg Score',
@@ -314,7 +315,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         const SizedBox(width: 10),
         Expanded(
           child: _buildSingleMetricCard(
-            icon: Icons.track_changes_rounded,
+            icon: LucideIcons.target,
             iconColor: AppColors.brand,
             value: goalsMetText,
             label: 'Goals Met',
@@ -443,7 +444,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.restaurant_outlined,
+                                LucideIcons.utensils,
                                 size: 20,
                                 color: AppColors.textSecondary.withValues(alpha: 0.5),
                               ),
@@ -663,7 +664,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
-                      Icons.auto_awesome_rounded,
+                      LucideIcons.sparkles,
                       size: 16,
                       color: AppColors.brand,
                     ),
@@ -693,7 +694,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
               if (report != null && !isGenerating)
                 IconButton(
-                  icon: const Icon(Icons.refresh_rounded, size: 18, color: AppColors.textSecondary),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18, color: AppColors.textSecondary),
                   tooltip: 'Re-generate Report',
                   onPressed: () => progressController.generateReportNow(),
                 ),
@@ -745,7 +746,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () => progressController.generateReportNow(),
-                    icon: const Icon(Icons.auto_awesome_rounded, size: 16),
+                    icon: const Icon(LucideIcons.sparkles, size: 16),
                     label: const Text('Synthesize Weekly Report'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.brand,

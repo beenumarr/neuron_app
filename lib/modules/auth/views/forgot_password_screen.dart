@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
@@ -63,7 +64,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Icon(Icons.mark_email_read_outlined, color: AppColors.brand, size: 48),
+                const Icon(LucideIcons.mailCheck, color: AppColors.brand, size: 48),
                 const SizedBox(height: 12),
                 Text(
                   'Reset Link Generated',
@@ -122,7 +123,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     border: Border.all(color: AppColors.border),
                   ),
                   child: const Icon(
-                    Icons.arrow_back,
+                    LucideIcons.arrowLeft,
                     size: 18,
                     color: AppColors.textPrimary,
                   ),
@@ -187,7 +188,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 errorText: _emailError,
-                suffix: const Icon(Icons.mail_outline, size: 20, color: AppColors.textMuted),
+                suffix: const Icon(LucideIcons.mail, size: 20, color: AppColors.textMuted),
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => _handleSendReset(),
               ),
@@ -205,7 +206,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               Center(
                 child: TextButton.icon(
                   onPressed: () => context.go('/login'),
-                  icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.textSecondary),
+                  icon: const Icon(LucideIcons.arrowLeft, size: 14, color: AppColors.textSecondary),
                   label: Text(
                     'Back to Sign In',
                     style: AppTypography.bodyBold.copyWith(

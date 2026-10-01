@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
@@ -142,7 +143,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     border: Border.all(color: AppColors.border),
                   ),
                   child: const Icon(
-                    Icons.arrow_back,
+                    LucideIcons.arrowLeft,
                     size: 18,
                     color: AppColors.textPrimary,
                   ),
@@ -157,10 +158,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   height: 80,
                   decoration: BoxDecoration(
                     color: AppColors.brandLight,
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: const Center(
-                    child: Icon(Icons.lock_rounded, size: 36, color: AppColors.brand),
+                    child: Icon(LucideIcons.lock, size: 36, color: AppColors.brand),
                   ),
                 ),
               ),
@@ -263,7 +264,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 errorText: _confirmError,
                 suffix: _confirmController.text.isNotEmpty &&
                         _confirmController.text == _passwordController.text
-                    ? const Icon(Icons.check_circle, size: 20, color: AppColors.brand)
+                    ? const Icon(LucideIcons.checkCircle, size: 20, color: AppColors.brand)
                     : null,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => _handleResetPassword(),

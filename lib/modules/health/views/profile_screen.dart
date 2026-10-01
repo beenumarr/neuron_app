@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -104,7 +105,7 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.verified_user_rounded, size: 13, color: Colors.white),
+                          const Icon(LucideIcons.shieldCheck, size: 13, color: Colors.white),
                           const SizedBox(width: 5),
                           Text(
                             'Patient · Verified Account',
@@ -321,25 +322,25 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildSettingsRow(
-                      icon: Icons.notifications_none_rounded,
+                      icon: LucideIcons.bell,
                       title: 'Notifications',
                       subtitle: 'Meal & medication reminders',
                       showDivider: true,
                     ),
                     _buildSettingsRow(
-                      icon: Icons.shield_outlined,
+                      icon: LucideIcons.shield,
                       title: 'Privacy & Security',
                       subtitle: 'Data sharing preferences',
                       showDivider: true,
                     ),
                     _buildSettingsRow(
-                      icon: Icons.devices_other_rounded,
+                      icon: LucideIcons.smartphone,
                       title: 'Connected Devices',
                       subtitle: 'Fitbit, Apple Watch, Google Fit',
                       showDivider: true,
                     ),
                     _buildSettingsRow(
-                      icon: Icons.favorite_border_rounded,
+                      icon: LucideIcons.heart,
                       title: 'Health Records',
                       subtitle: 'Medical history & lab reports',
                       showDivider: false,

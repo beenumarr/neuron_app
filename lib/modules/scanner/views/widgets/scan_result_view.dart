@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/scan_result_model.dart';
 
@@ -88,7 +89,7 @@ class ScanResultView extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: AppColors.backgroundCard,
-                    child: const Icon(Icons.fastfood_rounded, size: 48, color: AppColors.brand),
+                    child: const Icon(LucideIcons.utensils, size: 48, color: AppColors.brand),
                   ),
                 ),
               ),
@@ -218,7 +219,7 @@ class ScanResultView extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.health_and_safety_rounded,
+                      LucideIcons.shieldCheck,
                       size: 16,
                       color: result.verdictColor,
                     ),
@@ -255,7 +256,7 @@ class ScanResultView extends StatelessWidget {
                   height: 48,
                   child: ElevatedButton.icon(
                     onPressed: onLogMeal,
-                    icon: const Icon(Icons.check_circle_outline_rounded, size: 18),
+                    icon: const Icon(LucideIcons.checkCircle, size: 18),
                     label: const Text(
                       'Log Meal',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -277,7 +278,7 @@ class ScanResultView extends StatelessWidget {
                   height: 48,
                   child: OutlinedButton.icon(
                     onPressed: onAskAi,
-                    icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18),
+                    icon: const Icon(LucideIcons.messageCircle, size: 18),
                     label: const Text(
                       'Ask AI',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -301,7 +302,7 @@ class ScanResultView extends StatelessWidget {
           Center(
             child: TextButton.icon(
               onPressed: onScanAnother,
-              icon: const Icon(Icons.refresh_rounded, size: 16, color: AppColors.textSecondary),
+              icon: const Icon(LucideIcons.refreshCw, size: 16, color: AppColors.textSecondary),
               label: const Text(
                 'Scan another food',
                 style: TextStyle(fontSize: 13, color: AppColors.textSecondary),

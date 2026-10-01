@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/config/app_config.dart';
@@ -136,7 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         border: Border.all(color: AppColors.border),
                       ),
                       child: const Icon(
-                        Icons.arrow_back,
+                        LucideIcons.arrowLeft,
                         size: 18,
                         color: AppColors.textPrimary,
                       ),
@@ -154,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.dns_outlined, size: 14, color: AppColors.brandDark),
+                          const Icon(LucideIcons.server, size: 14, color: AppColors.brandDark),
                           const SizedBox(width: 4),
                           Text(
                             'Server',
@@ -205,7 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.error_outline, color: AppColors.danger, size: 20),
+                          const Icon(LucideIcons.alertCircle, color: AppColors.danger, size: 20),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
@@ -296,7 +297,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                       child: _agreeTerms
-                          ? const Icon(Icons.check, size: 14, color: Colors.white)
+                          ? const Icon(LucideIcons.check, size: 14, color: Colors.white)
                           : null,
                     ),
                     const SizedBox(width: 10),

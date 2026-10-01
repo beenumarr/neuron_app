@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
+/// NORI brand progress ring — defaults to sage with warm track.
 class AppRing extends StatelessWidget {
   final double value;
   final double max;
@@ -17,8 +18,8 @@ class AppRing extends StatelessWidget {
     this.max = 100,
     this.size = 96,
     this.strokeWidth = 7,
-    this.color = AppColors.brand,
-    this.trackColor = const Color(0x2218B97A),
+    this.color = AppColors.sage,
+    this.trackColor = const Color(0x227A8A5E),
     this.child,
   });
 

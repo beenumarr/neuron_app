@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class TypingIndicator extends StatefulWidget {
@@ -73,7 +74,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
               ),
             ),
             child: const Icon(
-              Icons.bolt_rounded,
+              LucideIcons.zap,
               size: 14,
               color: Colors.white,
             ),

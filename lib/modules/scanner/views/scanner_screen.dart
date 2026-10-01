@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
@@ -146,14 +147,14 @@ class _ScannerScreenState extends State<ScannerScreen>
                                   color: _activeSegment == 0
                                       ? AppColors.brand
                                       : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Center(
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
-                                        Icons.qr_code_scanner_rounded,
+                                        LucideIcons.scan,
                                         size: 15,
                                         color: _activeSegment == 0
                                             ? Colors.white
@@ -184,14 +185,14 @@ class _ScannerScreenState extends State<ScannerScreen>
                                   color: _activeSegment == 1
                                       ? AppColors.brand
                                       : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Center(
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
-                                        Icons.menu_book_rounded,
+                                        LucideIcons.bookOpen,
                                         size: 15,
                                         color: _activeSegment == 1
                                             ? Colors.white
@@ -337,7 +338,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                                     ),
                                                   ),
                                                   child: const Icon(
-                                                    Icons.camera_alt_rounded,
+                                                    LucideIcons.camera,
                                                     color: AppColors.brand,
                                                     size: 24,
                                                   ),
@@ -389,7 +390,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                         ),
                                         child: Row(
                                           children: [
-                                            Icon(Icons.error_outline_rounded, color: AppColors.danger, size: 18),
+                                            Icon(LucideIcons.alertCircle, color: AppColors.danger, size: 18),
                                             const SizedBox(width: 8),
                                             Expanded(
                                               child: Text(
@@ -411,7 +412,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                               onPressed: isScanning
                                                   ? null
                                                   : () => _pickImage(ImageSource.camera),
-                                              icon: const Icon(Icons.camera_alt_rounded, size: 18),
+                                              icon: const Icon(LucideIcons.camera, size: 18),
                                               label: const Text(
                                                 'Take Photo',
                                                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -435,7 +436,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                               onPressed: isScanning
                                                   ? null
                                                   : () => _pickImage(ImageSource.gallery),
-                                              icon: const Icon(Icons.photo_library_rounded, size: 18),
+                                              icon: const Icon(LucideIcons.image, size: 18),
                                               label: const Text(
                                                 'From Gallery',
                                                 style: TextStyle(fontWeight: FontWeight.bold),

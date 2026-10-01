@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../chat/views/chat_screen.dart';
 import '../../progress/views/progress_screen.dart';
@@ -68,27 +69,27 @@ class _MainScreenState extends State<MainScreen> {
                 _buildNavItem(
                   index: 0,
                   label: 'Home',
-                  icon: Icons.home_rounded,
+                  icon: LucideIcons.home,
                 ),
                 _buildCenterScanItem(
                   index: 1,
                   label: 'Scan',
-                  icon: Icons.qr_code_scanner_rounded,
+                  icon: LucideIcons.scan,
                 ),
                 _buildNavItem(
                   index: 2,
                   label: 'AI',
-                  icon: Icons.chat_bubble_outline_rounded,
+                  icon: LucideIcons.messageCircle,
                 ),
                 _buildNavItem(
                   index: 3,
                   label: 'Progress',
-                  icon: Icons.bar_chart_rounded,
+                  icon: LucideIcons.barChart3,
                 ),
                 _buildNavItem(
                   index: 4,
                   label: 'Profile',
-                  icon: Icons.person_outline_rounded,
+                  icon: LucideIcons.user,
                 ),
               ],
             ),
@@ -112,11 +113,11 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 36,
-              height: 36,
+              width: 44,
+              height: 32,
               decoration: BoxDecoration(
                 color: isActive ? AppColors.brandLight : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(
                 icon,

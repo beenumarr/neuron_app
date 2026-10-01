@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -42,7 +43,7 @@ class WelcomeScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.dns_outlined, size: 14, color: AppColors.brandDark),
+                                  const Icon(LucideIcons.server, size: 14, color: AppColors.brandDark),
                                   const SizedBox(width: 4),
                                   Text(
                                     'Server',

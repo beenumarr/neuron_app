@@ -5,6 +5,7 @@ import '../theme/app_typography.dart';
 
 enum AppButtonVariant { primary, secondary, ghost, danger }
 
+/// NORI brand button — pill-shaped, solid terracotta fill.
 class AppButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -77,7 +78,8 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    final effectiveRadius = widget.borderRadius ?? BorderRadius.circular(18);
+    // Pill shape: radius = half the height
+    final effectiveRadius = widget.borderRadius ?? BorderRadius.circular(widget.height / 2);
     final isEnabled = widget.onPressed != null && !widget.isLoading;
 
     Widget content = AnimatedBuilder(
@@ -135,14 +137,9 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
     switch (widget.variant) {
       case AppButtonVariant.primary:
         return BoxDecoration(
-          gradient: isEnabled
-              ? AppColors.primaryGradient
-              : LinearGradient(
-                  colors: [
-                    AppColors.brand.withValues(alpha: 0.5),
-                    AppColors.brandDark.withValues(alpha: 0.5),
-                  ],
-                ),
+          color: isEnabled
+              ? AppColors.brand
+              : AppColors.brand.withValues(alpha: 0.5),
           borderRadius: radius,
           boxShadow: isEnabled ? AppShadows.primaryButton : [],
         );

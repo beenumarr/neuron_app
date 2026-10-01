@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/chat_message_model.dart';
 
@@ -38,7 +39,7 @@ class ChatMessageBubble extends StatelessWidget {
                 ),
               ),
               child: const Icon(
-                Icons.bolt_rounded,
+                LucideIcons.zap,
                 size: 14,
                 color: Colors.white,
               ),

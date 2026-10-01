@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -365,7 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             child: const Icon(
-                              Icons.dns_outlined,
+                              LucideIcons.server,
                               size: 16,
                               color: AppColors.textPrimary,
                             ),
@@ -480,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Row(
                                   children: [
                                     Icon(
-                                      Icons.verified_rounded,
+                                      LucideIcons.badgeCheck,
                                       size: 13,
                                       color: Colors.white.withValues(alpha: 0.85),
                                     ),
@@ -561,17 +562,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Row(
                           children: [
                             _buildHeroVitalsItem(
-                              icon: Icons.local_fire_department_rounded,
+                              icon: LucideIcons.flame,
                               label: 'Calories',
                               value: '${homeController.totalCalories}',
                             ),
                             _buildHeroVitalsItem(
-                              icon: Icons.directions_walk_rounded,
+                              icon: LucideIcons.footprints,
                               label: 'Steps',
                               value: '7,234', // Static placeholder as instructed
                             ),
                             _buildHeroVitalsItem(
-                              icon: Icons.nightlight_round,
+                              icon: LucideIcons.moon,
                               label: 'Sleep',
                               value: '7h 20m', // Static placeholder as instructed
                             ),
@@ -602,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: AppColors.indigo,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.bolt_rounded, color: Colors.white, size: 18),
+                        child: const Icon(LucideIcons.zap, color: Colors.white, size: 18),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -734,7 +735,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Row(
                             children: const [
-                              Icon(Icons.water_drop_rounded, size: 16, color: AppColors.sky),
+                              Icon(LucideIcons.droplets, size: 16, color: AppColors.sky),
                               SizedBox(width: 6),
                               Text(
                                 'Water Intake',
@@ -795,7 +796,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Icon(
-                                Icons.water_drop_rounded,
+                                LucideIcons.droplets,
                                 size: 12,
                                 color: isFilled ? AppColors.sky : AppColors.textMuted,
                               ),
@@ -823,25 +824,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     _buildQuickActionItem(
                       label: 'Log Meal',
-                      icon: Icons.restaurant_rounded,
+                      icon: LucideIcons.utensils,
                       color: AppColors.brand,
                       onTap: _showQuickLogDialog,
                     ),
                     _buildQuickActionItem(
                       label: 'Scan Food',
-                      icon: Icons.qr_code_scanner_rounded,
+                      icon: LucideIcons.scan,
                       color: AppColors.indigo,
                       onTap: () => widget.onNavigateTab?.call(1),
                     ),
                     _buildQuickActionItem(
                       label: 'Ask AI',
-                      icon: Icons.chat_bubble_outline_rounded,
+                      icon: LucideIcons.messageCircle,
                       color: AppColors.purple,
                       onTap: () => widget.onNavigateTab?.call(2),
                     ),
                     _buildQuickActionItem(
                       label: 'Weight',
-                      icon: Icons.track_changes_rounded,
+                      icon: LucideIcons.target,
                       color: AppColors.orange,
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -911,7 +912,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                            Icons.restaurant_menu_rounded,
+                            LucideIcons.utensils,
                             color: AppColors.brand,
                             size: 22,
                           ),

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
@@ -62,16 +63,16 @@ class _WelcomeIllustrationPainter extends CustomPainter {
     final s = size.width / 320.0;
     final center = Offset(size.width / 2, size.height / 2);
 
-    // Glowing Concentric Circles
+    // Warm Glowing Concentric Circles
     final aura1 = Paint()..color = AppColors.brandLight;
     canvas.drawCircle(center, 105 * s, aura1);
 
-    final aura2 = Paint()..color = const Color(0x105E6CFF);
+    final aura2 = Paint()..color = AppColors.sageLight;
     canvas.drawCircle(center, 75 * s, aura2);
 
     // Floating Phone Card
     final phoneShadow = Paint()
-      ..color = const Color(0x200F172A)
+      ..color = const Color(0x202A2118)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
     final phoneRect = RRect.fromRectAndRadius(
       Rect.fromCenter(center: center, width: 72 * s, height: 126 * s),
@@ -79,7 +80,7 @@ class _WelcomeIllustrationPainter extends CustomPainter {
     );
     canvas.drawRRect(phoneRect.shift(Offset(0, 8 * s)), phoneShadow);
 
-    final phonePaint = Paint()..color = Colors.white;
+    final phonePaint = Paint()..color = AppColors.backgroundCard;
     canvas.drawRRect(phoneRect, phonePaint);
 
     // Phone Header Pill
@@ -102,7 +103,7 @@ class _WelcomeIllustrationPainter extends CustomPainter {
     canvas.drawCircle(ringCenter, ringRadius, ringTrack);
 
     final ringProgress = Paint()
-      ..color = AppColors.brand
+      ..color = AppColors.sage
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.5 * s
       ..strokeCap = StrokeCap.round;
@@ -114,14 +115,14 @@ class _WelcomeIllustrationPainter extends CustomPainter {
       ringProgress,
     );
 
-    final ringInner = Paint()..color = AppColors.brandLight;
+    final ringInner = Paint()..color = AppColors.sageLight;
     canvas.drawCircle(ringCenter, 8 * s, ringInner);
 
     // Macro Bars on Phone
     final barW = 10 * s;
     final bY = center.dy + 26 * s;
     final b1 = Paint()..color = AppColors.brand;
-    final b2 = Paint()..color = AppColors.indigo;
+    final b2 = Paint()..color = AppColors.sage;
     final b3 = Paint()..color = AppColors.orange;
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(center.dx - 20 * s, bY + 4 * s, barW, 16 * s), Radius.circular(3 * s)), b1);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(center.dx - 5 * s, bY - 3 * s, barW, 23 * s), Radius.circular(3 * s)), b2);
@@ -129,14 +130,14 @@ class _WelcomeIllustrationPainter extends CustomPainter {
 
     // Left Floating Card
     final leftCardShadow = Paint()
-      ..color = const Color(0x180F172A)
+      ..color = const Color(0x182A2118)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     final leftCardRect = RRect.fromRectAndRadius(
       Rect.fromLTWH(24 * s, center.dy - 35 * s, 76 * s, 34 * s),
       Radius.circular(12 * s),
     );
     canvas.drawRRect(leftCardRect.shift(Offset(0, 4 * s)), leftCardShadow);
-    canvas.drawRRect(leftCardRect, Paint()..color = Colors.white);
+    canvas.drawRRect(leftCardRect, Paint()..color = AppColors.backgroundCard);
     canvas.drawCircle(Offset(40 * s, center.dy - 18 * s), 7 * s, Paint()..color = AppColors.brandLight);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(52 * s, center.dy - 24 * s, 36 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.border);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(52 * s, center.dy - 15 * s, 22 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.brand.withValues(alpha: 0.6));
@@ -147,14 +148,14 @@ class _WelcomeIllustrationPainter extends CustomPainter {
       Radius.circular(12 * s),
     );
     canvas.drawRRect(rightCardRect.shift(Offset(0, 4 * s)), leftCardShadow);
-    canvas.drawRRect(rightCardRect, Paint()..color = Colors.white);
-    canvas.drawCircle(Offset(236 * s, center.dy + 2 * s), 7 * s, Paint()..color = AppColors.indigoLight);
+    canvas.drawRRect(rightCardRect, Paint()..color = AppColors.backgroundCard);
+    canvas.drawCircle(Offset(236 * s, center.dy + 2 * s), 7 * s, Paint()..color = AppColors.sageLight);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(248 * s, center.dy - 4 * s, 36 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.border);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(248 * s, center.dy + 5 * s, 22 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.indigo.withValues(alpha: 0.6));
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(248 * s, center.dy + 5 * s, 22 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.sage.withValues(alpha: 0.6));
 
     // Decorative floating dots
     canvas.drawCircle(Offset(72 * s, center.dy + 65 * s), 6 * s, Paint()..color = AppColors.brand.withValues(alpha: 0.3));
-    canvas.drawCircle(Offset(250 * s, center.dy - 60 * s), 8 * s, Paint()..color = AppColors.indigo.withValues(alpha: 0.25));
+    canvas.drawCircle(Offset(250 * s, center.dy - 60 * s), 8 * s, Paint()..color = AppColors.sage.withValues(alpha: 0.25));
     canvas.drawCircle(Offset(260 * s, center.dy + 60 * s), 5 * s, Paint()..color = AppColors.orange.withValues(alpha: 0.3));
   }
 
@@ -239,9 +240,9 @@ class _OnboardingStepPainter extends CustomPainter {
   }
 
   void _paintStep0(Canvas canvas, Size size, Offset center, double s) {
-    // Halo
+    // Halo — warm terracotta
     canvas.drawCircle(center, 95 * s, Paint()..color = AppColors.brandLight);
-    canvas.drawCircle(center, 65 * s, Paint()..color = Colors.white.withValues(alpha: 0.7));
+    canvas.drawCircle(center, 65 * s, Paint()..color = AppColors.backgroundCard.withValues(alpha: 0.7));
 
     // Heart Path
     final heartPath = Path();
@@ -274,7 +275,7 @@ class _OnboardingStepPainter extends CustomPainter {
       ..lineTo(center.dx + 60 * s, center.dy + 2 * s);
 
     final ekgPaint = Paint()
-      ..color = Colors.white
+      ..color = AppColors.backgroundCard
       ..strokeWidth = 2.8 * s
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -283,46 +284,46 @@ class _OnboardingStepPainter extends CustomPainter {
 
     // Floating Chips
     final shadow = Paint()
-      ..color = const Color(0x150F172A)
+      ..color = const Color(0x152A2118)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
 
     // Left Chip
     final leftRect = RRect.fromRectAndRadius(Rect.fromLTWH(18 * s, center.dy - 55 * s, 60 * s, 26 * s), Radius.circular(9 * s));
     canvas.drawRRect(leftRect.shift(Offset(0, 3 * s)), shadow);
-    canvas.drawRRect(leftRect, Paint()..color = Colors.white);
+    canvas.drawRRect(leftRect, Paint()..color = AppColors.backgroundCard);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(24 * s, center.dy - 49 * s, 12 * s, 14 * s), Radius.circular(4 * s)), Paint()..color = AppColors.brandLight);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(40 * s, center.dy - 49 * s, 26 * s, 4 * s), Radius.circular(2 * s)), Paint()..color = AppColors.border);
 
     // Right Chip
     final rightRect = RRect.fromRectAndRadius(Rect.fromLTWH(202 * s, center.dy - 45 * s, 60 * s, 26 * s), Radius.circular(9 * s));
     canvas.drawRRect(rightRect.shift(Offset(0, 3 * s)), shadow);
-    canvas.drawRRect(rightRect, Paint()..color = Colors.white);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(208 * s, center.dy - 39 * s, 12 * s, 14 * s), Radius.circular(4 * s)), Paint()..color = AppColors.indigoLight);
+    canvas.drawRRect(rightRect, Paint()..color = AppColors.backgroundCard);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(208 * s, center.dy - 39 * s, 12 * s, 14 * s), Radius.circular(4 * s)), Paint()..color = AppColors.sageLight);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(224 * s, center.dy - 39 * s, 26 * s, 4 * s), Radius.circular(2 * s)), Paint()..color = AppColors.border);
   }
 
   void _paintStep1(Canvas canvas, Size size, Offset center, double s) {
-    // Aura
-    canvas.drawCircle(center, 95 * s, Paint()..color = const Color(0x185E6CFF));
+    // Aura — sage
+    canvas.drawCircle(center, 95 * s, Paint()..color = AppColors.sageLight);
 
     // Dark sleek phone
     final phoneShadow = Paint()
-      ..color = const Color(0x350F172A)
+      ..color = const Color(0x352A2118)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 16);
     final phoneOuter = RRect.fromRectAndRadius(
       Rect.fromCenter(center: center, width: 94 * s, height: 154 * s),
       Radius.circular(18 * s),
     );
     canvas.drawRRect(phoneOuter.shift(Offset(0, 8 * s)), phoneShadow);
-    canvas.drawRRect(phoneOuter, Paint()..color = const Color(0xFF1E293B));
+    canvas.drawRRect(phoneOuter, Paint()..color = const Color(0xFF3D3228));
 
     final phoneInner = RRect.fromRectAndRadius(
       Rect.fromCenter(center: center, width: 80 * s, height: 136 * s),
       Radius.circular(12 * s),
     );
-    canvas.drawRRect(phoneInner, Paint()..color = const Color(0xFF0F172A));
+    canvas.drawRRect(phoneInner, Paint()..color = const Color(0xFF2A2118));
 
-    // Scanning brackets
+    // Scanning brackets — terracotta
     final bracketPaint = Paint()
       ..color = AppColors.brand
       ..strokeWidth = 2.5 * s
@@ -348,7 +349,7 @@ class _OnboardingStepPainter extends CustomPainter {
     canvas.drawLine(Offset(bR, bB), Offset(bR - arm, bB), bracketPaint);
     canvas.drawLine(Offset(bR, bB), Offset(bR, bB - arm), bracketPaint);
 
-    // Glowing scan laser beam
+    // Glowing scan laser beam — terracotta
     final laserGlow = Paint()
       ..color = AppColors.brand.withValues(alpha: 0.35)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
@@ -356,61 +357,54 @@ class _OnboardingStepPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(center.dx - 40 * s, center.dy, 80 * s, 2 * s), Paint()..color = AppColors.brand);
 
     // Food target placeholder boxes
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(center.dx - 14 * s, center.dy - 26 * s, 28 * s, 18 * s), Radius.circular(5 * s)), Paint()..color = const Color(0x40F5A524));
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(center.dx - 14 * s, center.dy + 12 * s, 28 * s, 18 * s), Radius.circular(5 * s)), Paint()..color = const Color(0x4018B97A));
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(center.dx - 14 * s, center.dy - 26 * s, 28 * s, 18 * s), Radius.circular(5 * s)), Paint()..color = AppColors.orange.withValues(alpha: 0.40));
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(center.dx - 14 * s, center.dy + 12 * s, 28 * s, 18 * s), Radius.circular(5 * s)), Paint()..color = AppColors.sage.withValues(alpha: 0.40));
 
     // Floating result card
     final resCardShadow = Paint()
-      ..color = const Color(0x180F172A)
+      ..color = const Color(0x182A2118)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     final resCard = RRect.fromRectAndRadius(Rect.fromLTWH(24 * s, center.dy + 25 * s, 72 * s, 44 * s), Radius.circular(12 * s));
     canvas.drawRRect(resCard.shift(Offset(0, 4 * s)), resCardShadow);
-    canvas.drawRRect(resCard, Paint()..color = Colors.white);
+    canvas.drawRRect(resCard, Paint()..color = AppColors.backgroundCard);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(32 * s, center.dy + 33 * s, 24 * s, 4 * s), Radius.circular(2 * s)), Paint()..color = AppColors.border);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(32 * s, center.dy + 41 * s, 48 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.brand.withValues(alpha: 0.8));
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(32 * s, center.dy + 50 * s, 34 * s, 4 * s), Radius.circular(2 * s)), Paint()..color = AppColors.border);
   }
 
   void _paintStep2(Canvas canvas, Size size, Offset center, double s) {
-    // Aura
-    canvas.drawCircle(center, 95 * s, Paint()..color = const Color(0x148B5CF6));
+    // Aura — sage
+    canvas.drawCircle(center, 95 * s, Paint()..color = AppColors.sageLight);
 
-    // AI Speech Bubble (White surface)
+    // AI Speech Bubble (Sand surface)
     final shadow = Paint()
-      ..color = const Color(0x180F172A)
+      ..color = const Color(0x182A2118)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     final aiBubble = RRect.fromRectAndRadius(
       Rect.fromLTWH(42 * s, center.dy - 60 * s, 140 * s, 54 * s),
       Radius.circular(18 * s),
     );
     canvas.drawRRect(aiBubble.shift(Offset(0, 4 * s)), shadow);
-    canvas.drawRRect(aiBubble, Paint()..color = Colors.white);
+    canvas.drawRRect(aiBubble, Paint()..color = AppColors.backgroundCard);
 
-    // AI Bubble Avatar (Gradient Zap)
+    // AI Bubble Avatar (Sage circle with seed icon)
     final avCenter = Offset(66 * s, center.dy - 33 * s);
-    canvas.drawCircle(avCenter, 14 * s, Paint()..color = AppColors.brand);
-    final zapPath = Path()
-      ..moveTo(avCenter.dx - 2 * s, avCenter.dy - 7 * s)
-      ..lineTo(avCenter.dx - 5 * s, avCenter.dy)
-      ..lineTo(avCenter.dx + 1 * s, avCenter.dy)
-      ..lineTo(avCenter.dx - 3 * s, avCenter.dy + 7 * s)
-      ..lineTo(avCenter.dx + 5 * s, avCenter.dy - 1 * s)
-      ..lineTo(avCenter.dx, avCenter.dy - 1 * s)
-      ..close();
-    canvas.drawPath(zapPath, Paint()..color = Colors.white);
+    canvas.drawCircle(avCenter, 14 * s, Paint()..color = AppColors.sage);
+    // Small seed dot inside
+    canvas.drawCircle(Offset(avCenter.dx + 2 * s, avCenter.dy - 3 * s), 4 * s, Paint()..color = AppColors.brand);
 
     // Message preview lines inside AI Bubble
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(88 * s, center.dy - 45 * s, 76 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.border);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(88 * s, center.dy - 35 * s, 58 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.brandLight);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(88 * s, center.dy - 35 * s, 58 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.sageLight);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(88 * s, center.dy - 25 * s, 66 * s, 5 * s), Radius.circular(2.5 * s)), Paint()..color = AppColors.border);
 
-    // User Message Bubble (Emerald surface)
+    // User Message Bubble (Terracotta surface)
     final userBubble = RRect.fromRectAndRadius(
       Rect.fromLTWH(100 * s, center.dy + 15 * s, 136 * s, 42 * s),
       Radius.circular(18 * s),
     );
     final userShadow = Paint()
-      ..color = const Color(0x3518B97A)
+      ..color = const Color(0x35C67139)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     canvas.drawRRect(userBubble.shift(Offset(0, 4 * s)), userShadow);
     canvas.drawRRect(userBubble, Paint()..color = AppColors.brand);
@@ -424,10 +418,10 @@ class _OnboardingStepPainter extends CustomPainter {
   }
 
   void _paintStep3(Canvas canvas, Size size, Offset center, double s) {
-    // Aura
-    canvas.drawCircle(center, 95 * s, Paint()..color = const Color(0x18F5A524));
+    // Aura — warm amber
+    canvas.drawCircle(center, 95 * s, Paint()..color = AppColors.brandLight);
 
-    // Main Health Score Ring (Center)
+    // Main Health Score Ring (Center) — sage
     final ringCenter = Offset(center.dx, center.dy - 18 * s);
     final rR = 48 * s;
 
@@ -437,14 +431,14 @@ class _OnboardingStepPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 9 * s);
 
-    // Progress Arc (87%)
+    // Progress Arc (87%) — sage
     canvas.drawArc(
       Rect.fromCircle(center: ringCenter, radius: rR),
       -pi / 2,
       2 * pi * 0.87,
       false,
       Paint()
-        ..color = AppColors.brand
+        ..color = AppColors.sage
         ..style = PaintingStyle.stroke
         ..strokeWidth = 9 * s
         ..strokeCap = StrokeCap.round,
@@ -452,10 +446,10 @@ class _OnboardingStepPainter extends CustomPainter {
 
     // Center circular badge with drop shadow
     final centerCard = Paint()
-      ..color = Colors.white
+      ..color = AppColors.backgroundCard
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
     canvas.drawCircle(ringCenter + Offset(0, 3 * s), 34 * s, centerCard);
-    canvas.drawCircle(ringCenter, 34 * s, Paint()..color = Colors.white);
+    canvas.drawCircle(ringCenter, 34 * s, Paint()..color = AppColors.backgroundCard);
 
     // Text: 87 / Health Score
     final textPainter87 = TextPainter(
@@ -484,12 +478,12 @@ class _OnboardingStepPainter extends CustomPainter {
     )..layout();
     textPainterSub.paint(canvas, ringCenter - Offset(textPainterSub.width / 2, -5 * s));
 
-    // Mini Left Ring (Indigo)
+    // Mini Left Ring (Terracotta)
     final leftCenter = Offset(62 * s, center.dy - 18 * s);
     canvas.drawCircle(leftCenter, 20 * s, Paint()..color = AppColors.border..style = PaintingStyle.stroke..strokeWidth = 4.5 * s);
-    canvas.drawArc(Rect.fromCircle(center: leftCenter, radius: 20 * s), -pi / 2, 4.0, false, Paint()..color = AppColors.indigo..style = PaintingStyle.stroke..strokeWidth = 4.5 * s..strokeCap = StrokeCap.round);
+    canvas.drawArc(Rect.fromCircle(center: leftCenter, radius: 20 * s), -pi / 2, 4.0, false, Paint()..color = AppColors.brand..style = PaintingStyle.stroke..strokeWidth = 4.5 * s..strokeCap = StrokeCap.round);
 
-    // Mini Right Ring (Orange)
+    // Mini Right Ring (Warm Amber)
     final rightCenter = Offset(218 * s, center.dy - 18 * s);
     canvas.drawCircle(rightCenter, 20 * s, Paint()..color = AppColors.border..style = PaintingStyle.stroke..strokeWidth = 4.5 * s);
     canvas.drawArc(Rect.fromCircle(center: rightCenter, radius: 20 * s), -pi / 2, 5.0, false, Paint()..color = AppColors.orange..style = PaintingStyle.stroke..strokeWidth = 4.5 * s..strokeCap = StrokeCap.round);
@@ -503,7 +497,7 @@ class _OnboardingStepPainter extends CustomPainter {
       final isLast = i == 6;
       canvas.drawRRect(
         RRect.fromRectAndRadius(Rect.fromLTWH(bX, bY, 11 * s, h), Radius.circular(3 * s)),
-        Paint()..color = isLast ? AppColors.brand : AppColors.border,
+        Paint()..color = isLast ? AppColors.sage : AppColors.border,
       );
     }
   }
@@ -533,19 +527,19 @@ class _EmailIllustrationPainter extends CustomPainter {
     final s = size.width / 200.0;
     final center = Offset(size.width / 2, size.height / 2);
 
-    // Halo
+    // Halo — warm terracotta
     canvas.drawCircle(center, 78 * s, Paint()..color = AppColors.brandLight);
 
     // Envelope card
     final shadow = Paint()
-      ..color = const Color(0x200F172A)
+      ..color = const Color(0x202A2118)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
     final envRect = RRect.fromRectAndRadius(
       Rect.fromCenter(center: center, width: 128 * s, height: 90 * s),
       Radius.circular(16 * s),
     );
     canvas.drawRRect(envRect.shift(Offset(0, 6 * s)), shadow);
-    canvas.drawRRect(envRect, Paint()..color = Colors.white);
+    canvas.drawRRect(envRect, Paint()..color = AppColors.backgroundCard);
 
     // Flap V Line
     final flapPath = Path()
@@ -562,7 +556,7 @@ class _EmailIllustrationPainter extends CustomPainter {
         ..strokeJoin = StrokeJoin.round,
     );
 
-    // Circular @ badge
+    // Circular @ badge — terracotta
     final badgeCenter = Offset(center.dx, center.dy + 8 * s);
     canvas.drawCircle(badgeCenter, 18 * s, Paint()..color = AppColors.brand..style = PaintingStyle.stroke..strokeWidth = 2.5 * s);
     canvas.drawCircle(badgeCenter, 9 * s, Paint()..color = AppColors.brandLight);
@@ -606,8 +600,8 @@ class _ShieldIllustrationPainter extends CustomPainter {
     final s = size.width / 200.0;
     final center = Offset(size.width / 2, size.height / 2);
 
-    // Halo
-    canvas.drawCircle(center, 78 * s, Paint()..color = AppColors.indigoLight);
+    // Halo — sage
+    canvas.drawCircle(center, 78 * s, Paint()..color = AppColors.sageLight);
 
     // Shield Path
     final shield = Path()
@@ -620,12 +614,12 @@ class _ShieldIllustrationPainter extends CustomPainter {
       ..close();
 
     final shadow = Paint()
-      ..color = const Color(0x200F172A)
+      ..color = const Color(0x202A2118)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
     canvas.drawPath(shield.shift(Offset(0, 6 * s)), shadow);
-    canvas.drawPath(shield, Paint()..color = Colors.white);
+    canvas.drawPath(shield, Paint()..color = AppColors.backgroundCard);
 
-    // Inner Shield Accent
+    // Inner Shield Accent — sage
     final innerShield = Path()
       ..moveTo(center.dx, center.dy - 50 * s)
       ..lineTo(center.dx + 42 * s, center.dy - 30 * s)
@@ -634,14 +628,14 @@ class _ShieldIllustrationPainter extends CustomPainter {
       ..cubicTo(center.dx - 24 * s, center.dy + 58 * s, center.dx - 42 * s, center.dy + 38 * s, center.dx - 42 * s, center.dy + 12 * s)
       ..lineTo(center.dx - 42 * s, center.dy - 30 * s)
       ..close();
-    canvas.drawPath(innerShield, Paint()..color = AppColors.indigoLight);
+    canvas.drawPath(innerShield, Paint()..color = AppColors.sageLight);
 
-    // Lock Body
+    // Lock Body — sage
     final lockRect = RRect.fromRectAndRadius(
       Rect.fromCenter(center: Offset(center.dx, center.dy + 14 * s), width: 34 * s, height: 26 * s),
       Radius.circular(8 * s),
     );
-    canvas.drawRRect(lockRect, Paint()..color = AppColors.indigo);
+    canvas.drawRRect(lockRect, Paint()..color = AppColors.sage);
 
     // Lock Shackle
     final shackle = Path()
@@ -652,22 +646,22 @@ class _ShieldIllustrationPainter extends CustomPainter {
     canvas.drawPath(
       shackle,
       Paint()
-        ..color = AppColors.indigo
+        ..color = AppColors.sage
         ..strokeWidth = 3.5 * s
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round,
     );
 
     // Keyhole
-    canvas.drawCircle(Offset(center.dx, center.dy + 11 * s), 3 * s, Paint()..color = Colors.white);
-    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(center.dx - 1.5 * s, center.dy + 11 * s, 3 * s, 6 * s), Radius.circular(1.5 * s)), Paint()..color = Colors.white);
+    canvas.drawCircle(Offset(center.dx, center.dy + 11 * s), 3 * s, Paint()..color = AppColors.backgroundCard);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(center.dx - 1.5 * s, center.dy + 11 * s, 3 * s, 6 * s), Radius.circular(1.5 * s)), Paint()..color = AppColors.backgroundCard);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-// ── Success Checkmark (Pulsing Green Checkmark) ───────────────────────────────
+// ── Success Checkmark (Pulsing Terracotta Checkmark) ──────────────────────────
 class SuccessCheckmarkWidget extends StatefulWidget {
   final double size;
 
@@ -722,7 +716,7 @@ class _SuccessCheckmarkWidgetState extends State<SuccessCheckmarkWidget>
           height: widget.size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.brand.withValues(alpha: _pulseAnimation.value),
+            color: AppColors.sage.withValues(alpha: _pulseAnimation.value),
           ),
           alignment: Alignment.center,
           child: Transform.scale(
@@ -730,20 +724,20 @@ class _SuccessCheckmarkWidgetState extends State<SuccessCheckmarkWidget>
             child: Container(
               width: widget.size * 0.72,
               height: widget.size * 0.72,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: AppColors.primaryGradient,
+                color: AppColors.sage,
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0x5518B97A),
+                    color: AppColors.sage.withValues(alpha: 0.35),
                     blurRadius: 24,
-                    offset: Offset(0, 8),
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
               child: const Center(
                 child: Icon(
-                  Icons.check_rounded,
+                  LucideIcons.check,
                   color: Colors.white,
                   size: 44,
                 ),

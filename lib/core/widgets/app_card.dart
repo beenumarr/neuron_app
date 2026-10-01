@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_shadows.dart';
 
+/// NORI brand card — 16 px radius, sand background.
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -26,7 +27,7 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveRadius = borderRadius ?? BorderRadius.circular(24);
+    final effectiveRadius = borderRadius ?? BorderRadius.circular(16);
     final cardContent = Container(
       margin: margin,
       padding: padding,

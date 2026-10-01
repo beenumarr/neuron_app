@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_colors.dart';
 
 class ScanResultModel {
@@ -50,10 +51,10 @@ class ScanResultModel {
   }
 
   IconData get verdictIcon {
-    if (isSafe) return Icons.verified_user_rounded;
-    if (isCaution) return Icons.warning_amber_rounded;
-    if (isAvoid) return Icons.do_not_disturb_on_rounded;
-    return Icons.health_and_safety_rounded;
+    if (isSafe) return LucideIcons.shieldCheck;
+    if (isCaution) return LucideIcons.alertTriangle;
+    if (isAvoid) return LucideIcons.ban;
+    return LucideIcons.shield;
   }
 
   factory ScanResultModel.fromJson(Map<String, dynamic> json) {

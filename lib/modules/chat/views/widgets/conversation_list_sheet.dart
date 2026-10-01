@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../controllers/chat_controller.dart';
@@ -101,7 +102,7 @@ class ConversationListSheet extends StatelessWidget {
                       chatController.startNewConversation();
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.add_rounded, size: 16, color: AppColors.brand),
+                    icon: const Icon(LucideIcons.plus, size: 16, color: AppColors.brand),
                     label: const Text(
                       'New Chat',
                       style: TextStyle(
@@ -147,7 +148,7 @@ class ConversationListSheet extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
-                                  Icons.chat_bubble_outline_rounded,
+                                  LucideIcons.messageCircle,
                                   color: AppColors.brand,
                                   size: 26,
                                 ),
@@ -213,7 +214,7 @@ class ConversationListSheet extends StatelessWidget {
                                         ),
                                       ),
                                       child: Icon(
-                                        Icons.chat_bubble_rounded,
+                                        LucideIcons.messageCircle,
                                         size: 16,
                                         color: isSelected ? Colors.white : AppColors.brand,
                                       ),
@@ -262,7 +263,7 @@ class ConversationListSheet extends StatelessWidget {
                                       )
                                     else
                                       const Icon(
-                                        Icons.chevron_right_rounded,
+                                        LucideIcons.chevronRight,
                                         size: 18,
                                         color: AppColors.textMuted,
                                       ),

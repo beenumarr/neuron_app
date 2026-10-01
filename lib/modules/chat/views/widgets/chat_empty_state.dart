@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class ChatEmptyState extends StatelessWidget {
@@ -57,7 +58,7 @@ class ChatEmptyState extends StatelessWidget {
                 ],
               ),
               child: const Icon(
-                Icons.bolt_rounded,
+                LucideIcons.zap,
                 size: 34,
                 color: Colors.white,
               ),
@@ -138,7 +139,7 @@ class ChatEmptyState extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           const Icon(
-                            Icons.arrow_forward_rounded,
+                            LucideIcons.arrowRight,
                             size: 16,
                             color: AppColors.brand,
                           ),

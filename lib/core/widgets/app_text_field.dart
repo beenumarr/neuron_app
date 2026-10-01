@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
+/// NORI brand text field — pill-shaped, cream background.
 class AppTextField extends StatefulWidget {
   final String label;
   final String placeholder;
@@ -97,7 +99,7 @@ class _AppTextFieldState extends State<AppTextField> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
             color: AppColors.backgroundPage,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(widget.maxLines == 1 ? 26 : 16),
             border: Border.all(
               color: hasError
                   ? AppColors.danger
@@ -150,7 +152,7 @@ class _AppTextFieldState extends State<AppTextField> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8),
                     child: Icon(
-                      _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                      _obscureText ? LucideIcons.eyeOff : LucideIcons.eye,
                       size: 20,
                       color: AppColors.textMuted,
                     ),

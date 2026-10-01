@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -185,7 +186,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
                     child: _currentStep > 0
                         ? IconButton(
                             icon: const Icon(
-                              Icons.arrow_back_ios_new_rounded,
+                              LucideIcons.chevronLeft,
                               size: 18,
                               color: AppColors.textPrimary,
                             ),
@@ -492,7 +493,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
                     children: [
                       if (isSelected) ...[
                         const Icon(
-                          Icons.check_circle_rounded,
+                          LucideIcons.checkCircle,
                           size: 15,
                           color: AppColors.brand,
                         ),
@@ -545,7 +546,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
-                  Icons.lock_outline_rounded,
+                  LucideIcons.lock,
                   size: 17,
                   color: Color(0xFFD97706),
                 ),
@@ -598,7 +599,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
                       ),
                       if (isSelected)
                         const Icon(
-                          Icons.check_circle_rounded,
+                          LucideIcons.checkCircle,
                           size: 18,
                           color: AppColors.brand,
                         )
@@ -672,7 +673,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
                     children: [
                       if (isSelected) ...[
                         const Icon(
-                          Icons.check_circle_rounded,
+                          LucideIcons.checkCircle,
                           size: 15,
                           color: AppColors.brand,
                         ),

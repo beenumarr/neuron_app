@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../controllers/chat_controller.dart';
@@ -123,7 +124,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                     child: const Icon(
-                      Icons.bolt_rounded,
+                      LucideIcons.zap,
                       size: 20,
                       color: Colors.white,
                     ),
@@ -177,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       backgroundColor: AppColors.brand,
                       child: const Icon(
-                        Icons.forum_outlined,
+                        LucideIcons.messageSquare,
                         size: 20,
                         color: AppColors.textPrimary,
                       ),
@@ -188,7 +189,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   IconButton(
                     tooltip: 'New Chat',
                     icon: const Icon(
-                      Icons.edit_note_rounded,
+                      LucideIcons.edit3,
                       size: 22,
                       color: AppColors.textPrimary,
                     ),
@@ -307,7 +308,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
-                              Icons.mic_none_rounded,
+                              LucideIcons.mic,
                               size: 15,
                               color: AppColors.brand,
                             ),
@@ -341,7 +342,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       child: const Center(
                         child: Icon(
-                          Icons.arrow_upward_rounded,
+                          LucideIcons.arrowUp,
                           color: Colors.white,
                           size: 20,
                         ),

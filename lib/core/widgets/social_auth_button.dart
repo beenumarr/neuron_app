@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
+/// NORI brand social auth button — pill-shaped, warm border.
 class SocialAuthButton extends StatelessWidget {
   final String label;
   final Widget icon;
@@ -45,7 +46,7 @@ class SocialAuthButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.backgroundCard,
           side: const BorderSide(color: AppColors.border, width: 1.5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
           padding: const EdgeInsets.symmetric(vertical: 14),
           elevation: 0,
         ),

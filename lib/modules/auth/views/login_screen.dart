@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/config/app_config.dart';
@@ -112,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           border: Border.all(color: AppColors.border),
                         ),
                         child: const Icon(
-                          Icons.arrow_back,
+                          LucideIcons.arrowLeft,
                           size: 18,
                           color: AppColors.textPrimary,
                         ),
@@ -130,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.dns_outlined, size: 14, color: AppColors.brandDark),
+                            const Icon(LucideIcons.server, size: 14, color: AppColors.brandDark),
                             const SizedBox(width: 4),
                             Text(
                               'Server',
@@ -181,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.error_outline, color: AppColors.danger, size: 20),
+                            const Icon(LucideIcons.alertCircle, color: AppColors.danger, size: 20),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(

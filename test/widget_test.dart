@@ -10,9 +10,9 @@ import 'package:neuron_app/modules/health/models/onboarding_payload.dart';
 
 void main() {
   test('AppColors brand color conforms to NORI design specs', () {
-    expect(AppColors.brand, const Color(0xFF18B97A));
-    expect(AppColors.brandDark, const Color(0xFF129863));
-    expect(AppColors.backgroundPage, const Color(0xFFF7F9FC));
+    expect(AppColors.brand, const Color(0xFFC67139));       // Terracotta
+    expect(AppColors.brandDark, const Color(0xFF9E5A2D));   // Deep Terracotta
+    expect(AppColors.backgroundPage, const Color(0xFFF5EAD8)); // Cream
   });
 
   test('Payload serialization matches backend expectations', () {
