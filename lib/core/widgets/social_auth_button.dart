@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_typography.dart';
 
-/// NORI brand social auth button — pill-shaped, warm border.
+/// Nori Brand Guidelines v2 Social Auth Button — pill-shaped, thin 1px border.
 class SocialAuthButton extends StatelessWidget {
   final String label;
   final Widget icon;
@@ -33,7 +33,7 @@ class SocialAuthButton extends StatelessWidget {
       icon: const Icon(
         Icons.apple,
         size: 20,
-        color: AppColors.textPrimary,
+        color: AppColors.ink,
       ),
     );
   }
@@ -45,9 +45,9 @@ class SocialAuthButton extends StatelessWidget {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.backgroundCard,
-          side: const BorderSide(color: AppColors.border, width: 1.5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          side: const BorderSide(color: AppColors.border, width: 1.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+          padding: const EdgeInsets.symmetric(vertical: 13),
           elevation: 0,
         ),
         child: Row(
@@ -57,9 +57,10 @@ class SocialAuthButton extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               label,
-              style: AppTypography.bodyBold.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 13,
+              style: GoogleFonts.inter(
+                color: AppColors.ink,
+                fontSize: 13.5,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -105,11 +106,11 @@ class _GoogleIconPainter extends CustomPainter {
     final yellowPaint = Paint()..color = const Color(0xFFFBBC05);
     final yellowPath = Path()
       ..moveTo(3.96 * s, 10.71 * s)
-      ..cubicTo(3.78 * s, 10.17 * s, 3.68 * s, 9.59 * s, 3.68 * s, 9.0 * s)
-      ..cubicTo(3.68 * s, 8.41 * s, 3.78 * s, 7.83 * s, 3.96 * s, 7.29 * s)
+      ..cubicTo(3.78 * s, 10.17 * s, 3.68 * s, 9.6 * s, 3.68 * s, 9.0 * s)
+      ..cubicTo(3.68 * s, 8.4 * s, 3.78 * s, 7.83 * s, 3.96 * s, 7.29 * s)
       ..lineTo(0.96 * s, 4.96 * s)
-      ..cubicTo(0.35 * s, 6.17 * s, 0.0 * s, 7.55 * s, 0.0 * s, 9.0 * s)
-      ..cubicTo(0.0 * s, 10.45 * s, 0.35 * s, 11.83 * s, 0.96 * s, 13.04 * s)
+      ..cubicTo(0.35 * s, 6.18 * s, 0.0 * s, 7.55 * s, 0.0 * s, 9.0 * s)
+      ..cubicTo(0.0 * s, 10.45 * s, 0.35 * s, 11.82 * s, 0.96 * s, 13.04 * s)
       ..lineTo(3.96 * s, 10.71 * s)
       ..close();
     canvas.drawPath(yellowPath, yellowPaint);
@@ -118,8 +119,8 @@ class _GoogleIconPainter extends CustomPainter {
     final redPaint = Paint()..color = const Color(0xFFEA4335);
     final redPath = Path()
       ..moveTo(9.0 * s, 3.58 * s)
-      ..cubicTo(10.32 * s, 3.58 * s, 11.51 * s, 4.03 * s, 12.44 * s, 4.93 * s)
-      ..lineTo(15.02 * s, 2.35 * s)
+      ..cubicTo(10.32 * s, 3.58 * s, 11.5 * s, 4.04 * s, 12.44 * s, 4.92 * s)
+      ..lineTo(15.02 * s, 2.34 * s)
       ..cubicTo(13.46 * s, 0.89 * s, 11.43 * s, 0.0 * s, 9.0 * s, 0.0 * s)
       ..cubicTo(5.48 * s, 0.0 * s, 2.44 * s, 2.02 * s, 0.96 * s, 4.96 * s)
       ..lineTo(3.96 * s, 7.29 * s)

@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 
-/// NORI brand progress ring — defaults to sage with warm track.
+/// Nori Brand Guidelines v2 Progress Ring — Nori green / Deep teal with clean track.
 class AppRing extends StatelessWidget {
   final double value;
   final double max;
@@ -18,8 +19,8 @@ class AppRing extends StatelessWidget {
     this.max = 100,
     this.size = 96,
     this.strokeWidth = 7,
-    this.color = AppColors.sage,
-    this.trackColor = const Color(0x227A8A5E),
+    this.color = AppColors.green,
+    this.trackColor = const Color(0x28D6E6E1),
     this.child,
   });
 
@@ -125,7 +126,7 @@ class MacroRing extends StatelessWidget {
         AppRing(
           value: pct.toDouble(),
           max: 100,
-          size: 56,
+          size: 58,
           strokeWidth: 5,
           color: color,
           trackColor: color.withValues(alpha: 0.14),
@@ -135,9 +136,9 @@ class MacroRing extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Text(
                 label == 'Calories' ? '$value' : '$value$unit',
-                style: TextStyle(
+                style: GoogleFonts.sora(
                   color: color,
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -147,8 +148,8 @@ class MacroRing extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           label,
-          style: const TextStyle(
-            color: AppColors.textSecondary,
+          style: GoogleFonts.inter(
+            color: AppColors.mute,
             fontSize: 11,
             fontWeight: FontWeight.w500,
           ),

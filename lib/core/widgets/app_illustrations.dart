@@ -72,7 +72,7 @@ class _WelcomeIllustrationPainter extends CustomPainter {
 
     // Floating Phone Card
     final phoneShadow = Paint()
-      ..color = const Color(0x202A2118)
+      ..color = const Color(0x180A2E2C)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
     final phoneRect = RRect.fromRectAndRadius(
       Rect.fromCenter(center: center, width: 72 * s, height: 126 * s),
@@ -130,7 +130,7 @@ class _WelcomeIllustrationPainter extends CustomPainter {
 
     // Left Floating Card
     final leftCardShadow = Paint()
-      ..color = const Color(0x182A2118)
+      ..color = const Color(0x140A2E2C)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     final leftCardRect = RRect.fromRectAndRadius(
       Rect.fromLTWH(24 * s, center.dy - 35 * s, 76 * s, 34 * s),
@@ -284,7 +284,7 @@ class _OnboardingStepPainter extends CustomPainter {
 
     // Floating Chips
     final shadow = Paint()
-      ..color = const Color(0x152A2118)
+      ..color = const Color(0x120A2E2C)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
 
     // Left Chip
@@ -308,20 +308,20 @@ class _OnboardingStepPainter extends CustomPainter {
 
     // Dark sleek phone
     final phoneShadow = Paint()
-      ..color = const Color(0x352A2118)
+      ..color = const Color(0x240A2E2C)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 16);
     final phoneOuter = RRect.fromRectAndRadius(
       Rect.fromCenter(center: center, width: 94 * s, height: 154 * s),
       Radius.circular(18 * s),
     );
     canvas.drawRRect(phoneOuter.shift(Offset(0, 8 * s)), phoneShadow);
-    canvas.drawRRect(phoneOuter, Paint()..color = const Color(0xFF3D3228));
+    canvas.drawRRect(phoneOuter, Paint()..color = AppColors.teal);
 
     final phoneInner = RRect.fromRectAndRadius(
       Rect.fromCenter(center: center, width: 80 * s, height: 136 * s),
       Radius.circular(12 * s),
     );
-    canvas.drawRRect(phoneInner, Paint()..color = const Color(0xFF2A2118));
+    canvas.drawRRect(phoneInner, Paint()..color = AppColors.ink);
 
     // Scanning brackets — terracotta
     final bracketPaint = Paint()
@@ -362,7 +362,7 @@ class _OnboardingStepPainter extends CustomPainter {
 
     // Floating result card
     final resCardShadow = Paint()
-      ..color = const Color(0x182A2118)
+      ..color = const Color(0x140A2E2C)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     final resCard = RRect.fromRectAndRadius(Rect.fromLTWH(24 * s, center.dy + 25 * s, 72 * s, 44 * s), Radius.circular(12 * s));
     canvas.drawRRect(resCard.shift(Offset(0, 4 * s)), resCardShadow);
@@ -378,7 +378,7 @@ class _OnboardingStepPainter extends CustomPainter {
 
     // AI Speech Bubble (Sand surface)
     final shadow = Paint()
-      ..color = const Color(0x182A2118)
+      ..color = const Color(0x140A2E2C)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     final aiBubble = RRect.fromRectAndRadius(
       Rect.fromLTWH(42 * s, center.dy - 60 * s, 140 * s, 54 * s),
@@ -404,7 +404,7 @@ class _OnboardingStepPainter extends CustomPainter {
       Radius.circular(18 * s),
     );
     final userShadow = Paint()
-      ..color = const Color(0x35C67139)
+      ..color = AppColors.amber.withValues(alpha: 0.35)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     canvas.drawRRect(userBubble.shift(Offset(0, 4 * s)), userShadow);
     canvas.drawRRect(userBubble, Paint()..color = AppColors.brand);
@@ -532,7 +532,7 @@ class _EmailIllustrationPainter extends CustomPainter {
 
     // Envelope card
     final shadow = Paint()
-      ..color = const Color(0x202A2118)
+      ..color = const Color(0x180A2E2C)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
     final envRect = RRect.fromRectAndRadius(
       Rect.fromCenter(center: center, width: 128 * s, height: 90 * s),
@@ -614,7 +614,7 @@ class _ShieldIllustrationPainter extends CustomPainter {
       ..close();
 
     final shadow = Paint()
-      ..color = const Color(0x202A2118)
+      ..color = const Color(0x180A2E2C)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
     canvas.drawPath(shield.shift(Offset(0, 6 * s)), shadow);
     canvas.drawPath(shield, Paint()..color = AppColors.backgroundCard);

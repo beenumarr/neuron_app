@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundCard,
+      backgroundColor: AppColors.cleanWhite,
       body: SafeArea(
         child: Stack(
           children: [
@@ -95,20 +95,29 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const AppLogo(size: 104),
-                    const SizedBox(height: 24),
+                    const AppLogo(size: 84, showShadow: true),
+                    const SizedBox(height: 20),
                     Text(
-                      'NORI',
-                      style: AppTypography.display.copyWith(
-                        letterSpacing: -0.8,
+                      'nori',
+                      style: AppTypography.wordmark.copyWith(
+                        fontSize: 44,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Text(
-                      'Your AI Health & Nutrition Companion',
+                      'Clinical trust. Human warmth.',
+                      style: AppTypography.title.copyWith(
+                        fontSize: 16,
+                        color: AppColors.teal,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'AI dietitian that reads your health context',
                       style: AppTypography.subtitle.copyWith(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
+                        fontSize: 13,
+                        color: AppColors.mute,
                       ),
                     ),
                   ],
@@ -128,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     height: 2.5,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: AppColors.border,
+                      color: AppColors.line,
                       borderRadius: BorderRadius.circular(99),
                     ),
                     alignment: Alignment.centerLeft,
@@ -139,7 +148,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                           widthFactor: _progressAnimation.value,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: AppColors.brand,
+                              color: AppColors.teal,
                               borderRadius: BorderRadius.circular(99),
                             ),
                           ),
@@ -148,12 +157,27 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     ),
                   ),
                   const SizedBox(height: 14),
-                  Text(
-                    'Powered by AI · Trusted by thousands',
-                    style: AppTypography.micro.copyWith(
-                      color: AppColors.textMuted,
-                      fontSize: 11,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 7,
+                        height: 7,
+                        decoration: const BoxDecoration(
+                          color: AppColors.amber,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Intelligence that grows from food',
+                        style: AppTypography.micro.copyWith(
+                          color: AppColors.mute,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

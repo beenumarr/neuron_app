@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/nori_brand_widgets.dart';
 import '../../auth/controllers/auth_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -26,29 +29,25 @@ class ProfileScreen extends StatelessWidget {
         : 'Improve Energy & Health';
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPage,
+      backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Profile Card (Gradient Green)
+              // Top Profile Hero Card (Deep Teal Gradient)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [AppColors.brand, AppColors.brandDark],
-                  ),
+                  borderRadius: BorderRadius.circular(22),
+                  gradient: AppColors.heroGradient,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.brand.withValues(alpha: 0.3),
-                      blurRadius: 18,
-                      offset: const Offset(0, 8),
+                      color: AppColors.teal.withValues(alpha: 0.16),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
                     ),
                   ],
                 ),
@@ -56,21 +55,21 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     // Avatar initial circle
                     Container(
-                      width: 64,
-                      height: 64,
+                      width: 68,
+                      height: 68,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.22),
+                        color: Colors.white.withValues(alpha: 0.15),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.4),
+                          color: AppColors.mint.withValues(alpha: 0.4),
                           width: 2,
                         ),
                       ),
                       child: Center(
                         child: Text(
                           initialLetter,
-                          style: const TextStyle(
-                            fontSize: 26,
+                          style: GoogleFonts.sora(
+                            fontSize: 28,
                             fontWeight: FontWeight.w800,
                             color: Colors.white,
                           ),
@@ -80,7 +79,7 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(
                       displayName,
-                      style: const TextStyle(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -89,27 +88,27 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 3),
                     Text(
                       user?.email ?? 'patient@nori.ai',
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 13,
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    // Patient role badge (XP/Level bar intentionally hidden)
+                    const SizedBox(height: 12),
+                    // Patient role badge
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.18),
-                        borderRadius: BorderRadius.circular(99),
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(999),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(LucideIcons.shieldCheck, size: 13, color: Colors.white),
-                          const SizedBox(width: 5),
+                          const Icon(LucideIcons.shieldCheck, size: 14, color: AppColors.mint),
+                          const SizedBox(width: 6),
                           Text(
                             'Patient · Verified Account',
-                            style: const TextStyle(
+                            style: GoogleFonts.inter(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -163,11 +162,12 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: AppColors.backgroundCard,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: AppColors.line),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 12,
+                      color: AppColors.ink.withValues(alpha: 0.03),
+                      blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
                   ],
@@ -175,40 +175,42 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Goal Section (Single Goal Field)
+                    // Goal Section
                     Text(
                       'Health Goal',
-                      style: AppTypography.bodyBold.copyWith(
+                      style: GoogleFonts.sora(
                         fontSize: 13,
-                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.ink,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppColors.indigoLight,
-                        borderRadius: BorderRadius.circular(99),
+                        color: AppColors.mint,
+                        borderRadius: BorderRadius.circular(999),
                       ),
                       child: Text(
                         goal,
-                        style: const TextStyle(
-                          color: AppColors.indigo,
+                        style: GoogleFonts.inter(
+                          color: AppColors.teal,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Divider(height: 1, color: AppColors.border),
+                    const Divider(height: 1, color: AppColors.line),
                     const SizedBox(height: 16),
 
                     // Conditions Section
                     Text(
                       'Health Conditions',
-                      style: AppTypography.bodyBold.copyWith(
+                      style: GoogleFonts.sora(
                         fontSize: 13,
-                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.ink,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -216,15 +218,16 @@ class ProfileScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: AppColors.brandLight,
-                          borderRadius: BorderRadius.circular(99),
+                          color: AppColors.cleanWhite,
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(color: AppColors.line),
                         ),
-                        child: const Text(
+                        child: Text(
                           'No known conditions',
-                          style: TextStyle(
-                            color: AppColors.brandDark,
+                          style: GoogleFonts.inter(
+                            color: AppColors.mute,
                             fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       )
@@ -236,13 +239,13 @@ class ProfileScreen extends StatelessWidget {
                           return Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: AppColors.brandLight,
-                              borderRadius: BorderRadius.circular(99),
+                              color: AppColors.mint,
+                              borderRadius: BorderRadius.circular(999),
                             ),
                             child: Text(
                               c,
-                              style: const TextStyle(
-                                color: AppColors.brandDark,
+                              style: GoogleFonts.inter(
+                                color: AppColors.teal,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -251,15 +254,16 @@ class ProfileScreen extends StatelessWidget {
                         }).toList(),
                       ),
                     const SizedBox(height: 16),
-                    const Divider(height: 1, color: AppColors.border),
+                    const Divider(height: 1, color: AppColors.line),
                     const SizedBox(height: 16),
 
                     // Allergies Section
                     Text(
                       'Allergies & Intolerances',
-                      style: AppTypography.bodyBold.copyWith(
+                      style: GoogleFonts.sora(
                         fontSize: 13,
-                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.ink,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -267,15 +271,16 @@ class ProfileScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: AppColors.orangeLight,
-                          borderRadius: BorderRadius.circular(99),
+                          color: AppColors.cleanWhite,
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(color: AppColors.line),
                         ),
-                        child: const Text(
+                        child: Text(
                           'No allergies listed',
-                          style: TextStyle(
-                            color: AppColors.orange,
+                          style: GoogleFonts.inter(
+                            color: AppColors.mute,
                             fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       )
@@ -287,13 +292,13 @@ class ProfileScreen extends StatelessWidget {
                           return Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: AppColors.orangeLight,
-                              borderRadius: BorderRadius.circular(99),
+                              color: AppColors.statusOverBg,
+                              borderRadius: BorderRadius.circular(999),
                             ),
                             child: Text(
                               a,
-                              style: const TextStyle(
-                                color: AppColors.orange,
+                              style: GoogleFonts.inter(
+                                color: AppColors.statusOverText,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -306,15 +311,16 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Settings Rows (Disabled "Coming soon" as instructed)
+              // Settings Rows
               Container(
                 decoration: BoxDecoration(
                   color: AppColors.backgroundCard,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: AppColors.line),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 12,
+                      color: AppColors.ink.withValues(alpha: 0.03),
+                      blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
                   ],
@@ -348,56 +354,70 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
-              // Sign Out Button (Real Session Revoke)
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () async {
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        title: Text('Sign Out', style: AppTypography.title),
-                        content: Text(
-                          'Are you sure you want to end your current session?',
-                          style: AppTypography.body,
+              // Nori "Where we stop" Clinical Disclaimer Card
+              const NoriDisclaimerCard(),
+              const SizedBox(height: 16),
+
+              // Sign Out Button (Pill Danger Style)
+              AppButton.outline(
+                title: 'Sign Out',
+                icon: LucideIcons.logOut,
+                textColor: AppColors.coral,
+                borderColor: AppColors.coral.withValues(alpha: 0.6),
+                onPressed: () async {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      backgroundColor: AppColors.backgroundCard,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: const BorderSide(color: AppColors.line),
+                      ),
+                      title: Text(
+                        'Sign Out',
+                        style: GoogleFonts.sora(
+                          color: AppColors.ink,
+                          fontWeight: FontWeight.w700,
                         ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(ctx).pop(false),
-                            child: Text('Cancel', style: AppTypography.bodyBold),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(ctx).pop(true),
-                            child: Text(
-                              'Sign Out',
-                              style: AppTypography.bodyBold.copyWith(color: AppColors.danger),
+                      ),
+                      content: Text(
+                        'Are you sure you want to end your current session?',
+                        style: GoogleFonts.inter(
+                          color: AppColors.mute,
+                          fontSize: 14,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(false),
+                          child: Text(
+                            'Cancel',
+                            style: GoogleFonts.inter(
+                              color: AppColors.mute,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ],
-                      ),
-                    );
-
-                    if (confirmed == true) {
-                      await authController.logout();
-                    }
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    side: const BorderSide(color: AppColors.danger, width: 1.5),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  ),
-                  child: const Text(
-                    'Sign Out',
-                    style: TextStyle(
-                      color: AppColors.danger,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(true),
+                          child: Text(
+                            'Sign Out',
+                            style: GoogleFonts.inter(
+                              color: AppColors.coral,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
+                  );
+
+                  if (confirmed == true) {
+                    await authController.logout();
+                  }
+                },
               ),
               const SizedBox(height: 24),
             ],
@@ -413,11 +433,12 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
         decoration: BoxDecoration(
           color: AppColors.backgroundCard,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.line),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
+              color: AppColors.ink.withValues(alpha: 0.02),
+              blurRadius: 6,
               offset: const Offset(0, 1),
             ),
           ],
@@ -426,19 +447,19 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Text(
               value,
-              style: const TextStyle(
+              style: GoogleFonts.sora(
                 fontSize: 14,
                 fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
+                color: AppColors.ink,
               ),
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 2),
             Text(
               label,
-              style: const TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 10,
-                color: AppColors.textSecondary,
+                color: AppColors.mute,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -464,10 +485,10 @@ class ProfileScreen extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundPage,
+                  color: AppColors.mint,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: AppColors.brand, size: 18),
+                child: Icon(icon, color: AppColors.teal, size: 18),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -476,18 +497,18 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: AppColors.ink,
                       ),
                     ),
                     const SizedBox(height: 1),
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 11,
-                        color: AppColors.textSecondary,
+                        color: AppColors.mute,
                       ),
                     ),
                   ],
@@ -497,16 +518,16 @@ class ProfileScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundPage,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: AppColors.border),
+                  color: AppColors.cleanWhite,
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: AppColors.line),
                 ),
-                child: const Text(
+                child: Text(
                   'Coming soon',
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textMuted,
+                    color: AppColors.mute,
                   ),
                 ),
               ),
@@ -516,7 +537,7 @@ class ProfileScreen extends StatelessWidget {
         if (showDivider)
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Divider(height: 1, color: AppColors.border),
+            child: Divider(height: 1, color: AppColors.line),
           ),
       ],
     );

@@ -1,7 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/nori_brand_widgets.dart';
 import '../../models/scan_result_model.dart';
 
 class ScanResultView extends StatelessWidget {
@@ -26,12 +29,12 @@ class ScanResultView extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: AppColors.ink.withValues(alpha: 0.03),
             blurRadius: 6,
-            offset: const Offset(0, 2),
+            offset: const Offset(0, 1),
           ),
         ],
       ),
@@ -39,18 +42,19 @@ class ScanResultView extends StatelessWidget {
         children: [
           Text(
             value,
-            style: TextStyle(
+            style: GoogleFonts.sora(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w700,
               color: color,
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 3),
           Text(
             label,
-            style: const TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 11,
-              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+              color: AppColors.mute,
             ),
           ),
         ],
@@ -65,7 +69,7 @@ class ScanResultView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Captured Image Thumbnail / Cloudinary Preview
+          // Captured Image Thumbnail / Preview
           if (imageBytes != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
@@ -89,14 +93,14 @@ class ScanResultView extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     color: AppColors.backgroundCard,
-                    child: const Icon(LucideIcons.utensils, size: 48, color: AppColors.brand),
+                    child: const Icon(LucideIcons.utensils, size: 48, color: AppColors.teal),
                   ),
                 ),
               ),
             ),
           const SizedBox(height: 16),
 
-          // Food Name & Clinical Verdict Badge Row
+          // Food Name & Status Badge Row
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -104,56 +108,56 @@ class ScanResultView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Identified Food',
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 11,
-                        color: AppColors.textSecondary,
+                        color: AppColors.mute,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       result.foodName,
-                      style: const TextStyle(
+                      style: GoogleFonts.sora(
                         fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.ink,
                       ),
                     ),
                     const SizedBox(height: 2),
-                    const Text(
+                    Text(
                       'Estimated 1 standard serving',
-                      style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: AppColors.mute,
+                      ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: 12),
-              // Deterministic Clinical Verdict Badge
+              // Nori Brand Status Chip
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: result.verdictBgColor,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: result.verdictColor.withValues(alpha: 0.35),
-                  ),
+                  borderRadius: BorderRadius.circular(999),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       result.verdictIcon,
-                      size: 16,
+                      size: 15,
                       color: result.verdictColor,
                     ),
                     const SizedBox(width: 5),
                     Text(
                       result.verdictTitle,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.inter(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
                         color: result.verdictColor,
                       ),
                     ),
@@ -171,7 +175,7 @@ class ScanResultView extends StatelessWidget {
                 child: _buildMacroCard(
                   'Calories',
                   '${result.calories.round()}',
-                  AppColors.brand,
+                  AppColors.teal,
                 ),
               ),
               const SizedBox(width: 8),
@@ -179,15 +183,7 @@ class ScanResultView extends StatelessWidget {
                 child: _buildMacroCard(
                   'Protein',
                   '${result.proteinG?.round() ?? 0}g',
-                  AppColors.indigo,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _buildMacroCard(
-                  'Fat',
-                  '${result.fatG?.round() ?? 0}g',
-                  AppColors.orange,
+                  AppColors.green,
                 ),
               ),
               const SizedBox(width: 8),
@@ -195,103 +191,45 @@ class ScanResultView extends StatelessWidget {
                 child: _buildMacroCard(
                   'Carbs',
                   '${result.carbsG?.round() ?? 0}g',
-                  AppColors.purple,
+                  AppColors.amber,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildMacroCard(
+                  'Fat',
+                  '${result.fatG?.round() ?? 0}g',
+                  AppColors.coral,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 18),
 
-          // NORI Recommendation Box (Exact Rules Engine Verdict Reason)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: result.verdictBgColor,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: result.verdictColor.withValues(alpha: 0.25),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      LucideIcons.shieldCheck,
-                      size: 16,
-                      color: result.verdictColor,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'NORI Clinical Assessment',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: result.verdictColor,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  result.verdictReason,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    height: 1.55,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
+          // Nori AI Answer Card (v2 Brand Guidelines Specification)
+          NoriAiAnswerCard(
+            title: 'Nori measured against your profile',
+            content: result.verdictReason,
           ),
           const SizedBox(height: 22),
 
-          // Action Buttons
+          // Action Buttons (Pill actions)
           Row(
             children: [
               Expanded(
-                child: SizedBox(
-                  height: 48,
-                  child: ElevatedButton.icon(
-                    onPressed: onLogMeal,
-                    icon: const Icon(LucideIcons.checkCircle, size: 18),
-                    label: const Text(
-                      'Log Meal',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.brand,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      elevation: 0,
-                    ),
-                  ),
+                child: AppButton(
+                  text: 'Log Meal',
+                  icon: const Icon(LucideIcons.check, size: 18, color: Colors.white),
+                  onPressed: onLogMeal,
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: SizedBox(
-                  height: 48,
-                  child: OutlinedButton.icon(
-                    onPressed: onAskAi,
-                    icon: const Icon(LucideIcons.messageCircle, size: 18),
-                    label: const Text(
-                      'Ask AI',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.textPrimary,
-                      side: const BorderSide(color: AppColors.border, width: 1.5),
-                      backgroundColor: AppColors.backgroundCard,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                  ),
+                child: AppButton(
+                  text: 'Ask Nori',
+                  variant: AppButtonVariant.outline,
+                  icon: const Icon(LucideIcons.messageCircle, size: 18, color: AppColors.teal),
+                  onPressed: onAskAi,
                 ),
               ),
             ],
@@ -302,10 +240,14 @@ class ScanResultView extends StatelessWidget {
           Center(
             child: TextButton.icon(
               onPressed: onScanAnother,
-              icon: const Icon(LucideIcons.refreshCw, size: 16, color: AppColors.textSecondary),
-              label: const Text(
+              icon: const Icon(LucideIcons.refreshCw, size: 15, color: AppColors.mute),
+              label: Text(
                 'Scan another food',
-                style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.mute,
+                ),
               ),
             ),
           ),

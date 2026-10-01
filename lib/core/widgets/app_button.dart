@@ -3,32 +3,118 @@ import '../theme/app_colors.dart';
 import '../theme/app_shadows.dart';
 import '../theme/app_typography.dart';
 
-enum AppButtonVariant { primary, secondary, ghost, danger }
+enum AppButtonVariant {
+  /// .p1 { background: var(--teal); color: #fff }
+  primary,
 
-/// NORI brand button — pill-shaped, solid terracotta fill.
+  /// .p2 { background: var(--mint); color: var(--teal) }
+  secondary,
+
+  /// .p3 { border: 1.5px solid var(--teal); color: var(--ink); background: transparent }
+  outline,
+
+  /// Ghost transparent
+  ghost,
+
+  /// Coral danger
+  danger,
+}
+
+/// Nori Brand Guidelines v2 Button.
+///
+/// "Pills for actions, 48px minimum touch targets, thin 1px borders instead of heavy shadows."
 class AppButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
   final bool isFullWidth;
   final AppButtonVariant variant;
-  final Widget? icon;
+  final dynamic icon; // Supports either Widget or IconData
   final double height;
   final double? width;
   final BorderRadius? borderRadius;
+  final Color? borderColor;
+  final Color? textColor;
 
   const AppButton({
     super.key,
-    required this.text,
+    String? text,
+    String? title,
     this.onPressed,
     this.isLoading = false,
     this.isFullWidth = true,
     this.variant = AppButtonVariant.primary,
     this.icon,
-    this.height = 54,
+    this.height = 50,
     this.width,
     this.borderRadius,
-  });
+    this.borderColor,
+    this.textColor,
+  }) : text = text ?? title ?? '';
+
+  const AppButton.secondary({
+    super.key,
+    String? text,
+    String? title,
+    this.onPressed,
+    this.isLoading = false,
+    this.isFullWidth = true,
+    this.icon,
+    this.height = 50,
+    this.width,
+    this.borderRadius,
+    this.borderColor,
+    this.textColor,
+  })  : variant = AppButtonVariant.secondary,
+        text = text ?? title ?? '';
+
+  const AppButton.outline({
+    super.key,
+    String? text,
+    String? title,
+    this.onPressed,
+    this.isLoading = false,
+    this.isFullWidth = true,
+    this.icon,
+    this.height = 50,
+    this.width,
+    this.borderRadius,
+    this.borderColor,
+    this.textColor,
+  })  : variant = AppButtonVariant.outline,
+        text = text ?? title ?? '';
+
+  const AppButton.danger({
+    super.key,
+    String? text,
+    String? title,
+    this.onPressed,
+    this.isLoading = false,
+    this.isFullWidth = true,
+    this.icon,
+    this.height = 50,
+    this.width,
+    this.borderRadius,
+    this.borderColor,
+    this.textColor,
+  })  : variant = AppButtonVariant.danger,
+        text = text ?? title ?? '';
+
+  const AppButton.ghost({
+    super.key,
+    String? text,
+    String? title,
+    this.onPressed,
+    this.isLoading = false,
+    this.isFullWidth = true,
+    this.icon,
+    this.height = 50,
+    this.width,
+    this.borderRadius,
+    this.borderColor,
+    this.textColor,
+  })  : variant = AppButtonVariant.ghost,
+        text = text ?? title ?? '';
 
   @override
   State<AppButton> createState() => _AppButtonState();
@@ -78,9 +164,10 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    // Pill shape: radius = half the height
+    // Pill shape: 999px radius (or half height)
     final effectiveRadius = widget.borderRadius ?? BorderRadius.circular(widget.height / 2);
     final isEnabled = widget.onPressed != null && !widget.isLoading;
+    final textStyle = _buildTextStyle(isEnabled);
 
     Widget content = AnimatedBuilder(
       animation: _scaleAnimation,
@@ -102,7 +189,7 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
                   valueColor: AlwaysStoppedAnimation<Color>(
                     widget.variant == AppButtonVariant.primary
                         ? AppColors.textWhite
-                        : AppColors.brand,
+                        : AppColors.teal,
                   ),
                 ),
               )
@@ -111,12 +198,18 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (widget.icon != null) ...[
-                    widget.icon!,
+                    widget.icon is IconData
+                        ? Icon(
+                            widget.icon as IconData,
+                            size: 18,
+                            color: textStyle.color,
+                          )
+                        : (widget.icon as Widget),
                     const SizedBox(width: 8),
                   ],
                   Text(
                     widget.text,
-                    style: _buildTextStyle(isEnabled),
+                    style: textStyle,
                   ),
                 ],
               ),
@@ -137,17 +230,23 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
     switch (widget.variant) {
       case AppButtonVariant.primary:
         return BoxDecoration(
-          color: isEnabled
-              ? AppColors.brand
-              : AppColors.brand.withValues(alpha: 0.5),
+          color: isEnabled ? AppColors.teal : AppColors.teal.withValues(alpha: 0.45),
           borderRadius: radius,
           boxShadow: isEnabled ? AppShadows.primaryButton : [],
         );
       case AppButtonVariant.secondary:
         return BoxDecoration(
-          color: AppColors.backgroundCard,
+          color: isEnabled ? AppColors.mint : AppColors.mint.withValues(alpha: 0.5),
           borderRadius: radius,
-          border: Border.all(color: AppColors.border, width: 1.5),
+        );
+      case AppButtonVariant.outline:
+        return BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: radius,
+          border: Border.all(
+            color: widget.borderColor ?? (isEnabled ? AppColors.teal : AppColors.line),
+            width: 1.5,
+          ),
         );
       case AppButtonVariant.ghost:
         return BoxDecoration(
@@ -156,30 +255,34 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
         );
       case AppButtonVariant.danger:
         return BoxDecoration(
-          color: AppColors.danger,
+          color: isEnabled ? AppColors.coral : AppColors.coral.withValues(alpha: 0.5),
           borderRadius: radius,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.danger.withValues(alpha: 0.25),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          boxShadow: isEnabled ? AppShadows.dangerButton : [],
         );
     }
   }
 
   TextStyle _buildTextStyle(bool isEnabled) {
+    if (widget.textColor != null) {
+      return AppTypography.button.copyWith(
+        color: isEnabled ? widget.textColor : AppColors.textMuted,
+      );
+    }
+
     switch (widget.variant) {
       case AppButtonVariant.primary:
         return AppTypography.button;
       case AppButtonVariant.secondary:
-        return AppTypography.button.copyWith(
-          color: isEnabled ? AppColors.textPrimary : AppColors.textMuted,
+        return AppTypography.buttonSecondary.copyWith(
+          color: isEnabled ? AppColors.teal : AppColors.textMuted,
+        );
+      case AppButtonVariant.outline:
+        return AppTypography.buttonSecondary.copyWith(
+          color: isEnabled ? AppColors.ink : AppColors.textMuted,
         );
       case AppButtonVariant.ghost:
         return AppTypography.subtitle.copyWith(
-          color: isEnabled ? AppColors.textSecondary : AppColors.textMuted,
+          color: isEnabled ? AppColors.teal : AppColors.textMuted,
           fontWeight: FontWeight.w600,
         );
       case AppButtonVariant.danger:

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 
-/// NORI brand text field — pill-shaped, cream background.
+/// Nori Brand Guidelines v2 Text Field.
+///
+/// Rounded 20-26px container, thin 1px line border, clean white/card fill.
 class AppTextField extends StatefulWidget {
   final String label;
   final String placeholder;
@@ -84,10 +87,10 @@ class _AppTextFieldState extends State<AppTextField> {
         if (widget.label.isNotEmpty) ...[
           Text(
             widget.label,
-            style: AppTypography.label.copyWith(
-              color: hasError ? AppColors.danger : AppColors.textSecondary,
+            style: GoogleFonts.inter(
+              color: hasError ? AppColors.coral : AppColors.mute,
               fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 6),
@@ -98,16 +101,25 @@ class _AppTextFieldState extends State<AppTextField> {
           height: widget.maxLines == 1 ? 52 : null,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: AppColors.backgroundPage,
-            borderRadius: BorderRadius.circular(widget.maxLines == 1 ? 26 : 16),
+            color: AppColors.backgroundCard,
+            borderRadius: BorderRadius.circular(widget.maxLines == 1 ? 26 : 18),
             border: Border.all(
               color: hasError
-                  ? AppColors.danger
+                  ? AppColors.coral
                   : _isFocused
-                      ? AppColors.brand
+                      ? AppColors.teal
                       : AppColors.border,
-              width: _isFocused || hasError ? 1.8 : 1.5,
+              width: _isFocused || hasError ? 1.5 : 1.0,
             ),
+            boxShadow: _isFocused
+                ? [
+                    BoxShadow(
+                      color: AppColors.teal.withValues(alpha: 0.08),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
           ),
           child: Row(
             children: [
@@ -127,13 +139,14 @@ class _AppTextFieldState extends State<AppTextField> {
                   maxLines: widget.maxLines,
                   onChanged: widget.onChanged,
                   onFieldSubmitted: widget.onSubmitted,
-                  style: AppTypography.bodyBold.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
+                  style: GoogleFonts.inter(
+                    color: AppColors.ink,
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w500,
                   ),
                   decoration: InputDecoration(
                     hintText: widget.placeholder,
-                    hintStyle: AppTypography.body.copyWith(
+                    hintStyle: GoogleFonts.inter(
                       color: AppColors.textMuted,
                       fontSize: 14,
                     ),
@@ -153,8 +166,8 @@ class _AppTextFieldState extends State<AppTextField> {
                     padding: const EdgeInsets.only(left: 8),
                     child: Icon(
                       _obscureText ? LucideIcons.eyeOff : LucideIcons.eye,
-                      size: 20,
-                      color: AppColors.textMuted,
+                      size: 19,
+                      color: AppColors.mute,
                     ),
                   ),
                 )
@@ -172,7 +185,7 @@ class _AppTextFieldState extends State<AppTextField> {
             child: Text(
               widget.errorText!,
               style: AppTypography.micro.copyWith(
-                color: AppColors.danger,
+                color: AppColors.coral,
                 fontWeight: FontWeight.w500,
               ),
             ),

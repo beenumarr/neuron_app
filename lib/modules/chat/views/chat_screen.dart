@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_logo.dart';
 import '../controllers/chat_controller.dart';
 import 'widgets/chat_empty_state.dart';
 import 'widgets/chat_message_bubble.dart';
@@ -100,47 +102,32 @@ class _ChatScreenState extends State<ChatScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top App Bar Header matching design prototype
+            // Top App Bar Header
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: const BoxDecoration(
                 color: AppColors.backgroundCard,
                 border: Border(
-                  bottom: BorderSide(color: AppColors.border, width: 1),
+                  bottom: BorderSide(color: AppColors.line, width: 1),
                 ),
               ),
               child: Row(
                 children: [
-                  // NORI AI Avatar with Brand Gradient
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColors.brand, AppColors.indigo],
-                      ),
-                    ),
-                    child: const Icon(
-                      LucideIcons.zap,
-                      size: 20,
-                      color: Colors.white,
-                    ),
-                  ),
+                  // Nori AppLogo
+                  const AppLogo(size: 38, variant: NoriLogoVariant.contained),
                   const SizedBox(width: 12),
                   // Title & Live status indicator
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'NORI AI',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
+                        Text(
+                          'nori',
+                          style: GoogleFonts.sora(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.02 * 18,
+                            color: AppColors.ink,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -150,16 +137,16 @@ class _ChatScreenState extends State<ChatScreen> {
                               width: 6,
                               height: 6,
                               decoration: const BoxDecoration(
-                                color: AppColors.brand,
+                                color: AppColors.green,
                                 shape: BoxShape.circle,
                               ),
                             ),
                             const SizedBox(width: 5),
-                            const Text(
-                              'Online · Health companion',
-                              style: TextStyle(
+                            Text(
+                              'AI Dietitian · Clinical trust',
+                              style: GoogleFonts.inter(
                                 fontSize: 11,
-                                color: AppColors.textSecondary,
+                                color: AppColors.mute,
                               ),
                             ),
                           ],
@@ -304,13 +291,13 @@ class _ChatScreenState extends State<ChatScreen> {
                             width: 28,
                             height: 28,
                             decoration: const BoxDecoration(
-                              color: AppColors.brandLight,
+                              color: AppColors.mint,
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
                               LucideIcons.mic,
                               size: 15,
-                              color: AppColors.brand,
+                              color: AppColors.teal,
                             ),
                           ),
                         ],
@@ -321,21 +308,21 @@ class _ChatScreenState extends State<ChatScreen> {
                   // Send button
                   InkWell(
                     onTap: (_hasInput && !isSending) ? () => _sendMessage() : null,
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(22),
                     child: Container(
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
                         color: (_hasInput && !isSending)
-                            ? AppColors.brand
-                            : AppColors.brand.withValues(alpha: 0.4),
-                        borderRadius: BorderRadius.circular(14),
+                            ? AppColors.teal
+                            : AppColors.teal.withValues(alpha: 0.35),
+                        shape: BoxShape.circle,
                         boxShadow: (_hasInput && !isSending)
                             ? [
                                 BoxShadow(
-                                  color: AppColors.brand.withValues(alpha: 0.3),
+                                  color: AppColors.teal.withValues(alpha: 0.22),
                                   blurRadius: 8,
-                                  offset: const Offset(0, 3),
+                                  offset: const Offset(0, 2),
                                 ),
                               ]
                             : null,

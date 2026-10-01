@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nori Brand Guidelines v2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F5FAF8;--card:#fff;--ink:#0A2E2C;--mute:#4F6B68;--line:#D6E6E1;--teal:#0B4F4A;--green:#16A37F;--mint:#DDF4EA;--amber:#F2A93B;--coral:#E5604D;--sky:#E6F1FA;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#071C1B;--card:#0D2B29;--ink:#E8F5F1;--mute:#9DBDB7;--line:#1C4440;--mint:#123B35;--sky:#14303F}}
+:root[data-theme="dark"]{--bg:#071C1B;--card:#0D2B29;--ink:#E8F5F1;--mute:#9DBDB7;--line:#1C4440;--mint:#123B35;--sky:#14303F}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Inter,system-ui,sans-serif}
+.w{max-width:920px;margin:0 auto;padding:28px 20px 80px}
+h1,h2,h3,.d{font-family:Sora,system-ui,sans-serif;letter-spacing:-.02em;line-height:1.1;margin:0}
+h1{font-size:clamp(34px,7vw,60px);font-weight:800}
+h2{font-size:28px;font-weight:700;margin:64px 0 8px}
+.k{font:600 12px Inter;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+p{margin:8px 0;color:var(--mute);max-width:62ch}
+.g{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:18px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+.tile{border-radius:16px;padding:28px;display:flex;align-items:center;justify-content:center;gap:12px;min-height:130px}
+.sw{border-radius:16px;padding:16px;min-height:120px;display:flex;flex-direction:column;justify-content:flex-end;font-size:13px;line-height:1.35}
+.sw b{font:700 15px Sora}
+.pill{display:inline-block;border-radius:999px;padding:12px 22px;font:600 15px Inter;border:0;min-height:48px}
+.p1{background:var(--teal);color:#fff}.p2{background:var(--mint);color:var(--teal)}.p3{border:1.5px solid var(--teal);color:var(--ink);background:transparent}
+.chip{border-radius:999px;padding:4px 12px;font:600 13px Inter}
+.say{border-left:4px solid var(--green)}.not{border-left:4px solid var(--coral)}
+.num{font:800 56px Sora;color:var(--green)}
+.wide{overflow-x:auto}
+</style></head><body><div class="w">
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="m" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#0B4F4A"/><path d="M32 11C48 13 53 30 46 43 40 53 25 53 18 46 13 32 19 16 32 11Z" fill="#DDF4EA"/><path d="M17 35h9l4-9 5 17 4-8h9" fill="none" stroke="#0B4F4A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="48" cy="16" r="5.5" fill="#F2A93B"/></symbol>
+<symbol id="l" viewBox="0 0 64 64"><path d="M32 6C50 8 56 28 48 43 41 56 23 56 14 48 8 31 16 12 32 6Z" fill="#16A37F"/><path d="M13 35h10l5-10 6 19 5-9h11" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="11" r="6" fill="#F2A93B"/></symbol></defs></svg>
+
+<div class="k">Brand guidelines · v2</div>
+<div style="display:flex;align-items:center;gap:14px;margin:14px 0 20px"><svg width="64" height="64"><use href="#m"/></svg><span class="d" style="font-size:40px;font-weight:800">nori</span></div>
+<h1>Clinical trust.<br>Human warmth.</h1>
+<p>Nori is an AI dietitian that reads your health context, understands the food in front of you, and answers in plain language, always saying what it measured against. The brand has to feel like a credible health product built for Africa, not a cooking app and not surveillance.</p>
+<p style="margin-top:14px"><span class="chip" style="background:var(--mint);color:var(--teal)">Trusted</span> <span class="chip" style="background:var(--mint);color:var(--teal)">Intelligent</span> <span class="chip" style="background:var(--mint);color:var(--teal)">Warm</span> <span class="chip" style="background:var(--mint);color:var(--teal)">Never scolding</span></p>
+
+<h2>Brand idea</h2>
+<p><b style="color:var(--ink)">"Intelligence that grows from food."</b> Three ideas live in one mark: a leaf (nutrition, farming, nori itself), a pulse line (clinical care, health data) and a single amber node (the AI that notices). Nature on the outside, science and intelligence inside.</p>
+
+<h2>Logo</h2>
+<p>The symbol is a leaf carrying a heartbeat, with an amber AI node at its tip. Always use the supplied vector shapes; never retype or redraw.</p>
+<div class="g">
+<div class="tile" style="background:var(--card);border:1px solid var(--line)"><svg width="64" height="64"><use href="#m"/></svg><span class="d" style="font-size:44px;font-weight:800;color:var(--ink)">nori</span></div>
+<div class="tile" style="background:#0B4F4A"><svg width="64" height="64"><use href="#l"/></svg><span class="d" style="font-size:44px;font-weight:800;color:#fff">nori</span></div>
+<div class="tile" style="background:#16A37F"><svg width="72" height="72"><use href="#m"/></svg></div>
+<div class="tile" style="background:var(--mint)"><svg width="72" height="72"><use href="#l"/></svg><svg width="40" height="40"><use href="#l"/></svg><svg width="24" height="24"><use href="#l"/></svg></div>
+</div>
+<div class="g">
+<div class="c"><b>Wordmark</b><p>Sora ExtraBold, all lowercase, tight tracking (-2%). Lowercase keeps it friendly and approachable. Symbol sits left, height equal to the x-height plus ascender.</p></div>
+<div class="c"><b>Clearspace and size</b><p>Keep clear space equal to the amber node diameter on all sides. Minimum 20px for the symbol alone, 72px wide for the full lockup.</p></div>
+<div class="c"><b>Don't</b><p>Recolour the leaf, remove the node, add gradients or shadows, rotate the pulse line, or place on busy photos without a solid panel.</p></div>
+</div>
+
+<h2>Colour</h2>
+<p>Deep teal carries trust and clinical credibility. Nori green is the living, growing colour of nutrition and agriculture. Amber is reserved for AI moments and gentle attention, never alarm.</p>
+<div class="g" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+<div class="sw" style="background:#0B4F4A;color:#fff"><b>Deep Teal</b>#0B4F4A<br>Primary, headers, buttons</div>
+<div class="sw" style="background:#16A37F;color:#fff"><b>Nori Green</b>#16A37F<br>Progress, success, accents</div>
+<div class="sw" style="background:#DDF4EA;color:#0B4F4A"><b>Mint</b>#DDF4EA<br>Panels, soft fills</div>
+<div class="sw" style="background:#F2A93B;color:#0A2E2C"><b>Signal Amber</b>#F2A93B<br>AI node, highlights</div>
+<div class="sw" style="background:#E5604D;color:#fff"><b>Coral</b>#E5604D<br>Over target, errors only</div>
+<div class="sw" style="background:#E6F1FA;color:#0A2E2C"><b>Sky</b>#E6F1FA<br>Info, clinical notes</div>
+<div class="sw" style="background:#F5FAF8;color:#0A2E2C;border:1px solid var(--line)"><b>Clean White</b>#F5FAF8<br>Ground</div>
+<div class="sw" style="background:#0A2E2C;color:#fff"><b>Ink</b>#0A2E2C<br>Text, dark mode ground</div>
+</div>
+<p>Ratio guide: 60% Clean White or Ink ground, 25% Teal, 10% Green and Mint, 5% Amber. Use white text on Teal, Green and Coral; Ink text on Mint, Sky and Amber. Large text only on Green.</p>
+
+<h2>Typography</h2>
+<div class="g">
+<div class="c"><div class="k">Display · Sora 800</div><div class="d" style="font-size:36px;font-weight:800;margin-top:8px">Eat well, know why.</div><p>Headlines and titles. Tight leading 1.1.</p></div>
+<div class="c"><div class="k">Body · Inter 400/500/600</div><p style="color:var(--ink);font-size:17px">Every answer names what it measured against, and you can update your profile whenever the facts change.</p><p>16-17px, 1.6 leading.</p></div>
+<div class="c"><div class="k">Numbers · Sora 800</div><div class="num">1,420</div><p>kcal left today. Key figures use Sora in Green or Teal.</p></div>
+</div>
+
+<h2>Interface language</h2>
+<p>Rounded, calm, data-forward. Pills for actions, 16-20px radius for cards, 48px minimum touch targets, thin 1px borders instead of heavy shadows. Icons: Lucide, stroke 2.</p>
+<div class="g">
+<div class="c"><div class="k">Actions</div><p style="display:flex;gap:8px;flex-wrap:wrap"><button class="pill p1">Scan my meal</button><button class="pill p2">Fix portion</button><button class="pill p3">Why this?</button></p></div>
+<div class="c"><div class="k">Status</div><p style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip" style="background:var(--mint);color:#0B4F4A">On target</span><span class="chip" style="background:#FDF0D5;color:#6B4300">Close to limit</span><span class="chip" style="background:#FBE3DF;color:#8A2A1C">Over target</span></p></div>
+<div class="c"><div class="k">AI answer card</div><div style="background:var(--mint);border-radius:16px;padding:14px;margin-top:8px"><div style="display:flex;align-items:center;gap:8px;font-weight:600;color:#0B4F4A"><span style="width:10px;height:10px;border-radius:50%;background:var(--amber)"></span>Nori measured against your profile</div><p style="color:#0A2E2C;margin:6px 0 0">Jollof with chicken: about 55% of your daily salt limit.</p></div></div>
+</div>
+
+<h2>Voice</h2>
+<p>Like a knowledgeable dietitian who respects you: specific, kind, unhurried. Always cite what the answer is based on. Never shame, never diagnose.</p>
+<div class="g">
+<div class="c say"><div class="k">Say</div><p style="color:var(--ink)">"That is high in salt against the limit in your profile. Try less stock cube next time."</p></div>
+<div class="c not"><div class="k" style="color:var(--coral)">Not</div><p>"Unhealthy choice. Avoid."</p></div>
+<div class="c say"><div class="k">Say</div><p style="color:var(--ink)">"I estimated the portion from your photo. Adjust it and I will recalculate."</p></div>
+<div class="c not"><div class="k" style="color:var(--coral)">Not</div><p>"Analysis complete."</p></div>
+</div>
+
+<h2>Imagery and graphics</h2>
+<p>Real Nigerian and African meals shot from above in natural light: egusi, jollof, tuwo, akara, fruit, local markets. Real people, never stock-photo clichés. Graphics use soft leaf shapes and the pulse line as a divider. Data visuals use Green for progress, Amber for attention, Coral only when a limit is exceeded.</p>
+
+<h2>Where we stop</h2>
+<div class="c" style="background:var(--mint)"><div class="d" style="font-size:22px;color:#0B4F4A">Nori is a decision-support and education tool, not a medical replacement or diagnostic system.</div><p style="color:#0A2E2C">Shown on first run, in the health profile, and on every exported report. Nori never diagnoses, prescribes or treats, and refers people to a clinician when a question crosses that line.</p></div>
+</div></body></html>

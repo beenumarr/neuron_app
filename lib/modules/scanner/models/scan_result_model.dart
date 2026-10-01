@@ -30,31 +30,31 @@ class ScanResultModel {
   bool get isAvoid => verdict.toLowerCase() == 'avoid';
 
   String get verdictTitle {
-    if (isSafe) return 'Safe to Eat';
-    if (isCaution) return 'Eat with Caution';
-    if (isAvoid) return 'Recommend to Avoid';
-    return 'Clinical Assessment';
+    if (isSafe) return 'On target';
+    if (isCaution) return 'Close to limit';
+    if (isAvoid) return 'Over target';
+    return 'Nori Assessment';
   }
 
   Color get verdictColor {
-    if (isSafe) return AppColors.brand;
-    if (isCaution) return AppColors.orange;
-    if (isAvoid) return AppColors.rose;
-    return AppColors.indigo;
+    if (isSafe) return AppColors.statusOnTargetText;
+    if (isCaution) return AppColors.statusCloseToLimitText;
+    if (isAvoid) return AppColors.statusOverTargetText;
+    return AppColors.teal;
   }
 
   Color get verdictBgColor {
-    if (isSafe) return AppColors.brandLight;
-    if (isCaution) return AppColors.orangeLight;
-    if (isAvoid) return AppColors.roseLight;
-    return AppColors.indigoLight;
+    if (isSafe) return AppColors.statusOnTargetBg;
+    if (isCaution) return AppColors.statusCloseToLimitBg;
+    if (isAvoid) return AppColors.statusOverTargetBg;
+    return AppColors.mint;
   }
 
   IconData get verdictIcon {
-    if (isSafe) return LucideIcons.shieldCheck;
+    if (isSafe) return LucideIcons.badgeCheck;
     if (isCaution) return LucideIcons.alertTriangle;
-    if (isAvoid) return LucideIcons.ban;
-    return LucideIcons.shield;
+    if (isAvoid) return LucideIcons.alertCircle;
+    return LucideIcons.sparkles;
   }
 
   factory ScanResultModel.fromJson(Map<String, dynamic> json) {

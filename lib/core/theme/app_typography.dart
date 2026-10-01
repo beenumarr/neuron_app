@@ -2,87 +2,138 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
-/// NORI Brand Guide typography.
+/// Nori Brand Guidelines v2 Typography.
 ///
-/// Caprasimo — carries the name, page titles, and the one big number on a
-/// screen.  Figtree — does everything else, including all figures.
-/// "A nutrition panel should read like a note, not a receipt."
+/// Headlines, titles, and key numbers: Sora (weights 500, 700, 800).
+/// Body, subtitles, buttons, chips, and UI text: Inter (weights 400, 500, 600).
 class AppTypography {
-  // ── Display & Headings (Caprasimo) ──────────────────────────────────────
+  // ── Display, Titles & Headings (Sora) ──────────────────────────────────────
 
-  static TextStyle get display => GoogleFonts.caprasimo(
+  /// Large display headline — Sora 800
+  static TextStyle get display => GoogleFonts.sora(
         fontSize: 32,
-        fontWeight: FontWeight.w400, // Caprasimo ships in Regular only
-        letterSpacing: -0.4,
-        color: AppColors.textPrimary,
-        height: 1.0,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.6,
+        color: AppColors.ink,
+        height: 1.1,
       );
 
-  static TextStyle get heading1 => GoogleFonts.caprasimo(
+  /// Main page title — Sora 800
+  static TextStyle get heading1 => GoogleFonts.sora(
         fontSize: 26,
-        fontWeight: FontWeight.w400,
-        letterSpacing: -0.3,
-        color: AppColors.textPrimary,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.5,
+        color: AppColors.ink,
         height: 1.15,
       );
 
-  static TextStyle get heading2 => GoogleFonts.caprasimo(
+  /// Section heading — Sora 700
+  static TextStyle get heading2 => GoogleFonts.sora(
         fontSize: 22,
-        fontWeight: FontWeight.w400,
-        letterSpacing: -0.2,
-        color: AppColors.textPrimary,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.4,
+        color: AppColors.ink,
         height: 1.2,
       );
 
-  static TextStyle get title => GoogleFonts.caprasimo(
+  /// Card or sub-section title — Sora 700
+  static TextStyle get title => GoogleFonts.sora(
         fontSize: 18,
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0,
-        color: AppColors.textPrimary,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.3,
+        color: AppColors.ink,
       );
 
-  // ── Body & UI text (Figtree) ────────────────────────────────────────────
+  /// Wordmark: Sora ExtraBold, all lowercase, tight tracking (-2%)
+  static TextStyle get wordmark => GoogleFonts.sora(
+        fontSize: 40,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.8,
+        color: AppColors.ink,
+        height: 1.0,
+      );
 
-  static TextStyle get subtitle => GoogleFonts.figtree(
+  /// Hero numbers / key figures — Sora 800 in Nori Green or Deep Teal
+  static TextStyle get numberDisplay => GoogleFonts.sora(
+        fontSize: 48,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0,
+        color: AppColors.green,
+        height: 1.0,
+      );
+
+  static TextStyle get numberHero => GoogleFonts.sora(
+        fontSize: 38,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.8,
+        color: AppColors.teal,
+        height: 1.0,
+      );
+
+  // ── Body & UI Text (Inter) ─────────────────────────────────────────────────
+
+  /// Subtitle — Inter 500, 15px
+  static TextStyle get subtitle => GoogleFonts.inter(
         fontSize: 15,
         fontWeight: FontWeight.w500,
-        color: AppColors.textSecondary,
+        color: AppColors.mute,
         height: 1.5,
       );
 
-  static TextStyle get body => GoogleFonts.figtree(
-        fontSize: 17,
+  /// Primary body copy — Inter 400, 16px, 1.6 leading
+  static TextStyle get body => GoogleFonts.inter(
+        fontSize: 15,
         fontWeight: FontWeight.w400,
-        color: AppColors.textSecondary,
+        color: AppColors.mute,
         height: 1.6,
       );
 
-  static TextStyle get bodyBold => GoogleFonts.figtree(
-        fontSize: 17,
+  /// Emphasized body copy — Inter 600
+  static TextStyle get bodyBold => GoogleFonts.inter(
+        fontSize: 15,
         fontWeight: FontWeight.w600,
-        color: AppColors.textPrimary,
+        color: AppColors.ink,
       );
 
-  static TextStyle get button => GoogleFonts.figtree(
+  /// Action buttons — Inter 600, 15px
+  static TextStyle get button => GoogleFonts.inter(
         fontSize: 15,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
         color: AppColors.textWhite,
         letterSpacing: 0.1,
       );
 
-  static TextStyle get caption => GoogleFonts.figtree(
+  /// Secondary button text — Inter 600, 15px
+  static TextStyle get buttonSecondary => GoogleFonts.inter(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        color: AppColors.teal,
+        letterSpacing: 0.1,
+      );
+
+  /// Caption text — Inter 500, 12px
+  static TextStyle get caption => GoogleFonts.inter(
         fontSize: 12,
         fontWeight: FontWeight.w500,
-        color: AppColors.textSecondary,
+        color: AppColors.mute,
       );
 
-  static TextStyle get label => GoogleFonts.figtree(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textSecondary,
+  /// Form / Section labels — Inter 600, 12px uppercase tracking
+  static TextStyle get label => GoogleFonts.inter(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.8,
+        color: AppColors.green,
       );
 
-  static TextStyle get micro => GoogleFonts.figtree(
+  /// Chips / Tag pills — Inter 600, 13px
+  static TextStyle get chip => GoogleFonts.inter(
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+      );
+
+  /// Smallest metadata text — Inter 500, 11px
+  static TextStyle get micro => GoogleFonts.inter(
         fontSize: 11,
         fontWeight: FontWeight.w500,
         color: AppColors.textMuted,

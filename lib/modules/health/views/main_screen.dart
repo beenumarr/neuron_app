@@ -49,11 +49,11 @@ class _MainScreenState extends State<MainScreen> {
         decoration: BoxDecoration(
           color: AppColors.backgroundCard,
           border: const Border(
-            top: BorderSide(color: AppColors.border, width: 1),
+            top: BorderSide(color: AppColors.line, width: 1),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
+              color: AppColors.ink.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -116,12 +116,12 @@ class _MainScreenState extends State<MainScreen> {
               width: 44,
               height: 32,
               decoration: BoxDecoration(
-                color: isActive ? AppColors.brandLight : Colors.transparent,
+                color: isActive ? AppColors.mint : Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(
                 icon,
-                color: isActive ? AppColors.brand : AppColors.textMuted,
+                color: isActive ? AppColors.teal : AppColors.mute,
                 size: 20,
               ),
             ),
@@ -129,9 +129,9 @@ class _MainScreenState extends State<MainScreen> {
             Text(
               label,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 10.5,
                 fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? AppColors.brand : AppColors.textMuted,
+                color: isActive ? AppColors.teal : AppColors.mute,
               ),
             ),
           ],
@@ -159,12 +159,12 @@ class _MainScreenState extends State<MainScreen> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: AppColors.brand,
+                  color: AppColors.teal,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.brand.withValues(alpha: 0.4),
-                      blurRadius: 14,
+                      color: AppColors.teal.withValues(alpha: 0.28),
+                      blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
                   ],
@@ -181,9 +181,9 @@ class _MainScreenState extends State<MainScreen> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 10.5,
                   fontWeight: FontWeight.w700,
-                  color: isActive ? AppColors.brand : AppColors.textSecondary,
+                  color: isActive ? AppColors.teal : AppColors.mute,
                 ),
               ),
             ],

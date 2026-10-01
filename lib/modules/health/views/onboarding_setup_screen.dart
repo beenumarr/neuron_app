@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_button.dart';
 import '../controllers/onboarding_controller.dart';
 
 class OnboardingSetupScreen extends StatefulWidget {
@@ -276,38 +278,10 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
             // ── Bottom Action Button ─────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : _nextStep,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.brand,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    shadowColor: AppColors.brand.withValues(alpha: 0.35),
-                  ),
-                  child: isLoading
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor: AlwaysStoppedAnimation(Colors.white),
-                          ),
-                        )
-                      : Text(
-                          _currentStep == 4 ? 'Finish Setup' : 'Continue',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.2,
-                          ),
-                        ),
-                ),
+              child: AppButton(
+                title: _currentStep == 4 ? 'Finish Setup' : 'Continue',
+                isLoading: isLoading,
+                onPressed: _nextStep,
               ),
             ),
           ],
@@ -538,26 +512,26 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFFFEF3C7),
+              color: AppColors.sky,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFFDE68A)),
+              border: Border.all(color: AppColors.teal.withValues(alpha: 0.15)),
             ),
-            child: const Row(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   LucideIcons.lock,
                   size: 17,
-                  color: Color(0xFFD97706),
+                  color: AppColors.teal,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     'Your health data is encrypted and never shared with third parties.',
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF92400E),
+                      color: AppColors.ink,
                       height: 1.35,
                     ),
                   ),
@@ -819,29 +793,29 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
       children: [
         Text(
           'STEP $stepNumber OF 5',
-          style: const TextStyle(
+          style: GoogleFonts.inter(
             fontSize: 11,
             fontWeight: FontWeight.w800,
-            color: AppColors.brand,
+            color: AppColors.teal,
             letterSpacing: 0.8,
           ),
         ),
         const SizedBox(height: 6),
         Text(
           title,
-          style: const TextStyle(
+          style: GoogleFonts.sora(
             fontSize: 24,
             fontWeight: FontWeight.w800,
-            color: AppColors.textPrimary,
+            color: AppColors.ink,
             letterSpacing: -0.4,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           subtitle,
-          style: const TextStyle(
+          style: GoogleFonts.inter(
             fontSize: 13,
-            color: AppColors.textSecondary,
+            color: AppColors.mute,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -858,11 +832,11 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: AppColors.ink.withValues(alpha: 0.02),
             blurRadius: 6,
             offset: const Offset(0, 1),
           ),
@@ -871,15 +845,15 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
-        style: const TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
+          color: AppColors.ink,
         ),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(
-            color: AppColors.textMuted,
+          hintStyle: GoogleFonts.inter(
+            color: AppColors.mute,
             fontSize: 15,
             fontWeight: FontWeight.w400,
           ),

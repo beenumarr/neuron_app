@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_ring.dart';
+import '../../../core/widgets/nori_brand_widgets.dart';
 import '../../../core/widgets/server_config_dialog.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../../scanner/models/meal_model.dart';
@@ -384,13 +386,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                                colors: [AppColors.brand, AppColors.indigo],
+                                colors: [AppColors.teal, AppColors.green],
                               ),
                             ),
                             child: Center(
                               child: Text(
                                 initialLetter,
-                                style: const TextStyle(
+                                style: GoogleFonts.sora(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -405,22 +407,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Hero Card: Real BMI & Health Score / Danger Gauge (Gradient Green)
+                // Hero Card: Real BMI & Health Score / Gauge (Deep Teal)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppColors.brand, AppColors.brandDark],
-                    ),
+                    borderRadius: BorderRadius.circular(22),
+                    gradient: AppColors.heroGradient,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.brand.withValues(alpha: 0.28),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
+                        color: AppColors.teal.withValues(alpha: 0.22),
+                        blurRadius: 14,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -435,7 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Text(
                                   'Body Mass Index (BMI)',
-                                  style: TextStyle(
+                                  style: GoogleFonts.inter(
                                     color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
@@ -448,8 +446,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Text(
                                       displayBmi,
-                                      style: const TextStyle(
-                                        fontSize: 40,
+                                      style: GoogleFonts.sora(
+                                        fontSize: 38,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.white,
                                         height: 1.0,
@@ -460,15 +458,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha: 0.2),
-                                          borderRadius: BorderRadius.circular(10),
+                                          color: AppColors.mint,
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: Text(
                                           bmiCategory,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            color: Colors.white,
+                                          style: GoogleFonts.inter(
+                                            color: AppColors.teal,
                                             fontSize: 11,
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -483,13 +481,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Icon(
                                       LucideIcons.badgeCheck,
                                       size: 13,
-                                      color: Colors.white.withValues(alpha: 0.85),
+                                      color: AppColors.mint,
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
                                       'Target: 18.5 – 24.9',
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.85),
+                                      style: GoogleFonts.inter(
+                                        color: Colors.white.withValues(alpha: 0.88),
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -507,38 +505,38 @@ class _HomeScreenState extends State<HomeScreen> {
                             size: 94,
                             strokeWidth: 7,
                             color: homeController.healthScore < 50
-                                ? const Color(0xFFFFD54F)
-                                : Colors.white,
+                                ? AppColors.amber
+                                : AppColors.mint,
                             trackColor: Colors.white.withValues(alpha: 0.2),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   '${homeController.healthScore}',
-                                  style: const TextStyle(
+                                  style: GoogleFonts.sora(
                                     color: Colors.white,
                                     fontSize: 22,
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: FontWeight.w800,
                                     height: 1.0,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   homeController.dangerLevelLabel,
-                                  style: TextStyle(
+                                  style: GoogleFonts.inter(
                                     color: homeController.healthScore < 50
-                                        ? const Color(0xFFFFD54F)
+                                        ? AppColors.amber
                                         : Colors.white,
                                     fontSize: 10,
-                                    fontWeight: FontWeight.w800,
+                                    fontWeight: FontWeight.w700,
                                     letterSpacing: 0.2,
                                   ),
                                 ),
                                 Text(
                                   'Health Score',
-                                  style: TextStyle(
+                                  style: GoogleFonts.inter(
                                     color: Colors.white.withValues(alpha: 0.75),
-                                    fontSize: 8,
+                                    fontSize: 8.5,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -549,13 +547,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Vitals row inside the card (Real calories, static Steps & Sleep as requested)
+                      // Vitals row inside the card
                       Container(
                         padding: const EdgeInsets.only(top: 14),
                         decoration: BoxDecoration(
                           border: Border(
                             top: BorderSide(
-                              color: Colors.white.withValues(alpha: 0.2),
+                              color: Colors.white.withValues(alpha: 0.18),
                             ),
                           ),
                         ),
@@ -569,12 +567,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             _buildHeroVitalsItem(
                               icon: LucideIcons.footprints,
                               label: 'Steps',
-                              value: '7,234', // Static placeholder as instructed
+                              value: '7,234',
                             ),
                             _buildHeroVitalsItem(
                               icon: LucideIcons.moon,
                               label: 'Sleep',
-                              value: '7h 20m', // Static placeholder as instructed
+                              value: '7h 20m',
                             ),
                           ],
                         ),
@@ -584,56 +582,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                // NORI AI Insight Card (Short & personalized)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.indigoLight,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.indigo.withValues(alpha: 0.18)),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 32,
-                        height: 32,
-                        decoration: const BoxDecoration(
-                          color: AppColors.indigo,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(LucideIcons.zap, color: Colors.white, size: 18),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'NORI AI Insight',
-                              style: TextStyle(
-                                color: AppColors.indigo,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              homeController.getShortAiInsight(profile),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: AppColors.textPrimary,
-                                fontSize: 13,
-                                height: 1.4,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                // Nori AI Answer Card (v2 Brand Guidelines Specification)
+                NoriAiAnswerCard(
+                  title: 'Nori measured against your profile',
+                  content: homeController.getShortAiInsight(profile),
                 ),
                 const SizedBox(height: 14),
 
@@ -643,11 +595,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: AppColors.backgroundCard,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: AppColors.line),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 12,
+                        color: AppColors.ink.withValues(alpha: 0.03),
+                        blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
                     ],
@@ -657,18 +610,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             "Today's Nutrition",
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 13,
+                            style: GoogleFonts.sora(
+                              color: AppColors.ink,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
                             '${homeController.calorieGoal} kcal goal',
-                            style: const TextStyle(
-                              color: AppColors.brand,
+                            style: GoogleFonts.inter(
+                              color: AppColors.teal,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
@@ -682,28 +635,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           MacroRing(
                             label: 'Calories',
                             value: homeController.totalCalories,
-                            color: AppColors.brand,
+                            color: AppColors.teal,
                             pct: homeController.caloriesPct,
                           ),
                           MacroRing(
                             label: 'Protein',
                             value: homeController.totalProtein.round(),
                             unit: 'g',
-                            color: AppColors.indigo,
+                            color: AppColors.green,
                             pct: homeController.proteinPct,
                           ),
                           MacroRing(
                             label: 'Carbs',
                             value: homeController.totalCarbs.round(),
                             unit: 'g',
-                            color: AppColors.orange,
+                            color: AppColors.amber,
                             pct: homeController.carbsPct,
                           ),
                           MacroRing(
                             label: 'Fat',
                             value: homeController.totalFat.round(),
                             unit: 'g',
-                            color: AppColors.danger,
+                            color: AppColors.coral,
                             pct: homeController.fatPct,
                           ),
                         ],
@@ -713,17 +666,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                // Water Intake Card (Static Placeholder as instructed)
+                // Water Intake Card (v2 Sky / Teal theme)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: AppColors.backgroundCard,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: AppColors.line),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 12,
+                        color: AppColors.ink.withValues(alpha: 0.03),
+                        blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
                     ],
@@ -734,23 +688,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            children: const [
-                              Icon(LucideIcons.droplets, size: 16, color: AppColors.sky),
-                              SizedBox(width: 6),
+                            children: [
+                              const Icon(LucideIcons.droplets, size: 16, color: AppColors.teal),
+                              const SizedBox(width: 6),
                               Text(
                                 'Water Intake',
-                                style: TextStyle(
-                                  color: AppColors.textPrimary,
+                                style: GoogleFonts.sora(
+                                  color: AppColors.ink,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ],
                           ),
-                          const Text(
+                          Text(
                             '1.6L / 2.5L',
-                            style: TextStyle(
-                              color: AppColors.sky,
+                            style: GoogleFonts.inter(
+                              color: AppColors.teal,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
@@ -762,7 +716,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         height: 8,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEFF6FF),
+                          color: AppColors.sky,
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Align(
@@ -773,7 +727,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
                                 gradient: const LinearGradient(
-                                  colors: [AppColors.sky, Color(0xFF0EA5E9)],
+                                  colors: [AppColors.teal, AppColors.green],
                                 ),
                               ),
                             ),
@@ -791,14 +745,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 28,
                               decoration: BoxDecoration(
                                 color: isFilled
-                                    ? AppColors.sky.withValues(alpha: 0.14)
-                                    : const Color(0xFFF1F5F9),
+                                    ? AppColors.sky
+                                    : AppColors.backgroundPage,
                                 borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: isFilled ? AppColors.teal.withValues(alpha: 0.2) : AppColors.line,
+                                ),
                               ),
                               child: Icon(
                                 LucideIcons.droplets,
                                 size: 12,
-                                color: isFilled ? AppColors.sky : AppColors.textMuted,
+                                color: isFilled ? AppColors.teal : AppColors.textMuted,
                               ),
                             ),
                           );
@@ -810,11 +767,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 18),
 
                 // Quick Actions
-                const Text(
+                Text(
                   'Quick Actions',
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 13,
+                  style: GoogleFonts.sora(
+                    color: AppColors.ink,
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -825,32 +782,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildQuickActionItem(
                       label: 'Log Meal',
                       icon: LucideIcons.utensils,
-                      color: AppColors.brand,
+                      color: AppColors.teal,
                       onTap: _showQuickLogDialog,
                     ),
                     _buildQuickActionItem(
                       label: 'Scan Food',
                       icon: LucideIcons.scan,
-                      color: AppColors.indigo,
+                      color: AppColors.green,
                       onTap: () => widget.onNavigateTab?.call(1),
                     ),
                     _buildQuickActionItem(
-                      label: 'Ask AI',
+                      label: 'Ask Nori',
                       icon: LucideIcons.messageCircle,
-                      color: AppColors.purple,
+                      color: AppColors.amber,
                       onTap: () => widget.onNavigateTab?.call(2),
                     ),
                     _buildQuickActionItem(
                       label: 'Weight',
                       icon: LucideIcons.target,
-                      color: AppColors.orange,
+                      color: AppColors.teal,
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
                               'Current Recorded Weight: ${profile?.weightKg ?? 72} kg',
                             ),
-                            backgroundColor: AppColors.orange,
+                            backgroundColor: AppColors.teal,
                             duration: const Duration(seconds: 2),
                           ),
                         );
@@ -1041,10 +998,11 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
+            color: AppColors.ink.withValues(alpha: 0.03),
+            blurRadius: 6,
             offset: const Offset(0, 1),
           ),
         ],
@@ -1055,7 +1013,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.backgroundPage,
+              color: AppColors.mint,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
@@ -1072,10 +1030,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   meal.displayName,
-                  style: const TextStyle(
-                    fontSize: 13,
+                  style: GoogleFonts.inter(
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: AppColors.ink,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -1083,9 +1041,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 2),
                 Text(
                   meal.formattedTime,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: AppColors.textSecondary,
+                  style: GoogleFonts.inter(
+                    fontSize: 11.5,
+                    color: AppColors.mute,
                   ),
                 ),
               ],
@@ -1093,10 +1051,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Text(
             '${meal.totalCalories.round()} kcal',
-            style: const TextStyle(
+            style: GoogleFonts.sora(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: AppColors.brand,
+              color: AppColors.teal,
             ),
           ),
         ],

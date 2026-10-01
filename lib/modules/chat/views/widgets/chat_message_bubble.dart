@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_logo.dart';
 import '../../models/chat_message_model.dart';
 
 class ChatMessageBubble extends StatelessWidget {
@@ -20,29 +21,15 @@ class ChatMessageBubble extends StatelessWidget {
     final isUser = message.isUser;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
-            Container(
-              width: 28,
-              height: 28,
-              margin: const EdgeInsets.only(top: 2, right: 8),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.brand, AppColors.indigo],
-                ),
-              ),
-              child: const Icon(
-                LucideIcons.zap,
-                size: 14,
-                color: Colors.white,
-              ),
+            const Padding(
+              padding: EdgeInsets.only(top: 2, right: 8),
+              child: AppLogo(size: 28, variant: NoriLogoVariant.contained),
             ),
           ],
           Flexible(
@@ -55,30 +42,28 @@ class ChatMessageBubble extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: isUser ? AppColors.brand : AppColors.backgroundCard,
+                    color: isUser ? AppColors.teal : AppColors.backgroundCard,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(18),
                       topRight: const Radius.circular(18),
                       bottomLeft: isUser ? const Radius.circular(18) : const Radius.circular(4),
                       bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(18),
                     ),
-                    border: isUser
-                        ? null
-                        : Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+                    border: isUser ? null : Border.all(color: AppColors.line),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: isUser ? 0.08 : 0.04),
-                        blurRadius: 8,
+                        color: AppColors.ink.withValues(alpha: isUser ? 0.08 : 0.03),
+                        blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
                     ],
                   ),
                   child: SelectableText(
                     message.content,
-                    style: TextStyle(
-                      color: isUser ? Colors.white : AppColors.textPrimary,
-                      fontSize: 13.5,
-                      height: 1.55,
+                    style: GoogleFonts.inter(
+                      color: isUser ? Colors.white : AppColors.ink,
+                      fontSize: 14,
+                      height: 1.5,
                       fontWeight: isUser ? FontWeight.w500 : FontWeight.normal,
                     ),
                   ),
@@ -88,9 +73,9 @@ class ChatMessageBubble extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
                     _formatTime(message.createdAt),
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: AppColors.textMuted,
+                    style: GoogleFonts.inter(
+                      fontSize: 10.5,
+                      color: AppColors.mute,
                     ),
                   ),
                 ),

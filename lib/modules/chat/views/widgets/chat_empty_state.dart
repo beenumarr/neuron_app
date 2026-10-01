@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_logo.dart';
 
 class ChatEmptyState extends StatelessWidget {
   final ValueChanged<String> onSelectPrompt;
@@ -38,47 +41,27 @@ class ChatEmptyState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // NORI AI Glowing Avatar
-            Container(
-              width: 68,
-              height: 68,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.brand, AppColors.indigo],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.brand.withValues(alpha: 0.28),
-                    blurRadius: 18,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                LucideIcons.zap,
-                size: 34,
-                color: Colors.white,
-              ),
+            // Nori Brand Logo
+            const AppLogo(
+              size: 64,
+              variant: NoriLogoVariant.contained,
+              showShadow: true,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Chat with NORI',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+            Text(
+              'Chat with nori',
+              style: AppTypography.heading2.copyWith(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Your clinical AI health companion tailored with personalized Nigerian nutrition insights. Ask about your meals, health goals, or recovery.',
+            Text(
+              'Your AI dietitian reading your health context, answering in plain language, and always saying what it measured against.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: AppColors.textSecondary,
+              style: GoogleFonts.inter(
+                fontSize: 13.5,
+                color: AppColors.mute,
                 height: 1.5,
               ),
             ),
@@ -96,12 +79,12 @@ class ChatEmptyState extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.backgroundCard,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(color: AppColors.line),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.03),
+                            color: AppColors.ink.withValues(alpha: 0.03),
                             blurRadius: 6,
-                            offset: const Offset(0, 2),
+                            offset: const Offset(0, 1),
                           ),
                         ],
                       ),
@@ -118,10 +101,10 @@ class ChatEmptyState extends StatelessWidget {
                               children: [
                                 Text(
                                   p['title']!,
-                                  style: const TextStyle(
+                                  style: GoogleFonts.inter(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
-                                    color: AppColors.textPrimary,
+                                    color: AppColors.ink,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -129,9 +112,9 @@ class ChatEmptyState extends StatelessWidget {
                                   p['prompt']!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: AppColors.textSecondary,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 11.5,
+                                    color: AppColors.mute,
                                   ),
                                 ),
                               ],
@@ -141,7 +124,7 @@ class ChatEmptyState extends StatelessWidget {
                           const Icon(
                             LucideIcons.arrowRight,
                             size: 16,
-                            color: AppColors.brand,
+                            color: AppColors.teal,
                           ),
                         ],
                       ),

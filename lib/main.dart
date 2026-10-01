@@ -6,6 +6,7 @@ import 'core/config/app_config.dart';
 import 'core/network/api_client.dart';
 import 'core/router/app_router.dart';
 import 'core/storage/token_storage.dart';
+import 'core/theme/app_colors.dart';
 import 'core/theme/app_theme.dart';
 import 'modules/auth/controllers/auth_controller.dart';
 import 'modules/auth/services/auth_api_service.dart';
@@ -27,7 +28,7 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
+      systemNavigationBarColor: AppColors.cleanWhite,
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );

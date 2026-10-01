@@ -1,9 +1,12 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/nori_brand_widgets.dart';
 import '../controllers/progress_controller.dart';
 import '../models/weekly_report_model.dart';
 
@@ -106,6 +109,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     isGenerating: isGenerating,
                     riskFlags: riskFlags,
                   ),
+                  const SizedBox(height: 14),
+                  const NoriDisclaimerCard(),
                   const SizedBox(height: 24),
                 ],
               ],
@@ -116,26 +121,25 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  // ── Header with segmented selector ─────────────────────────────────────────
   Widget _buildHeader(ProgressController controller, String selectedPeriod) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        Text(
           'Progress',
-          style: TextStyle(
-            fontSize: 22,
+          style: GoogleFonts.sora(
+            fontSize: 24,
             fontWeight: FontWeight.w800,
-            color: AppColors.textPrimary,
-            letterSpacing: -0.3,
+            color: AppColors.ink,
+            letterSpacing: -0.4,
           ),
         ),
         Container(
           padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             color: AppColors.backgroundCard,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.border),
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: AppColors.line),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -147,15 +151,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.brand : Colors.transparent,
-                    borderRadius: BorderRadius.circular(9),
+                    color: isSelected ? AppColors.teal : Colors.transparent,
+                    borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
                     period,
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color: isSelected ? Colors.white : AppColors.textSecondary,
+                      color: isSelected ? Colors.white : AppColors.mute,
                     ),
                   ),
                 ),
@@ -180,12 +184,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
+            color: AppColors.ink.withValues(alpha: 0.03),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -200,10 +204,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Health Score',
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
+                    style: GoogleFonts.inter(
+                      color: AppColors.mute,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -215,19 +219,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     children: [
                       Text(
                         '$score',
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 24,
+                        style: GoogleFonts.sora(
+                          color: AppColors.ink,
+                          fontSize: 26,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         deltaString,
-                        style: TextStyle(
+                        style: GoogleFonts.inter(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: isImproving ? AppColors.brand : AppColors.orange,
+                          color: isImproving ? AppColors.green : AppColors.amber,
                         ),
                       ),
                     ],
@@ -237,8 +241,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: isImproving ? AppColors.brandLight : AppColors.orangeLight,
-                  borderRadius: BorderRadius.circular(99),
+                  color: isImproving ? AppColors.mint : AppColors.amber.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(999),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -248,13 +252,13 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           ? LucideIcons.trendingUp
                           : LucideIcons.minus,
                       size: 13,
-                      color: isImproving ? AppColors.brand : AppColors.orange,
+                      color: isImproving ? AppColors.teal : AppColors.amber,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       statusLabel,
-                      style: TextStyle(
-                        color: isImproving ? AppColors.brand : AppColors.orange,
+                      style: GoogleFonts.inter(
+                        color: isImproving ? AppColors.teal : AppColors.amber,
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                       ),
@@ -274,8 +278,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
               painter: _HealthScoreLineChartPainter(
                 scores: series.values,
                 days: series.labels,
-                lineColor: AppColors.brand,
-                textColor: AppColors.textSecondary,
+                lineColor: AppColors.green,
+                textColor: AppColors.mute,
               ),
             ),
           ),
@@ -284,7 +288,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  // ── Row of 3 Metric Cards: Streak, Avg Score, Goals Met ───────────────────
   Widget _buildThreeMetricsRow({
     required int streak,
     required String avgScore,
@@ -297,8 +300,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
       children: [
         Expanded(
           child: _buildSingleMetricCard(
-            icon: LucideIcons.star,
-            iconColor: AppColors.orange,
+            icon: LucideIcons.flame,
+            iconColor: AppColors.amber,
             value: streakText,
             label: 'Streak',
           ),
@@ -307,7 +310,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         Expanded(
           child: _buildSingleMetricCard(
             icon: LucideIcons.lineChart,
-            iconColor: AppColors.indigo,
+            iconColor: AppColors.green,
             value: avgScore,
             label: 'Avg Score',
           ),
@@ -316,7 +319,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         Expanded(
           child: _buildSingleMetricCard(
             icon: LucideIcons.target,
-            iconColor: AppColors.brand,
+            iconColor: AppColors.teal,
             value: goalsMetText,
             label: 'Goals Met',
           ),
@@ -336,11 +339,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+        border: Border.all(color: AppColors.line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
+            color: AppColors.ink.withValues(alpha: 0.03),
+            blurRadius: 6,
             offset: const Offset(0, 1),
           ),
         ],
@@ -352,8 +355,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 6),
           Text(
             value,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
+            style: GoogleFonts.sora(
+              color: AppColors.ink,
               fontSize: 15,
               fontWeight: FontWeight.w700,
             ),
@@ -361,9 +364,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 10,
+            style: GoogleFonts.inter(
+              color: AppColors.mute,
+              fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -387,12 +390,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
+            color: AppColors.ink.withValues(alpha: 0.03),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -403,10 +406,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Nutrition Breakdown',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
+                style: GoogleFonts.sora(
+                  color: AppColors.ink,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                 ),
@@ -414,8 +417,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
               if (hasMeals)
                 Text(
                   '$totalMeals ${totalMeals == 1 ? "meal" : "meals"} logged',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: GoogleFonts.inter(
+                    color: AppColors.mute,
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                   ),
@@ -434,9 +437,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     carbs: hasMeals ? carbs : 0,
                     protein: hasMeals ? protein : 0,
                     fat: hasMeals ? fat : 0,
-                    carbsColor: AppColors.orange,
-                    proteinColor: AppColors.indigo,
-                    fatColor: AppColors.danger,
+                    carbsColor: AppColors.amber,
+                    proteinColor: AppColors.teal,
+                    fatColor: AppColors.coral,
                   ),
                   child: !hasMeals
                       ? Center(
@@ -446,14 +449,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               Icon(
                                 LucideIcons.utensils,
                                 size: 20,
-                                color: AppColors.textSecondary.withValues(alpha: 0.5),
+                                color: AppColors.mute.withValues(alpha: 0.5),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 'No meals',
-                                style: TextStyle(
+                                style: GoogleFonts.inter(
                                   fontSize: 9,
-                                  color: AppColors.textSecondary.withValues(alpha: 0.7),
+                                  color: AppColors.mute,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -469,29 +472,29 @@ class _ProgressScreenState extends State<ProgressScreen> {
               Expanded(
                 child: Column(
                   children: [
-                    _buildMacroRow('Carbs', '${carbs.toInt()}g', AppColors.orange),
+                    _buildMacroRow('Carbs', '${carbs.toInt()}g', AppColors.amber),
                     const SizedBox(height: 8),
-                    _buildMacroRow('Protein', '${protein.toInt()}g', AppColors.indigo),
+                    _buildMacroRow('Protein', '${protein.toInt()}g', AppColors.teal),
                     const SizedBox(height: 8),
-                    _buildMacroRow('Fat', '${fat.toInt()}g', AppColors.danger),
+                    _buildMacroRow('Fat', '${fat.toInt()}g', AppColors.coral),
                     const SizedBox(height: 10),
-                    Container(height: 1, color: AppColors.border),
+                    Container(height: 1, color: AppColors.line),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Total',
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
+                          style: GoogleFonts.inter(
+                            color: AppColors.mute,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         Text(
                           '${totalCalories.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} kcal',
-                          style: const TextStyle(
-                            color: AppColors.brand,
+                          style: GoogleFonts.sora(
+                            color: AppColors.ink,
                             fontSize: 13,
                             fontWeight: FontWeight.w800,
                           ),
@@ -509,15 +512,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.border.withValues(alpha: 0.3),
+                color: AppColors.line.withValues(alpha: 0.35),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text(
+              child: Text(
                 'Log your meals in the Scan tab to see real clinical macro distribution.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: AppColors.mute,
                 ),
               ),
             ),
@@ -544,8 +547,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
             const SizedBox(width: 8),
             Text(
               name,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
+              style: GoogleFonts.inter(
+                color: AppColors.mute,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -554,8 +557,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
         ),
         Text(
           value,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
+          style: GoogleFonts.sora(
+            color: AppColors.ink,
             fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
@@ -571,12 +574,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
+            color: AppColors.ink.withValues(alpha: 0.03),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -585,21 +588,21 @@ class _ProgressScreenState extends State<ProgressScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header: Calorie Intake + Goal
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Calorie Intake',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
+                style: GoogleFonts.sora(
+                  color: AppColors.ink,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               Text(
                 'Goal: 2,200 kcal',
-                style: TextStyle(
-                  color: AppColors.textSecondary,
+                style: GoogleFonts.inter(
+                  color: AppColors.mute,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
@@ -616,8 +619,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
               painter: _CalorieAreaChartPainter(
                 calories: series.values,
                 days: series.labels,
-                brandColor: AppColors.brand,
-                textColor: AppColors.textSecondary,
+                brandColor: AppColors.teal,
+                textColor: AppColors.mute,
               ),
             ),
           ),
@@ -638,12 +641,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.line),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
+            color: AppColors.ink.withValues(alpha: 0.03),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -657,35 +660,35 @@ class _ProgressScreenState extends State<ProgressScreen> {
               Row(
                 children: [
                   Container(
-                    width: 32,
-                    height: 32,
+                    width: 34,
+                    height: 34,
                     decoration: BoxDecoration(
-                      color: AppColors.brandLight,
-                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.mint,
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
                       LucideIcons.sparkles,
                       size: 16,
-                      color: AppColors.brand,
+                      color: AppColors.teal,
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Weekly AI Clinical Report',
-                        style: TextStyle(
+                        style: GoogleFonts.sora(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                          color: AppColors.ink,
                         ),
                       ),
                       Text(
-                        'Synthesized by NORI Dietitian',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: AppColors.textSecondary,
+                        'Synthesized by nori dietitian',
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          color: AppColors.mute,
                         ),
                       ),
                     ],
@@ -694,7 +697,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
               if (report != null && !isGenerating)
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18, color: AppColors.textSecondary),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18, color: AppColors.mute),
                   tooltip: 'Re-generate Report',
                   onPressed: () => progressController.generateReportNow(),
                 ),
@@ -703,25 +706,25 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 14),
 
           if (isGenerating)
-            const Center(
+            Center(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
+                padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 28,
                       height: 28,
                       child: CircularProgressIndicator(
                         strokeWidth: 2.5,
-                        valueColor: AlwaysStoppedAnimation(AppColors.brand),
+                        valueColor: AlwaysStoppedAnimation(AppColors.teal),
                       ),
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     Text(
                       'Synthesizing weekly clinical report...',
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: AppColors.mute,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -733,31 +736,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'No report synthesized yet for this week. Tap below to analyze your logged meals against clinical guidelines.',
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: AppColors.mute,
                     height: 1.4,
                   ),
                 ),
                 const SizedBox(height: 14),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () => progressController.generateReportNow(),
-                    icon: const Icon(LucideIcons.sparkles, size: 16),
-                    label: const Text('Synthesize Weekly Report'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.brand,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
+                AppButton(
+                  title: 'Synthesize Weekly Report',
+                  icon: LucideIcons.sparkles,
+                  onPressed: () => progressController.generateReportNow(),
                 ),
               ],
             )
@@ -765,24 +756,24 @@ class _ProgressScreenState extends State<ProgressScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.brandLight,
-                borderRadius: BorderRadius.circular(8),
+                color: AppColors.mint,
+                borderRadius: BorderRadius.circular(999),
               ),
               child: Text(
                 report.formattedDateRange,
-                style: const TextStyle(
+                style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.brand,
+                  color: AppColors.teal,
                 ),
               ),
             ),
             const SizedBox(height: 10),
             Text(
               report.reportText,
-              style: const TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 12,
-                color: AppColors.textPrimary,
+                color: AppColors.ink,
                 height: 1.5,
               ),
             ),
@@ -802,9 +793,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
           height: i == 0 ? 180 : 120,
           margin: const EdgeInsets.only(bottom: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.border),
+            color: AppColors.backgroundCard,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: AppColors.line),
           ),
         ),
       ),
@@ -976,7 +967,7 @@ class _DonutChartPainter extends CustomPainter {
     if (total <= 0) {
       // Draw subtle placeholder ring when no meals are logged
       final emptyPaint = Paint()
-        ..color = const Color(0xFFE2E8F0)
+        ..color = AppColors.line
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth
         ..strokeCap = StrokeCap.round;

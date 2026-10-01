@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_illustrations.dart';
+import '../../../core/widgets/app_logo.dart';
 import '../../../core/widgets/server_config_dialog.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -13,7 +15,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundCard,
+      backgroundColor: AppColors.cleanWhite,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -29,96 +31,105 @@ class WelcomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 8),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: GestureDetector(
-                            onTap: () => ServerConfigDialog.show(context),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: AppColors.backgroundPage,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: AppColors.border),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(LucideIcons.server, size: 14, color: AppColors.brandDark),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Server',
-                                    style: AppTypography.caption.copyWith(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textSecondary,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const NoriBrandLockup(iconSize: 34, fontSize: 24, spacing: 8),
+                            GestureDetector(
+                              onTap: () => ServerConfigDialog.show(context),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: AppColors.backgroundCard,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: AppColors.line),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(LucideIcons.server, size: 14, color: AppColors.teal),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Server',
+                                      style: AppTypography.caption.copyWith(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.mute,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        // Floating Illustration Area - gracefully expands or contracts
+                        const SizedBox(height: 12),
+                        // Floating Illustration Area
                         Expanded(
                           child: Center(
                             child: FittedBox(
                               fit: BoxFit.contain,
                               child: const WelcomeIllustrationWidget(
                                 width: 300,
-                                height: 240,
+                                height: 230,
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12),
 
                         // Copy & Action Buttons
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Meet Your Personal\nAI Health Assistant',
+                              'Clinical trust.\nHuman warmth.',
                               textAlign: TextAlign.center,
                               style: AppTypography.heading1.copyWith(
-                                fontSize: 24,
+                                fontSize: 28,
                                 fontWeight: FontWeight.w800,
-                                height: 1.25,
+                                height: 1.15,
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 10),
                             Text(
-                              'Track nutrition, scan meals, monitor your health, and receive intelligent recommendations tailored specifically for you.',
+                              'Nori is an AI dietitian that reads your health context, understands the food in front of you, and answers in plain language.',
                               textAlign: TextAlign.center,
                               style: AppTypography.body.copyWith(
                                 fontSize: 14,
                                 height: 1.5,
                               ),
                             ),
-                            const SizedBox(height: 28),
+                            const SizedBox(height: 14),
 
-                            // Get Started Button
+                            // Brand Trait Chips (From v2 Guidelines)
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              alignment: WrapAlignment.center,
+                              children: const [
+                                _WelcomeTraitChip(label: 'Trusted'),
+                                _WelcomeTraitChip(label: 'Intelligent'),
+                                _WelcomeTraitChip(label: 'Warm'),
+                                _WelcomeTraitChip(label: 'Never scolding'),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Get Started Button (Pill .p1)
                             AppButton(
                               text: 'Get Started',
                               onPressed: () => context.go('/onboarding'),
                             ),
                             const SizedBox(height: 12),
 
-                            // Already have an account Button
-                            TextButton(
+                            // Already have an account Button (Pill .p3 / outline)
+                            AppButton(
+                              text: 'I already have an account',
+                              variant: AppButtonVariant.outline,
                               onPressed: () => context.go('/login'),
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
-                              ),
-                              child: Text(
-                                'I already have an account',
-                                style: AppTypography.bodyBold.copyWith(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 14,
-                                ),
-                              ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 20),
                           ],
                         ),
                       ],
@@ -128,6 +139,30 @@ class WelcomeScreen extends StatelessWidget {
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _WelcomeTraitChip extends StatelessWidget {
+  final String label;
+  const _WelcomeTraitChip({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.mint,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.inter(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: AppColors.teal,
         ),
       ),
     );

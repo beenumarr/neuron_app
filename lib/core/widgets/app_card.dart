@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_shadows.dart';
 
-/// NORI brand card — 16 px radius, sand background.
+/// Nori Brand Guidelines v2 Card.
+///
+/// "16-20px radius for cards, thin 1px borders instead of heavy shadows."
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -27,7 +29,7 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveRadius = borderRadius ?? BorderRadius.circular(16);
+    final effectiveRadius = borderRadius ?? BorderRadius.circular(18);
     final cardContent = Container(
       margin: margin,
       padding: padding,
@@ -35,7 +37,7 @@ class AppCard extends StatelessWidget {
         color: backgroundColor ?? AppColors.backgroundCard,
         borderRadius: effectiveRadius,
         boxShadow: shadows ?? AppShadows.card,
-        border: border,
+        border: border ?? Border.all(color: AppColors.border, width: 1.0),
       ),
       child: child,
     );

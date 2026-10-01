@@ -237,11 +237,11 @@ class _ScannerScreenState extends State<ScannerScreen>
                         )
                       : Column(
                           children: [
-                            // Dark Tech Viewfinder matching prototype design
+                            // Viewfinder with Nori v2 Dark Background (#071C1B)
                             Container(
                               height: 310,
                               width: double.infinity,
-                              color: const Color(0xFF09101F),
+                              color: AppColors.darkBg,
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
@@ -298,13 +298,13 @@ class _ScannerScreenState extends State<ScannerScreen>
                                                     gradient: const LinearGradient(
                                                       colors: [
                                                         Colors.transparent,
-                                                        AppColors.brand,
+                                                        AppColors.amber,
                                                         Colors.transparent,
                                                       ],
                                                     ),
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: AppColors.brand.withValues(alpha: 0.8),
+                                                        color: AppColors.amber.withValues(alpha: 0.6),
                                                         blurRadius: 10,
                                                         spreadRadius: 2,
                                                       ),
@@ -539,7 +539,7 @@ class _ScannerScreenState extends State<ScannerScreen>
   Widget _buildCorner(bool isTop, bool isLeft) {
     const size = 26.0;
     const thickness = 3.0;
-    const color = AppColors.brand;
+    const color = AppColors.green;
 
     return Container(
       width: size,
