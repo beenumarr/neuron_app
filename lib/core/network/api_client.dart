@@ -44,10 +44,7 @@ class ApiClient {
   }
 
   void updateBaseUrl(String newUrl) {
-    final sanitized = newUrl.trim().replaceAll(RegExp(r'/+$'), '');
-    dio.options.baseUrl = sanitized;
-    AppConfig.setBaseUrl(sanitized);
-    tokenStorage.saveCustomBaseUrl(sanitized);
+    dio.options.baseUrl = newUrl.trim().replaceAll(RegExp(r'/+$'), '');
   }
 
   Future<ApiEnvelope<T>> get<T>(

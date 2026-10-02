@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'core/config/app_config.dart';
 import 'core/network/api_client.dart';
 import 'core/router/app_router.dart';
 import 'core/storage/token_storage.dart';
@@ -37,11 +36,6 @@ void main() async {
   final tokenStorage = TokenStorage();
   await tokenStorage.init();
 
-  // Load saved custom server base URL if previously configured
-  final savedUrl = await tokenStorage.getCustomBaseUrl();
-  if (savedUrl != null && savedUrl.isNotEmpty) {
-    AppConfig.setBaseUrl(savedUrl);
-  }
 
   late final AuthController authController;
 

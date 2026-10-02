@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
-import '../../../core/widgets/server_config_dialog.dart';
 import '../../../core/widgets/social_auth_button.dart';
 import '../controllers/auth_controller.dart';
 
@@ -92,60 +90,29 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Bar (Back button + Server Settings)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (context.canPop()) {
-                          context.pop();
-                        } else {
-                          context.go('/welcome');
-                        }
-                      },
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: AppColors.backgroundPage,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.border),
-                        ),
-                        child: const Icon(
-                          LucideIcons.arrowLeft,
-                          size: 18,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
+                // Top Bar (Back button)
+                GestureDetector(
+                  onTap: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.go('/welcome');
+                    }
+                  },
+                  child: Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundPage,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.border),
                     ),
-                    GestureDetector(
-                      onTap: () => ServerConfigDialog.show(context),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppColors.backgroundPage,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.border),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(LucideIcons.server, size: 14, color: AppColors.brandDark),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Server',
-                              style: AppTypography.caption.copyWith(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    child: const Icon(
+                      LucideIcons.arrowLeft,
+                      size: 18,
+                      color: AppColors.textPrimary,
                     ),
-                  ],
+                  ),
                 ),
                 const SizedBox(height: 24),
 
@@ -195,22 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ],
                         ),
-                        if (authController.errorMessage!.toLowerCase().contains('server') ||
-                            authController.errorMessage!.toLowerCase().contains('timed out') ||
-                            authController.errorMessage!.toLowerCase().contains('connection')) ...[
-                          const SizedBox(height: 8),
-                          GestureDetector(
-                            onTap: () => ServerConfigDialog.show(context),
-                            child: Text(
-                              'Change backend server URL (${AppConfig.baseUrl}) ->',
-                              style: AppTypography.caption.copyWith(
-                                color: AppColors.brandDark,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),

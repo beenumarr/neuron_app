@@ -7,7 +7,6 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_ring.dart';
 import '../../../core/widgets/nori_brand_widgets.dart';
-import '../../../core/widgets/server_config_dialog.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../../scanner/models/meal_model.dart';
 import '../controllers/home_controller.dart';
@@ -352,32 +351,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Server configuration quick access button
-                        GestureDetector(
-                          onTap: () => ServerConfigDialog.show(context),
-                          child: Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundCard,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: AppColors.border),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.05),
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              LucideIcons.server,
-                              size: 16,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
                         // Avatar Initial Circle
                         GestureDetector(
                           onTap: () => widget.onNavigateTab?.call(4), // Navigate to Profile

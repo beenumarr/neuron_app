@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_illustrations.dart';
 import '../../../core/widgets/app_logo.dart';
-import '../../../core/widgets/server_config_dialog.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -31,36 +29,10 @@ class WelcomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const NoriBrandLockup(iconSize: 34, fontSize: 24, spacing: 8),
-                            GestureDetector(
-                              onTap: () => ServerConfigDialog.show(context),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: AppColors.backgroundCard,
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(color: AppColors.line),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(LucideIcons.server, size: 14, color: AppColors.teal),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'Server',
-                                      style: AppTypography.caption.copyWith(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.mute,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            NoriBrandLockup(iconSize: 34, fontSize: 24, spacing: 8),
                           ],
                         ),
                         const SizedBox(height: 12),

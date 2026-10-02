@@ -48,6 +48,8 @@ class TokenStorage {
     try {
       final prefs = await SharedPreferences.getInstance();
       _isOnboarded = prefs.getBool(_keyOnboarded) ?? prefs.getBool(_legacyKeyOnboarded) ?? false;
+      await prefs.remove(_keyCustomBaseUrl);
+      await prefs.remove(_legacyKeyCustomBaseUrl);
     } catch (_) {}
   }
 
