@@ -113,6 +113,23 @@ class HomeController extends ChangeNotifier {
       _sleepGoalHours > 0 ? (sleepHours / _sleepGoalHours).clamp(0.0, 1.0) : 0.0;
   String get sleepAiReason => _sleepAiReason;
 
+  // AI Focus Tags for Health Goals
+  String get stepsFocusTag {
+    if (_stepsGoal >= 10000) return 'NEAT & Fat Burn';
+    if (_stepsGoal == 8500) return 'Insulin & BP Balance';
+    if (_stepsGoal == 9000) return 'Heart & Arterial Health';
+    if (_stepsGoal == 7500) return 'Active Recovery';
+    return 'Metabolic Health';
+  }
+
+  String get sleepFocusTag {
+    if (_sleepGoalHours >= 8.5) return 'Anabolic Synthesis';
+    if (_sleepGoalHours == 7.5) return 'Circadian Support';
+    if (_sleepAiReason.contains('BP')) return 'Vascular Recovery';
+    if (_sleepAiReason.contains('leptin')) return 'Appetite & Leptin';
+    return 'Cellular Repair';
+  }
+
   // Calibrate AI Targets from Profile
   void calibrateAiTargets(HealthProfileModel? profile) {
     if (profile == null) return;
@@ -189,15 +206,15 @@ class HomeController extends ChangeNotifier {
     }
   }
 
-  Future<void> addWaterCup() async {
-    _waterCups = (_waterCups + 1).clamp(0, 24);
+  Future<void> addWaterCup([int cups = 1]) async {
+    _waterCups = (_waterCups + cups).clamp(0, 48);
     notifyListeners();
     _saveHabit('habits_water_$_todayKey', _waterCups);
   }
 
-  Future<void> removeWaterCup() async {
+  Future<void> removeWaterCup([int cups = 1]) async {
     if (_waterCups > 0) {
-      _waterCups -= 1;
+      _waterCups = (_waterCups - cups).clamp(0, 48);
       notifyListeners();
       _saveHabit('habits_water_$_todayKey', _waterCups);
     }
