@@ -5,7 +5,6 @@ import '../../modules/auth/views/forgot_password_screen.dart';
 import '../../modules/auth/views/login_screen.dart';
 import '../../modules/auth/views/register_screen.dart';
 import '../../modules/auth/views/reset_password_screen.dart';
-import '../../modules/auth/views/splash_screen.dart';
 import '../../modules/auth/views/welcome_screen.dart';
 import '../../modules/health/views/main_screen.dart';
 import '../../modules/health/views/onboarding_complete_screen.dart';
@@ -15,25 +14,21 @@ import '../../modules/health/views/onboarding_setup_screen.dart';
 class AppRouter {
   static GoRouter createRouter(AuthController authController) {
     return GoRouter(
-      initialLocation: '/splash',
+      initialLocation: authController.isAuthenticated
+          ? (authController.isOnboarded ? '/home' : '/onboarding-setup')
+          : '/welcome',
       refreshListenable: authController,
       redirect: (BuildContext context, GoRouterState state) {
         final isAuth = authController.isAuthenticated;
         final isOnboarded = authController.isOnboarded;
         final loc = state.matchedLocation;
 
-        final isPublicRoute = loc == '/splash' ||
-            loc == '/welcome' ||
+        final isPublicRoute = loc == '/welcome' ||
             loc == '/onboarding' ||
             loc == '/login' ||
             loc == '/register' ||
             loc == '/forgot-password' ||
             loc == '/reset-password';
-
-        // Still loading/initializing splash
-        if (authController.isInitial && loc == '/splash') {
-          return null;
-        }
 
         // Unauthenticated users attempting to access protected screens
         if (!isAuth) {
@@ -46,7 +41,7 @@ class AppRouter {
         // Authenticated users
         if (isAuth) {
           // If on public auth screens, redirect into the app flow
-          if (loc == '/welcome' || loc == '/login' || loc == '/register' || loc == '/splash') {
+          if (loc == '/welcome' || loc == '/login' || loc == '/register') {
             return isOnboarded ? '/home' : '/onboarding-setup';
           }
 
@@ -59,10 +54,6 @@ class AppRouter {
         return null;
       },
       routes: [
-        GoRoute(
-          path: '/splash',
-          builder: (context, state) => const SplashScreen(),
-        ),
         GoRoute(
           path: '/welcome',
           builder: (context, state) => const WelcomeScreen(),

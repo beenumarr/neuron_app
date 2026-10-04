@@ -86,8 +86,8 @@ void main() async {
     mealApiService: mealApiService,
   );
 
-  // Initialize existing auth session asynchronously in the background
-  authController.initialize();
+  // Initialize existing auth session
+  await authController.initialize();
 
   runApp(
     MultiProvider(
