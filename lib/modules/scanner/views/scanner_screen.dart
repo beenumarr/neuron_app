@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:image_picker/image_picker.dart';
@@ -83,16 +84,48 @@ class _ScannerScreenState extends State<ScannerScreen>
         // Also refresh Home dashboard so calories and rings update
         context.read<HomeController>().fetchDashboardData(silent: true);
 
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${result.foodName} logged to your meal diary!'),
-            backgroundColor: AppColors.brand,
-            action: SnackBarAction(
-              label: 'View Diary',
-              textColor: Colors.white,
-              onPressed: () {
-                setState(() => _activeSegment = 1);
-              },
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            backgroundColor: const Color(0xFF0B4F4A),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(milliseconds: 2000),
+            content: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 22,
+                  height: 22,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF16A37F),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    LucideIcons.check,
+                    size: 13,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    '${result.foodName} logged to diary',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ),
         );

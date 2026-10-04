@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/app_ring.dart';
-import '../../../core/widgets/nori_brand_widgets.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../../scanner/models/meal_model.dart';
 import '../controllers/home_controller.dart';
@@ -557,13 +556,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 14),
-
-                // Nori AI Answer Card (v2 Brand Guidelines Specification)
-                NoriAiAnswerCard(
-                  title: 'Nori measured against your profile',
-                  content: homeController.getShortAiInsight(profile),
                 ),
                 const SizedBox(height: 14),
 

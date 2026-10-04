@@ -5,7 +5,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../core/widgets/nori_brand_widgets.dart';
 import '../controllers/progress_controller.dart';
 
 class ProgressScreen extends StatefulWidget {
@@ -97,9 +96,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   _buildCalorieIntakeCard(calorieSeries),
                   const SizedBox(height: 16),
 
-                  // "Where we stop" Clinical Disclaimer
-                  const NoriDisclaimerCard(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                 ],
               ],
             ),

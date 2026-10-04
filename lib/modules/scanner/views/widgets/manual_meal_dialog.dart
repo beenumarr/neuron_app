@@ -1,3 +1,5 @@
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -82,10 +84,47 @@ class _ManualMealDialogState extends State<ManualMealDialog> {
       setState(() => _isSaving = false);
       if (success) {
         Navigator.pop(context);
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Meal logged successfully!'),
-            backgroundColor: AppColors.brand,
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            backgroundColor: const Color(0xFF0B4F4A),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(milliseconds: 2000),
+            content: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 22,
+                  height: 22,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF16A37F),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    LucideIcons.check,
+                    size: 13,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Meal logged successfully',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       } else {

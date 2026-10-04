@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
-import '../../../core/widgets/nori_brand_widgets.dart';
 import '../../auth/controllers/auth_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -356,9 +355,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Nori "Where we stop" Clinical Disclaimer Card
-              const NoriDisclaimerCard(),
-              const SizedBox(height: 16),
+
 
               // Sign Out Button (Pill Danger Style)
               AppButton.outline(

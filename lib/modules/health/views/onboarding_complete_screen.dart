@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_illustrations.dart';
-import '../../../core/widgets/nori_brand_widgets.dart';
 
 class OnboardingCompleteScreen extends StatelessWidget {
   const OnboardingCompleteScreen({super.key});
@@ -81,9 +80,7 @@ class OnboardingCompleteScreen extends StatelessWidget {
 
               const Spacer(flex: 2),
 
-              // "Where we stop" Clinical Disclaimer
-              const NoriDisclaimerCard(),
-              const SizedBox(height: 20),
+
 
               // Go to Dashboard Button
               AppButton(

@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/nori_brand_widgets.dart';
 import '../../models/scan_result_model.dart';
 
 class ScanResultView extends StatelessWidget {
@@ -204,14 +203,7 @@ class ScanResultView extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 18),
-
-          // Nori AI Answer Card (v2 Brand Guidelines Specification)
-          NoriAiAnswerCard(
-            title: 'Nori measured against your profile',
-            content: result.verdictReason,
-          ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 20),
 
           // Action Buttons (Pill actions)
           Row(
