@@ -772,32 +772,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Weight Tracking History',
-                              style: GoogleFonts.sora(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.ink,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Weight Tracking History',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.sora(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.ink,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              _weightHistory.isNotEmpty
-                                  ? 'Last entry: ${_formatDate(_weightHistory.first['recorded_at'])}'
-                                  : 'No measurements logged yet',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                color: AppColors.mute,
+                              const SizedBox(height: 2),
+                              Text(
+                                _weightHistory.isNotEmpty
+                                    ? 'Last entry: ${_formatDate(_weightHistory.first['recorded_at'])}'
+                                    : 'No measurements logged yet',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  color: AppColors.mute,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+                        const SizedBox(width: 8),
                         TextButton.icon(
                           onPressed: () => _showLogWeightDialog(context, profile),
-                          icon: const Icon(LucideIcons.plus, size: 15, color: AppColors.teal),
+                          icon: const Icon(LucideIcons.plus, size: 14, color: AppColors.teal),
                           label: Text(
                             'Log Weight',
                             style: GoogleFonts.inter(
@@ -808,7 +815,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           style: TextButton.styleFrom(
                             backgroundColor: AppColors.mint,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
                         ),
