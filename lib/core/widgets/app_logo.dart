@@ -3,13 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 
 enum NoriLogoVariant {
-  /// Symbol with rounded clean white container, crisp border and soft shadow
   contained,
-
-  /// Standalone transparent Nori Green emblem
   standalone,
-
-  /// Standalone for dark backgrounds
   standaloneOnDark,
 }
 
@@ -30,41 +25,27 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (variant == NoriLogoVariant.contained) {
-      return Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(size * 0.26),
-          boxShadow: showShadow
-              ? [
-                  BoxShadow(
-                    color: AppColors.teal.withValues(alpha: 0.12),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ]
-              : null,
-          border: Border.all(
-            color: AppColors.line.withValues(alpha: 0.8),
-            width: 1.0,
-          ),
-        ),
-        padding: EdgeInsets.all(size * 0.12),
-        child: Image.asset(
-          'assets/images/logo_emblem.png',
-          fit: BoxFit.contain,
-        ),
-      );
-    }
-
-    return SizedBox(
+    return Container(
       width: size,
       height: size,
-      child: Image.asset(
-        'assets/images/logo_emblem.png',
-        fit: BoxFit.contain,
+      decoration: showShadow
+          ? BoxDecoration(
+              borderRadius: BorderRadius.circular(size * 0.22),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.teal.withValues(alpha: 0.14),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            )
+          : null,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(size * 0.22),
+        child: Image.asset(
+          'assets/images/app_logo.png',
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
