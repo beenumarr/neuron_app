@@ -80,6 +80,7 @@ class AuthController extends ChangeNotifier {
   Future<bool> register({
     required String email,
     required String password,
+    bool agreedToTerms = true,
   }) async {
     _isLoading = true;
     _errorMessage = null;
@@ -88,7 +89,11 @@ class AuthController extends ChangeNotifier {
     try {
       // 1. Register the account
       final user = await authApiService.register(
-        RegisterPayload(email: email, password: password),
+        RegisterPayload(
+          email: email,
+          password: password,
+          agreedToTerms: agreedToTerms,
+        ),
       );
       _currentUser = user;
 

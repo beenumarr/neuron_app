@@ -1,3 +1,4 @@
+import '../../../core/data/nigeria_locations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -22,6 +23,9 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
   late final TextEditingController _ageController;
   late final TextEditingController _weightController;
   late final TextEditingController _heightController;
+  late final TextEditingController _cityController;
+  late final TextEditingController _areaController;
+  late final TextEditingController _lgaController;
 
   static const List<String> availableGoals = [
     'Lose weight',
@@ -33,8 +37,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
   ];
 
   static const List<String> availableConditions = [
-    'Type 1 Diabetes',
-    'Type 2 Diabetes',
+    'Diabetes',
     'Hypertension',
     'High Cholesterol',
     'Heart Disease',
@@ -59,27 +62,22 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
   static const List<Map<String, String>> availableActivityLevels = [
     {
       'title': 'Sedentary',
-      'subtitle': 'Little to no exercise',
+      'subtitle': 'Mostly sitting throughout the day, with little exercise.',
       'emoji': '🪑',
     },
     {
-      'title': 'Light',
-      'subtitle': '1-3 days/week',
+      'title': 'Lightly Active',
+      'subtitle': 'Mostly light daily activities, with some walking or occasional light exercise.',
       'emoji': '🚶',
     },
     {
-      'title': 'Moderate',
-      'subtitle': '3-5 days/week',
+      'title': 'Moderately Active',
+      'subtitle': 'Regular walking, exercise, or moderate physical activity on several days of the week.',
       'emoji': '🏃',
     },
     {
-      'title': 'Active',
-      'subtitle': '6-7 days/week',
-      'emoji': '🏋️',
-    },
-    {
       'title': 'Very Active',
-      'subtitle': 'Athlete / physical job',
+      'subtitle': 'Frequent vigorous exercise or a physically demanding daily routine.',
       'emoji': '⚡',
     },
   ];
@@ -93,6 +91,9 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
     _ageController = TextEditingController(text: controller.age?.toString() ?? '30');
     _weightController = TextEditingController(text: controller.weightKg?.toString() ?? '70');
     _heightController = TextEditingController(text: controller.heightCm?.toString() ?? '170');
+    _cityController = TextEditingController(text: controller.city ?? '');
+    _areaController = TextEditingController(text: controller.area ?? '');
+    _lgaController = TextEditingController(text: controller.lga ?? '');
   }
 
   @override
@@ -101,11 +102,14 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
     _ageController.dispose();
     _weightController.dispose();
     _heightController.dispose();
+    _cityController.dispose();
+    _areaController.dispose();
+    _lgaController.dispose();
     super.dispose();
   }
 
   void _nextStep() {
-    if (_currentStep < 4) {
+    if (_currentStep < 5) {
       // Save step 1 inputs if on step 0
       if (_currentStep == 0) {
         _syncStepOneInputs();
@@ -157,6 +161,15 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
   Future<void> _handleCompleteOnboarding() async {
     _syncStepOneInputs();
     final controller = context.read<OnboardingController>();
+    if (_cityController.text.trim().isNotEmpty) {
+      controller.setCity(_cityController.text.trim());
+    }
+    if (_areaController.text.trim().isNotEmpty) {
+      controller.setArea(_areaController.text.trim());
+    }
+    if (_lgaController.text.trim().isNotEmpty) {
+      controller.setLga(_lgaController.text.trim());
+    }
 
     final success = await controller.submitOnboarding();
     if (success && mounted) {
@@ -169,7 +182,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
     final controller = context.watch<OnboardingController>();
     final isLoading = controller.isLoading;
 
-    final canSkip = _currentStep == 2 || _currentStep == 3;
+    final canSkip = _currentStep == 2 || _currentStep == 3 || _currentStep == 5;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
@@ -202,7 +215,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(5, (index) {
+                      children: List.generate(6, (index) {
                         final isActive = index == _currentStep;
                         final isCompleted = index < _currentStep;
 
@@ -260,6 +273,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
                   _buildStep3ChronicConditions(controller),
                   _buildStep4DietaryPreferences(controller),
                   _buildStep5ActivityLevel(controller),
+                  _buildStep6Location(controller),
                 ],
               ),
             ),
@@ -332,7 +346,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
           ),
           const SizedBox(height: 8),
           Row(
-            children: ['Male', 'Female', 'Other'].map((sex) {
+            children: ['Male', 'Female'].map((sex) {
               final isSelected = controller.gender.toLowerCase() == sex.toLowerCase();
               return Expanded(
                 child: Padding(
@@ -560,35 +574,88 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
                       width: isSelected ? 1.5 : 1.0,
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        condition,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                          color: isSelected ? AppColors.brandDark : AppColors.textPrimary,
-                        ),
-                      ),
-                      if (isSelected)
-                        const Icon(
-                          LucideIcons.checkCircle,
-                          size: 18,
-                          color: AppColors.brand,
-                        )
-                      else
-                        Container(
-                          width: 18,
-                          height: 18,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.border,
-                              width: 1.5,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            condition,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                              color: isSelected ? AppColors.brandDark : AppColors.textPrimary,
                             ),
                           ),
+                          if (isSelected)
+                            const Icon(
+                              LucideIcons.checkCircle,
+                              size: 18,
+                              color: AppColors.brand,
+                            )
+                          else
+                            Container(
+                              width: 18,
+                              height: 18,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.border,
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      if (condition == 'Diabetes' && isSelected) ...[
+                        const SizedBox(height: 12),
+                        const Divider(height: 1, color: AppColors.line),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Which type of diabetes do you have?',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
                         ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            'Type 1 Diabetes',
+                            'Type 2 Diabetes',
+                            'Gestational Diabetes',
+                            'Other/Unspecified',
+                          ].map((type) {
+                            final isTypeSelected = controller.diabetesType == type;
+                            return GestureDetector(
+                              onTap: () => controller.setDiabetesType(type),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 150),
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: isTypeSelected ? AppColors.brand : AppColors.backgroundPage,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: isTypeSelected ? AppColors.brand : AppColors.border,
+                                  ),
+                                ),
+                                child: Text(
+                                  type,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: isTypeSelected ? FontWeight.w700 : FontWeight.w500,
+                                    color: isTypeSelected ? Colors.white : AppColors.textSecondary,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -777,6 +844,190 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
               ),
             );
           }),
+        ],
+      ),
+    );
+  }
+
+  // ── Step 6: Geographical Location (Nigeria) ─────────────────────────────
+  Widget _buildStep6Location(OnboardingController controller) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildStepHeader(
+            stepNumber: 6,
+            title: 'Your Location',
+            subtitle: 'Helps NORI recommend regional staples and seasonal foods (Optional)',
+          ),
+          const SizedBox(height: 18),
+
+          // State Picker
+          const Text(
+            'State (Nigeria)',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundCard,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.line),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: controller.state,
+                isExpanded: true,
+                hint: Text(
+                  'Select your State',
+                  style: GoogleFonts.inter(fontSize: 14, color: AppColors.mute),
+                ),
+                icon: const Icon(LucideIcons.chevronDown, size: 18, color: AppColors.teal),
+                items: NigeriaLocations.states.map((state) {
+                  return DropdownMenuItem<String>(
+                    value: state,
+                    child: Text(
+                      state,
+                      style: GoogleFonts.inter(fontSize: 14, color: AppColors.ink),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (val) {
+                  controller.setStateLocation(val);
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // Region banner (auto-assigned)
+          if (controller.region != null) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: AppColors.mint,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.teal.withValues(alpha: 0.2)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(LucideIcons.mapPin, size: 18, color: AppColors.teal),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Region: ${controller.region}',
+                          style: GoogleFonts.sora(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.teal,
+                          ),
+                        ),
+                        Text(
+                          'Auto-assigned. NORI will prioritize regional culinary recipes.',
+                          style: GoogleFonts.inter(fontSize: 11, color: AppColors.mute),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
+          ],
+
+          // Local Government Area (LGA)
+          const Text(
+            'Local Government Area (LGA)',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          if (controller.state != null && NigeriaLocations.getSampleLgasForState(controller.state!).isNotEmpty) ...[
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: NigeriaLocations.getSampleLgasForState(controller.state!).map((sampleLga) {
+                final isSelected = controller.lga == sampleLga;
+                return GestureDetector(
+                  onTap: () {
+                    controller.setLga(sampleLga);
+                    _lgaController.text = sampleLga;
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppColors.brandLight : AppColors.backgroundCard,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isSelected ? AppColors.brand : AppColors.line,
+                      ),
+                    ),
+                    child: Text(
+                      sampleLga,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        color: isSelected ? AppColors.brandDark : AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 8),
+          ],
+          _buildInputField(
+            controller: _lgaController,
+            hint: 'e.g. Ikeja, Kano Municipal, Port Harcourt',
+            keyboardType: TextInputType.text,
+          ),
+          const SizedBox(height: 14),
+
+          // City
+          const Text(
+            'City / Town',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildInputField(
+            controller: _cityController,
+            hint: 'e.g. Ikeja, Ibadan, Kaduna, Enugu',
+            keyboardType: TextInputType.text,
+          ),
+          const SizedBox(height: 14),
+
+          // Area / Neighborhood
+          const Text(
+            'Area / Neighborhood (Optional)',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildInputField(
+            controller: _areaController,
+            hint: 'e.g. Alausa, Bodija, Wuse 2, GRA',
+            keyboardType: TextInputType.text,
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );

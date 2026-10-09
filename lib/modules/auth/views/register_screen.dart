@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
@@ -23,13 +24,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
 
-  bool _agreeTerms = true;
+  bool _agreeTerms = false;
   String? _emailError;
   String? _passwordError;
   String? _confirmError;
 
+  late final TapGestureRecognizer _termsRecognizer;
+  late final TapGestureRecognizer _privacyRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _termsRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        context.push('/terms');
+      };
+    _privacyRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        context.push('/privacy');
+      };
+  }
+
   @override
   void dispose() {
+    _termsRecognizer.dispose();
+    _privacyRecognizer.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -94,6 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final success = await authController.register(
       email: _emailController.text.trim(),
       password: _passwordController.text,
+      agreedToTerms: _agreeTerms,
     );
 
     if (success && mounted) {
@@ -260,15 +280,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontSize: 12,
                             height: 1.4,
                           ),
-                          children: const [
-                            TextSpan(text: 'I agree to the '),
+                          children: [
+                            const TextSpan(text: 'I agree to the '),
                             TextSpan(
-                              text: 'Terms and Privacy Policy',
-                              style: TextStyle(
+                              text: 'Terms of Service',
+                              recognizer: _termsRecognizer,
+                              style: const TextStyle(
                                 color: AppColors.brand,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
+                                decoration: TextDecoration.underline,
                               ),
                             ),
+                            const TextSpan(text: ' and '),
+                            TextSpan(
+                              text: 'Privacy Policy',
+                              recognizer: _privacyRecognizer,
+                              style: const TextStyle(
+                                color: AppColors.brand,
+                                fontWeight: FontWeight.w700,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            const TextSpan(text: '.'),
                           ],
                         ),
                       ),

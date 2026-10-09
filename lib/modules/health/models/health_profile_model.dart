@@ -7,6 +7,13 @@ class HealthProfileModel {
   final double? weightKg;
   final double? heightCm;
   final List<String> conditions;
+  final String? diabetesType;
+  final String? activityLevel;
+  final String? state;
+  final String? city;
+  final String? lga;
+  final String? area;
+  final String? region;
   final List<String> allergies;
   final List<String> dietaryPreferences;
   final String? goal;
@@ -23,6 +30,13 @@ class HealthProfileModel {
     this.weightKg,
     this.heightCm,
     this.conditions = const [],
+    this.diabetesType,
+    this.activityLevel,
+    this.state,
+    this.city,
+    this.lga,
+    this.area,
+    this.region,
     this.allergies = const [],
     this.dietaryPreferences = const [],
     this.goal,
@@ -41,6 +55,13 @@ class HealthProfileModel {
       weightKg: json['weight_kg'] != null ? (json['weight_kg'] as num).toDouble() : null,
       heightCm: json['height_cm'] != null ? (json['height_cm'] as num).toDouble() : null,
       conditions: (json['conditions'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      diabetesType: json['diabetes_type'] as String?,
+      activityLevel: json['activity_level'] as String?,
+      state: json['state'] as String?,
+      city: json['city'] as String?,
+      lga: json['lga'] as String?,
+      area: json['area'] as String?,
+      region: json['region'] as String?,
       allergies: (json['allergies'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       dietaryPreferences: (json['dietary_preferences'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       goal: json['goal'] as String?,
@@ -59,6 +80,13 @@ class HealthProfileModel {
         'weight_kg': weightKg,
         'height_cm': heightCm,
         'conditions': conditions,
+        if (diabetesType != null) 'diabetes_type': diabetesType,
+        if (activityLevel != null) 'activity_level': activityLevel,
+        if (state != null) 'state': state,
+        if (city != null) 'city': city,
+        if (lga != null) 'lga': lga,
+        if (area != null) 'area': area,
+        if (region != null) 'region': region,
         'allergies': allergies,
         'dietary_preferences': dietaryPreferences,
         'goal': goal,

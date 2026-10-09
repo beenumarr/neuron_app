@@ -1,3 +1,4 @@
+import '../../chat/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -20,6 +21,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _tellNoriController = TextEditingController();
+  bool _isSubmittingTellNori = false;
+
+  @override
+  void dispose() {
+    _tellNoriController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +69,175 @@ class _HomeScreenState extends State<HomeScreen> {
     final weekday = weekdays[now.weekday - 1];
     final month = months[now.month - 1];
     return '$weekday, $month ${now.day}';
+  }
+
+  void _handleTellNoriSubmit() async {
+    final text = _tellNoriController.text.trim();
+    if (text.isEmpty || _isSubmittingTellNori) return;
+
+    setState(() => _isSubmittingTellNori = true);
+    _tellNoriController.clear();
+
+    try {
+      final chatController = context.read<ChatController>();
+      chatController.sendMessage(text);
+      widget.onNavigateTab?.call(2);
+    } catch (e) {
+      debugPrint('[HomeScreen] Tell Nori error: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmittingTellNori = false);
+      }
+    }
+  }
+
+  void _showLogMealOptionsSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+        decoration: const BoxDecoration(
+          color: AppColors.backgroundCard,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Text(
+              'Log Meal',
+              style: GoogleFonts.sora(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: AppColors.ink,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Choose how you would like to log your meal',
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                color: AppColors.mute,
+              ),
+            ),
+            const SizedBox(height: 18),
+            // Option 1: Scan Meal
+            GestureDetector(
+              onTap: () {
+                Navigator.of(ctx).pop();
+                widget.onNavigateTab?.call(1);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.cleanWhite,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.teal.withValues(alpha: 0.2)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: AppColors.mint,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(LucideIcons.camera, color: AppColors.teal, size: 22),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Scan Meal',
+                            style: GoogleFonts.sora(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Take a photo or upload an image to identify foods and estimate nutrients with AI.',
+                            style: GoogleFonts.inter(fontSize: 11, color: AppColors.mute),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(LucideIcons.chevronRight, size: 18, color: AppColors.mute),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Option 2: Log Manually
+            GestureDetector(
+              onTap: () {
+                Navigator.of(ctx).pop();
+                _showQuickLogDialog();
+              },
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.cleanWhite,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.line),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundPage,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(LucideIcons.utensils, color: AppColors.brand, size: 22),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Log Manually',
+                            style: GoogleFonts.sora(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Enter food item name, meal type, portion size, and calories or macros directly.',
+                            style: GoogleFonts.inter(fontSize: 11, color: AppColors.mute),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(LucideIcons.chevronRight, size: 18, color: AppColors.mute),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showQuickLogDialog() {
@@ -640,7 +819,101 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildHabitsAndRecoverySection(context, homeController, profile),
                 const SizedBox(height: 18),
 
-                // Quick Actions
+                // ── Tell NORI What's Going On Card (Requirement 8) ──
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundCard,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.teal.withValues(alpha: 0.2)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.teal.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: AppColors.mint,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(LucideIcons.sparkles, color: AppColors.teal, size: 18),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              "Tell NORI What's Going On",
+                              style: GoogleFonts.sora(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.ink,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "Explain a concern, craving, or symptom in your own words for personalized Nigerian nutrition guidance.",
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          color: AppColors.mute,
+                          height: 1.35,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.cleanWhite,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppColors.line),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _tellNoriController,
+                                minLines: 1,
+                                maxLines: 3,
+                                style: GoogleFonts.inter(fontSize: 13, color: AppColors.ink),
+                                decoration: const InputDecoration(
+                                  hintText: "Tell NORI what's happening or what you need help with...",
+                                  hintStyle: TextStyle(fontSize: 12, color: AppColors.textMuted),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                  border: InputBorder.none,
+                                ),
+                                onSubmitted: (_) => _handleTellNoriSubmit(),
+                              ),
+                            ),
+                            IconButton(
+                              icon: _isSubmittingTellNori
+                                  ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.teal),
+                                    )
+                                  : const Icon(LucideIcons.sendHorizontal, color: AppColors.teal, size: 20),
+                              onPressed: _isSubmittingTellNori ? null : _handleTellNoriSubmit,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 18),
+
+                // Quick Actions (Requirement 5: Standalone Weight removed, Log Meal offers Scan or Manual)
                 Text(
                   'Quick Actions',
                   style: GoogleFonts.sora(
@@ -657,7 +930,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       label: 'Log Meal',
                       icon: LucideIcons.utensils,
                       color: AppColors.teal,
-                      onTap: _showQuickLogDialog,
+                      onTap: _showLogMealOptionsSheet,
                     ),
                     _buildQuickActionItem(
                       label: 'Scan Food',
@@ -672,20 +945,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () => widget.onNavigateTab?.call(2),
                     ),
                     _buildQuickActionItem(
-                      label: 'Weight',
-                      icon: LucideIcons.target,
+                      label: 'Profile',
+                      icon: LucideIcons.user,
                       color: AppColors.teal,
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Current Recorded Weight: ${profile?.weightKg ?? 72} kg',
-                            ),
-                            backgroundColor: AppColors.teal,
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      },
+                      onTap: () => widget.onNavigateTab?.call(4),
                     ),
                   ],
                 ),

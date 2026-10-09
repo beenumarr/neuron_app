@@ -1,3 +1,5 @@
+import '../../modules/auth/views/privacy_policy_screen.dart';
+import '../../modules/auth/views/terms_of_service_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../modules/auth/controllers/auth_controller.dart';
@@ -28,7 +30,9 @@ class AppRouter {
             loc == '/login' ||
             loc == '/register' ||
             loc == '/forgot-password' ||
-            loc == '/reset-password';
+            loc == '/reset-password' ||
+            loc == '/terms' ||
+            loc == '/privacy';
 
         // Unauthenticated users attempting to access protected screens
         if (!isAuth) {
@@ -69,6 +73,14 @@ class AppRouter {
         GoRoute(
           path: '/register',
           builder: (context, state) => const RegisterScreen(),
+        ),
+        GoRoute(
+          path: '/terms',
+          builder: (context, state) => const TermsOfServiceScreen(),
+        ),
+        GoRoute(
+          path: '/privacy',
+          builder: (context, state) => const PrivacyPolicyScreen(),
         ),
         GoRoute(
           path: '/forgot-password',
