@@ -33,8 +33,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
   ];
 
   static const List<String> availableConditions = [
-    'Type 1 Diabetes',
-    'Type 2 Diabetes',
+    'Diabetes',
     'Hypertension',
     'High Cholesterol',
     'Heart Disease',
@@ -44,43 +43,75 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
     'None',
   ];
 
-  static const List<String> availableDietaryPrefs = [
-    'No restrictions',
-    'Vegetarian',
-    'Vegan',
-    'Gluten-Free',
-    'Dairy-Free',
-    'Keto',
-    'Paleo',
-    'Low-Sodium',
-    'Low-Sugar',
+  static const List<String> diabetesTypes = [
+    'Type 1 Diabetes',
+    'Type 2 Diabetes',
+    'Gestational Diabetes',
+    'Other / Unspecified',
   ];
+
+  static const Map<String, List<String>> lifestyleAndDietOptions = {
+    'Dietary Preferences': [
+      'No restrictions',
+      'Vegetarian',
+      'Vegan',
+      'Low-Sodium',
+      'Low-Sugar',
+      'Ulcer-Friendly',
+      'Halal',
+    ],
+    'Location & Region': [
+      'Lagos (South West)',
+      'Abuja / FCT (North Central)',
+      'Kano (North West)',
+      'Port Harcourt (South South)',
+      'Enugu (South East)',
+      'Ibadan (South West)',
+      'Northern Nigeria',
+      'Southern Nigeria',
+    ],
+    'Lifestyle & Occupation': [
+      'Desk Job / Mostly Sitting',
+      'Standing / On-Feet All Day',
+      'Student',
+      'Shift / Night Worker',
+      'Active Field Work',
+    ],
+    'Meal Habits & Accessibility': [
+      '2 meals/day',
+      '3 meals/day',
+      'Intermittent Fasting',
+      'Late Night Dinners',
+      'Cooks at Home',
+      'Buys from Local Market',
+      'Eats at Bukas / Canteens',
+    ],
+  };
 
   static const List<Map<String, String>> availableActivityLevels = [
     {
       'title': 'Sedentary',
-      'subtitle': 'Little to no exercise',
+      'subtitle': 'Mostly sitting throughout the day with little exercise',
+      'example': 'e.g., Desk jobs, driving, studying, screen time',
       'emoji': '🪑',
     },
     {
-      'title': 'Light',
-      'subtitle': '1-3 days/week',
+      'title': 'Lightly Active',
+      'subtitle': 'Light daily movement with occasional light exercise',
+      'example': 'e.g., Teaching, retail, walking 1–3 days/week',
       'emoji': '🚶',
     },
     {
-      'title': 'Moderate',
-      'subtitle': '3-5 days/week',
+      'title': 'Moderately Active',
+      'subtitle': 'Regular walking, exercise, or moderate physical activity',
+      'example': 'e.g., Brisk walking, cycling, workouts 3–5 days/week',
       'emoji': '🏃',
     },
     {
-      'title': 'Active',
-      'subtitle': '6-7 days/week',
-      'emoji': '🏋️',
-    },
-    {
       'title': 'Very Active',
-      'subtitle': 'Athlete / physical job',
-      'emoji': '⚡',
+      'subtitle': 'Frequent vigorous exercise or physically demanding routine',
+      'example': 'e.g., Heavy manual labor, construction, sports 6–7 days/week',
+      'emoji': '🏋️',
     },
   ];
 
@@ -332,7 +363,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
           ),
           const SizedBox(height: 8),
           Row(
-            children: ['Male', 'Female', 'Other'].map((sex) {
+            children: ['Male', 'Female'].map((sex) {
               final isSelected = controller.gender.toLowerCase() == sex.toLowerCase();
               return Expanded(
                 child: Padding(
@@ -543,6 +574,135 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
 
           // List of Conditions
           ...availableConditions.map((condition) {
+            if (condition == 'Diabetes') {
+              final isDiabetesSelected = selected.any((c) => c.toLowerCase().contains('diabetes'));
+              final currentDiabetesMatch = selected.firstWhere(
+                (c) => c.toLowerCase().contains('diabetes'),
+                orElse: () => '',
+              );
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (isDiabetesSelected) {
+                          final toRemove = selected.where((c) => c.toLowerCase().contains('diabetes')).toList();
+                          for (final item in toRemove) {
+                            controller.toggleCondition(item);
+                          }
+                        } else {
+                          controller.toggleCondition('Diabetes (Type 2)');
+                        }
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                        decoration: BoxDecoration(
+                          color: isDiabetesSelected ? AppColors.brandLight : AppColors.backgroundCard,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: isDiabetesSelected ? AppColors.brand : AppColors.border,
+                            width: isDiabetesSelected ? 1.5 : 1.0,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Diabetes',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: isDiabetesSelected ? FontWeight.w700 : FontWeight.w500,
+                                    color: isDiabetesSelected ? AppColors.brandDark : AppColors.textPrimary,
+                                  ),
+                                ),
+                                if (isDiabetesSelected && currentDiabetesMatch.isNotEmpty) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    currentDiabetesMatch,
+                                    style: const TextStyle(fontSize: 11, color: AppColors.brandDark),
+                                  ),
+                                ],
+                              ],
+                            ),
+                            if (isDiabetesSelected)
+                              const Icon(LucideIcons.checkCircle, size: 18, color: AppColors.brand)
+                            else
+                              Container(
+                                width: 18,
+                                height: 18,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.border, width: 1.5),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (isDiabetesSelected) ...[
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Text(
+                          'Select your diabetes type:',
+                          style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
+                        children: diabetesTypes.map((dtype) {
+                          final isTypeSelected = currentDiabetesMatch.contains(dtype) || 
+                              (dtype == 'Type 2 Diabetes' && currentDiabetesMatch == 'Diabetes (Type 2)') ||
+                              (dtype == 'Type 1 Diabetes' && currentDiabetesMatch == 'Diabetes (Type 1)') ||
+                              (dtype == 'Gestational Diabetes' && currentDiabetesMatch == 'Diabetes (Gestational)') ||
+                              (dtype == 'Other / Unspecified' && currentDiabetesMatch == 'Diabetes (Other)');
+
+                          return GestureDetector(
+                            onTap: () {
+                              final toRemove = selected.where((c) => c.toLowerCase().contains('diabetes')).toList();
+                              for (final item in toRemove) {
+                                controller.toggleCondition(item);
+                              }
+                              controller.toggleCondition(dtype);
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 150),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: isTypeSelected ? AppColors.brand : AppColors.backgroundCard,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: isTypeSelected ? AppColors.brand : AppColors.border,
+                                ),
+                              ),
+                              child: Text(
+                                dtype,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: isTypeSelected ? FontWeight.w700 : FontWeight.w500,
+                                  color: isTypeSelected ? Colors.white : AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 6),
+                    ],
+                  ],
+                ),
+              );
+            }
+
             final isSelected = selected.contains(condition);
 
             return Padding(
@@ -600,7 +760,7 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
     );
   }
 
-  // ── Step 4: Dietary Preferences ──────────────────────────────────────────
+  // ── Step 4: Dietary Preferences & Environment ────────────────────────────
   Widget _buildStep4DietaryPreferences(OnboardingController controller) {
     final selected = controller.selectedDietaryPreferences;
 
@@ -611,62 +771,67 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
         children: [
           _buildStepHeader(
             stepNumber: 4,
-            title: 'Dietary Preferences',
-            subtitle: 'Select your dietary lifestyle',
+            title: 'Diet, Lifestyle & Environment',
+            subtitle: 'Personalize recommendations to your location and daily routine',
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 18),
 
-          Wrap(
-            spacing: 10,
-            runSpacing: 12,
-            children: availableDietaryPrefs.map((diet) {
-              final isSelected = selected.contains(diet);
-
-              return GestureDetector(
-                onTap: () => controller.toggleDiet(diet),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.brandLight : AppColors.backgroundCard,
-                    borderRadius: BorderRadius.circular(99),
-                    border: Border.all(
-                      color: isSelected ? AppColors.brand : AppColors.border,
-                      width: isSelected ? 1.5 : 1.0,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.02),
-                        blurRadius: 6,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (isSelected) ...[
-                        const Icon(
-                          LucideIcons.checkCircle,
-                          size: 15,
-                          color: AppColors.brand,
-                        ),
-                        const SizedBox(width: 6),
-                      ],
-                      Text(
-                        diet,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                          color: isSelected ? AppColors.brandDark : AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
+          ...lifestyleAndDietOptions.entries.map((category) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  category.key,
+                  style: GoogleFonts.sora(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
                   ),
                 ),
-              );
-            }).toList(),
-          ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: category.value.map((item) {
+                    final isSelected = selected.contains(item);
+                    return GestureDetector(
+                      onTap: () => controller.toggleDiet(item),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.brandLight : AppColors.backgroundCard,
+                          borderRadius: BorderRadius.circular(99),
+                          border: Border.all(
+                            color: isSelected ? AppColors.brand : AppColors.border,
+                            width: isSelected ? 1.5 : 1.0,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (isSelected) ...[
+                              const Icon(LucideIcons.checkCircle, size: 14, color: AppColors.brand),
+                              const SizedBox(width: 5),
+                            ],
+                            Text(
+                              item,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                color: isSelected ? AppColors.brandDark : AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+              ],
+            );
+          }),
         ],
       ),
     );
@@ -756,6 +921,17 @@ class _OnboardingSetupScreenState extends State<OnboardingSetupScreen> {
                                 color: AppColors.textSecondary,
                               ),
                             ),
+                            if (level['example'] != null) ...[
+                              const SizedBox(height: 3),
+                              Text(
+                                level['example']!,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontStyle: FontStyle.italic,
+                                  color: AppColors.textMuted,
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),

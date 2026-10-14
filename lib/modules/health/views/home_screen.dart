@@ -61,6 +61,111 @@ class _HomeScreenState extends State<HomeScreen> {
     return '$weekday, $month ${now.day}';
   }
 
+  void _showLogMealOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Log Meal',
+              style: GoogleFonts.sora(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: AppColors.ink,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Choose how you would like to record your meal:',
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                color: AppColors.mute,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ListTile(
+              leading: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.mint,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(LucideIcons.camera, color: AppColors.teal, size: 22),
+              ),
+              title: Text(
+                'Scan Meal with Camera',
+                style: GoogleFonts.sora(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.ink),
+              ),
+              subtitle: Text(
+                'Snap a photo for instant AI food analysis',
+                style: GoogleFonts.inter(fontSize: 12, color: AppColors.mute),
+              ),
+              trailing: const Icon(LucideIcons.chevronRight, size: 18, color: AppColors.mute),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+                side: const BorderSide(color: AppColors.line),
+              ),
+              onTap: () {
+                Navigator.pop(ctx);
+                widget.onNavigateTab?.call(1);
+              },
+            ),
+            const SizedBox(height: 10),
+            ListTile(
+              leading: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.orange.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(LucideIcons.utensils, color: AppColors.orange, size: 22),
+              ),
+              title: Text(
+                'Log Meal Manually',
+                style: GoogleFonts.sora(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.ink),
+              ),
+              subtitle: Text(
+                'Search food database and enter portions',
+                style: GoogleFonts.inter(fontSize: 12, color: AppColors.mute),
+              ),
+              trailing: const Icon(LucideIcons.chevronRight, size: 18, color: AppColors.mute),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+                side: const BorderSide(color: AppColors.line),
+              ),
+              onTap: () {
+                Navigator.pop(ctx);
+                _showQuickLogDialog();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showQuickLogDialog() {
     final nameController = TextEditingController();
     final caloriesController = TextEditingController();
@@ -651,13 +756,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 10),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildQuickActionItem(
                       label: 'Log Meal',
                       icon: LucideIcons.utensils,
                       color: AppColors.teal,
-                      onTap: _showQuickLogDialog,
+                      onTap: () => _showLogMealOptions(context),
                     ),
                     _buildQuickActionItem(
                       label: 'Scan Food',
@@ -670,22 +775,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: LucideIcons.messageCircle,
                       color: AppColors.amber,
                       onTap: () => widget.onNavigateTab?.call(2),
-                    ),
-                    _buildQuickActionItem(
-                      label: 'Weight',
-                      icon: LucideIcons.target,
-                      color: AppColors.teal,
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Current Recorded Weight: ${profile?.weightKg ?? 72} kg',
-                            ),
-                            backgroundColor: AppColors.teal,
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      },
                     ),
                   ],
                 ),
