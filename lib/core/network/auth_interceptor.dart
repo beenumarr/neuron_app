@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import '../storage/token_storage.dart';
-import 'api_endpoints.dart';
+import "dart:async";
+import "package:dio/dio.dart";
+import "package:flutter/foundation.dart";
+import "../storage/token_storage.dart";
+import "api_endpoints.dart";
 
 typedef OnTokenExpired = void Function();
 
@@ -23,40 +23,39 @@ class AuthInterceptor extends QueuedInterceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     final token = tokenStorage.accessToken;
-    final isAuthEndpoint = options.path.contains('/api/v1/auth/login') ||
-        options.path.contains('/api/v1/auth/register') ||
-        options.path.contains('/api/v1/auth/refresh') ||
-        options.path.contains('/api/v1/auth/forgot-password') ||
-        options.path.contains('/api/v1/auth/reset-password');
+    final isAuthEndpoint = options.path.contains("/api/v1/auth/login") ||
+        options.path.contains("/api/v1/auth/register") ||
+        options.path.contains("/api/v1/auth/refresh") ||
+        options.path.contains("/api/v1/auth/forgot-password") ||
+        options.path.contains("/api/v1/auth/reset-password");
 
     if (token != null && token.isNotEmpty && !isAuthEndpoint) {
-      options.headers['Authorization'] = 'Bearer $token';
+      options.headers["Authorization"] = "Bearer \$token";
     }
 
-    options.headers['Content-Type'] = 'application/json';
-    options.headers['Accept'] = 'application/json';
+    options.headers["Content-Type"] = "application/json";
+    options.headers["Accept"] = "application/json";
 
     return handler.next(options);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    // Only attempt token refresh on 401 responses for non-auth endpoints
     final is401 = err.response?.statusCode == 401;
-    final isAuthEndpoint = err.requestOptions.path.contains('/api/v1/auth/');
+    final isAuthEndpoint = err.requestOptions.path.contains("/api/v1/auth/");
 
     if (is401 && !isAuthEndpoint && tokenStorage.refreshToken != null) {
-      debugPrint('[AuthInterceptor] 401 received for ${err.requestOptions.path}. Attempting token refresh...');
+      debugPrint("[AuthInterceptor] 401 received for \${err.requestOptions.path}. Attempting token refresh...");
 
       if (_isRefreshing) {
-        // Queue this request until refresh is done
+        // Queue this request until ongoing refresh is done
         final completer = Completer<String?>();
         _refreshCompleters.add(completer);
         final newToken = await completer.future;
 
         if (newToken != null) {
           final retryOptions = err.requestOptions;
-          retryOptions.headers['Authorization'] = 'Bearer $newToken';
+          retryOptions.headers["Authorization"] = "Bearer \$newToken";
           try {
             final response = await dio.fetch(retryOptions);
             return handler.resolve(response);
@@ -74,7 +73,7 @@ class AuthInterceptor extends QueuedInterceptor {
       try {
         final currentRefreshToken = tokenStorage.refreshToken;
         if (currentRefreshToken == null || currentRefreshToken.isEmpty) {
-          throw Exception('No refresh token available');
+          throw Exception("No refresh token available");
         }
 
         // Use a separate Dio instance to avoid interceptor recursion
@@ -86,23 +85,22 @@ class AuthInterceptor extends QueuedInterceptor {
 
         final response = await refreshDio.post(
           ApiEndpoints.refresh,
-          data: {'refresh_token': currentRefreshToken},
+          data: {"refresh_token": currentRefreshToken},
         );
 
         if (response.statusCode == 200 && response.data != null) {
           final resData = response.data;
-          final tokenData = resData['data'];
-          final newAccessToken = tokenData['access_token'] as String;
-          final newRefreshToken = tokenData['refresh_token'] as String;
+          final tokenData = resData["data"];
+          final newAccessToken = tokenData["access_token"] as String;
+          final newRefreshToken = tokenData["refresh_token"] as String;
 
           await tokenStorage.saveTokens(
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
           );
 
-          debugPrint('[AuthInterceptor] Token refreshed successfully.');
+          debugPrint("[AuthInterceptor] Token refreshed successfully.");
 
-          // Resolve all pending completers
           for (final c in _refreshCompleters) {
             c.complete(newAccessToken);
           }
@@ -111,14 +109,14 @@ class AuthInterceptor extends QueuedInterceptor {
 
           // Retry the original request
           final retryOptions = err.requestOptions;
-          retryOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+          retryOptions.headers["Authorization"] = "Bearer \$newAccessToken";
           final retriedResponse = await dio.fetch(retryOptions);
           return handler.resolve(retriedResponse);
         } else {
-          throw Exception('Refresh returned non-200 status');
+          throw Exception("Refresh returned non-200 status");
         }
       } catch (refreshErr) {
-        debugPrint('[AuthInterceptor] Refresh token expired or failed: $refreshErr');
+        debugPrint("[AuthInterceptor] Refresh failed: \$refreshErr");
 
         for (final c in _refreshCompleters) {
           c.complete(null);
@@ -126,9 +124,22 @@ class AuthInterceptor extends QueuedInterceptor {
         _refreshCompleters.clear();
         _isRefreshing = false;
 
-        // Clear session and notify listener to navigate to login
-        await tokenStorage.clear();
-        onTokenExpired?.call();
+        // Check if error is genuine authorization revocation vs temporary network loss
+        bool isAuthRevoked = false;
+        if (refreshErr is DioException) {
+          final status = refreshErr.response?.statusCode;
+          if (status == 401 || status == 403 || status == 404) {
+            isAuthRevoked = true;
+          }
+        }
+
+        if (isAuthRevoked) {
+          debugPrint("[AuthInterceptor] Refresh token permanently rejected. Clearing credentials.");
+          await tokenStorage.clear();
+          onTokenExpired?.call();
+        } else {
+          debugPrint("[AuthInterceptor] Refresh failed due to connectivity or server error. Retaining session.");
+        }
 
         return handler.next(err);
       }

@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import "package:flutter/foundation.dart";
+import "package:flutter_secure_storage/flutter_secure_storage.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 class TokenStorage {
   static final TokenStorage _instance = TokenStorage._internal();
@@ -15,47 +15,61 @@ class TokenStorage {
   // In-memory cache for ultra-fast synchronous checks
   String? _cachedAccessToken;
   String? _cachedRefreshToken;
+  String? _cachedUserId;
+  String? _cachedUserEmail;
   bool _isOnboarded = false;
 
-  static const String _keyAccessToken = 'nori_access_token';
-  static const String _keyRefreshToken = 'nori_refresh_token';
-  static const String _keyUserEmail = 'nori_user_email';
-  static const String _keyUserId = 'nori_user_id';
-  static const String _keyOnboarded = 'nori_onboarding_completed';
-  static const String _keyCustomBaseUrl = 'nori_custom_base_url';
+  static const String _keyAccessToken = "nori_access_token";
+  static const String _keyRefreshToken = "nori_refresh_token";
+  static const String _keyUserEmail = "nori_user_email";
+  static const String _keyUserId = "nori_user_id";
+  static const String _keyOnboarded = "nori_onboarding_completed";
+  static const String _keyCustomBaseUrl = "nori_custom_base_url";
 
   // Legacy keys for seamless backwards-compatible migration
-  static const String _legacyKeyAccessToken = 'neuron_access_token';
-  static const String _legacyKeyRefreshToken = 'neuron_refresh_token';
-  static const String _legacyKeyUserEmail = 'neuron_user_email';
-  static const String _legacyKeyUserId = 'neuron_user_id';
-  static const String _legacyKeyOnboarded = 'neuron_onboarding_completed';
-  static const String _legacyKeyCustomBaseUrl = 'neuron_custom_base_url';
+  static const String _legacyKeyAccessToken = "neuron_access_token";
+  static const String _legacyKeyRefreshToken = "neuron_refresh_token";
+  static const String _legacyKeyUserEmail = "neuron_user_email";
+  static const String _legacyKeyUserId = "neuron_user_id";
+  static const String _legacyKeyOnboarded = "neuron_onboarding_completed";
+  static const String _legacyKeyCustomBaseUrl = "neuron_custom_base_url";
 
   Future<void> init() async {
+    // 1. Attempt reading from Secure Storage first
     try {
       _cachedAccessToken = await _secureStorage.read(key: _keyAccessToken) ??
           await _secureStorage.read(key: _legacyKeyAccessToken);
       _cachedRefreshToken = await _secureStorage.read(key: _keyRefreshToken) ??
           await _secureStorage.read(key: _legacyKeyRefreshToken);
     } catch (e) {
-      debugPrint('[TokenStorage] Secure storage read error, falling back to SharedPreferences: $e');
-      final prefs = await SharedPreferences.getInstance();
-      _cachedAccessToken = prefs.getString(_keyAccessToken) ?? prefs.getString(_legacyKeyAccessToken);
-      _cachedRefreshToken = prefs.getString(_keyRefreshToken) ?? prefs.getString(_legacyKeyRefreshToken);
+      debugPrint("[TokenStorage] Secure storage read error: $e");
     }
 
+    // 2. Fall back to persistent SharedPreferences if secure storage was empty or threw
     try {
       final prefs = await SharedPreferences.getInstance();
+      _cachedAccessToken ??= prefs.getString(_keyAccessToken) ?? prefs.getString(_legacyKeyAccessToken);
+      _cachedRefreshToken ??= prefs.getString(_keyRefreshToken) ?? prefs.getString(_legacyKeyRefreshToken);
+      _cachedUserId = prefs.getString(_keyUserId) ?? prefs.getString(_legacyKeyUserId);
+      _cachedUserEmail = prefs.getString(_keyUserEmail) ?? prefs.getString(_legacyKeyUserEmail);
       _isOnboarded = prefs.getBool(_keyOnboarded) ?? prefs.getBool(_legacyKeyOnboarded) ?? false;
       await prefs.remove(_keyCustomBaseUrl);
       await prefs.remove(_legacyKeyCustomBaseUrl);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint("[TokenStorage] SharedPreferences init error: $e");
+    }
   }
 
   String? get accessToken => _cachedAccessToken;
   String? get refreshToken => _cachedRefreshToken;
-  bool get hasToken => _cachedAccessToken != null && _cachedAccessToken!.isNotEmpty;
+  String? get cachedUserId => _cachedUserId;
+  String? get cachedUserEmail => _cachedUserEmail;
+
+  /// Returns true if either access token or a valid refresh token exists
+  bool get hasToken =>
+      (_cachedAccessToken != null && _cachedAccessToken!.isNotEmpty) ||
+      (_cachedRefreshToken != null && _cachedRefreshToken!.isNotEmpty);
+
   bool get isOnboarded => _isOnboarded;
 
   Future<void> saveTokens({
@@ -65,13 +79,15 @@ class TokenStorage {
     _cachedAccessToken = accessToken;
     _cachedRefreshToken = refreshToken;
 
+    // Secure persistence
     try {
       await _secureStorage.write(key: _keyAccessToken, value: accessToken);
       await _secureStorage.write(key: _keyRefreshToken, value: refreshToken);
     } catch (e) {
-      debugPrint('[TokenStorage] Secure write failed, using SharedPreferences fallback: $e');
+      debugPrint("[TokenStorage] Secure storage write error: $e");
     }
 
+    // Secondary durable persistence
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_keyAccessToken, accessToken);
@@ -83,25 +99,35 @@ class TokenStorage {
     required String id,
     required String email,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_keyUserId, id);
-    await prefs.setString(_keyUserEmail, email);
+    _cachedUserId = id;
+    _cachedUserEmail = email;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_keyUserId, id);
+      await prefs.setString(_keyUserEmail, email);
+    } catch (_) {}
   }
 
   Future<String?> getUserEmail() async {
+    if (_cachedUserEmail != null) return _cachedUserEmail;
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyUserEmail) ?? prefs.getString(_legacyKeyUserEmail);
+    _cachedUserEmail = prefs.getString(_keyUserEmail) ?? prefs.getString(_legacyKeyUserEmail);
+    return _cachedUserEmail;
   }
 
   Future<String?> getUserId() async {
+    if (_cachedUserId != null) return _cachedUserId;
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyUserId) ?? prefs.getString(_legacyKeyUserId);
+    _cachedUserId = prefs.getString(_keyUserId) ?? prefs.getString(_legacyKeyUserId);
+    return _cachedUserId;
   }
 
   Future<void> setOnboardingCompleted(bool completed) async {
     _isOnboarded = completed;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_keyOnboarded, completed);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_keyOnboarded, completed);
+    } catch (_) {}
   }
 
   Future<String?> getCustomBaseUrl() async {
@@ -117,6 +143,8 @@ class TokenStorage {
   Future<void> clear() async {
     _cachedAccessToken = null;
     _cachedRefreshToken = null;
+    _cachedUserId = null;
+    _cachedUserEmail = null;
     _isOnboarded = false;
 
     try {

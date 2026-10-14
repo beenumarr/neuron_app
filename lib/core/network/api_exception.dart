@@ -59,6 +59,14 @@ class ApiException implements Exception {
     );
   }
 
+  bool get isNetworkError =>
+      statusCode == null ||
+      statusCode == 0 ||
+      message.toLowerCase().contains('connect') ||
+      message.toLowerCase().contains('timed out') ||
+      message.toLowerCase().contains('network') ||
+      message.toLowerCase().contains('socket');
+
   @override
   String toString() => message;
 }
