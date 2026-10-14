@@ -2,17 +2,20 @@ class RegisterPayload {
   final String email;
   final String password;
   final String role;
+  final bool agreedToTerms;
 
   RegisterPayload({
     required this.email,
     required this.password,
     this.role = 'patient',
+    this.agreedToTerms = true,
   });
 
   Map<String, dynamic> toJson() => {
         'email': email.trim().toLowerCase(),
         'password': password,
         'role': role,
+        'agreed_to_terms': agreedToTerms,
       };
 }
 

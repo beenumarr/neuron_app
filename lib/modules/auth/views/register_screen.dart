@@ -24,13 +24,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
 
-  bool _agreeTerms = true;
+  bool _agreeTerms = false;
   String? _emailError;
   String? _passwordError;
   String? _confirmError;
 
+  late final TapGestureRecognizer _termsRecognizer;
+  late final TapGestureRecognizer _privacyRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _termsRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        context.push('/terms');
+      };
+    _privacyRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        context.push('/privacy');
+      };
+  }
+
   @override
   void dispose() {
+    _termsRecognizer.dispose();
+    _privacyRecognizer.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -95,6 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final success = await authController.register(
       email: _emailController.text.trim(),
       password: _passwordController.text,
+      agreedToTerms: _agreeTerms,
     );
 
     if (success && mounted) {
@@ -103,90 +122,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-
-  void _showPolicyModal(BuildContext context, {required String title, required String body}) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        height: MediaQuery.of(ctx).size.height * 0.75,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
-                  ),
-                  IconButton(
-                    icon: const Icon(LucideIcons.x, size: 20),
-                    onPressed: () => Navigator.pop(ctx),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  body,
-                  style: const TextStyle(fontSize: 13, height: 1.6, color: AppColors.textSecondary),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showTerms(BuildContext context) {
-    _showPolicyModal(
-      context,
-      title: "Terms of Service",
-      body: "Welcome to NORI.\n\n"
-          "1. ACCEPTANCE OF TERMS\n"
-          "By creating an account, you agree to these Terms of Service. NORI provides AI-assisted nutrition and wellness guidance.\n\n"
-          "2. MEDICAL DISCLAIMER\n"
-          "NORI is NOT a medical device and does not provide formal medical diagnosis or treatment. Always consult licensed healthcare providers for clinical emergencies or medical conditions.\n\n"
-          "3. USER RESPONSIBILITIES\n"
-          "You agree to provide accurate information and keep your credentials secure.\n\n"
-          "4. PRIVACY & DATA USE\n"
-          "Your health information is handled securely according to our Privacy Policy.",
-    );
-  }
-
-  void _showPrivacy(BuildContext context) {
-    _showPolicyModal(
-      context,
-      title: "Privacy Policy",
-      body: "NORI Privacy Policy\n\n"
-          "1. INFORMATION WE COLLECT\n"
-          "We collect registration details, biometric measurements (weight, height, age), chronic conditions, dietary preferences, and meal logs to personalize your nutritional recommendations.\n\n"
-          "2. HOW WE USE YOUR DATA\n"
-          "Your data is used solely to generate tailored nutritional plans, track dietary progress, and personalize AI assistance.\n\n"
-          "3. DATA SECURITY & OWNERSHIP\n"
-          "Your health data belongs to you. We employ industry-standard encryption and never sell your personal health records to third parties.",
-    );
-  }
   @override
   Widget build(BuildContext context) {
     final authController = context.watch<AuthController>();
@@ -349,23 +284,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const TextSpan(text: 'I agree to the '),
                             TextSpan(
                               text: 'Terms of Service',
+                              recognizer: _termsRecognizer,
                               style: const TextStyle(
                                 color: AppColors.brand,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                                 decoration: TextDecoration.underline,
                               ),
-                              recognizer: TapGestureRecognizer()..onTap = () => _showTerms(context),
                             ),
                             const TextSpan(text: ' and '),
                             TextSpan(
                               text: 'Privacy Policy',
+                              recognizer: _privacyRecognizer,
                               style: const TextStyle(
                                 color: AppColors.brand,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                                 decoration: TextDecoration.underline,
                               ),
-                              recognizer: TapGestureRecognizer()..onTap = () => _showPrivacy(context),
                             ),
+                            const TextSpan(text: '.'),
                           ],
                         ),
                       ),

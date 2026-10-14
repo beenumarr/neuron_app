@@ -43,6 +43,15 @@ class HealthApiService {
     return response.data!;
   }
 
+  Future<List<Map<String, dynamic>>> getMeasurements({String? measurementType}) async {
+    final query = measurementType != null ? '?measurement_type=$measurementType' : '';
+    final response = await apiClient.get<List<dynamic>>(
+      '${ApiEndpoints.healthMeasurements}$query',
+      parser: (data) => data as List<dynamic>,
+    );
+    return response.data?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ?? [];
+  }
+
   Future<void> recordMeasurement({
     required String measurementType,
     required double value,
@@ -56,21 +65,5 @@ class HealthApiService {
         'unit': unit,
       },
     );
-  }
-
-  Future<List<Map<String, dynamic>>> getMeasurements({
-    String? measurementType,
-    int limit = 10,
-  }) async {
-    final queryParams = <String, dynamic>{'limit': limit};
-    if (measurementType != null) {
-      queryParams['measurement_type'] = measurementType;
-    }
-    final response = await apiClient.get<List<dynamic>>(
-      ApiEndpoints.healthMeasurements,
-      queryParameters: queryParams,
-      parser: (data) => data as List<dynamic>,
-    );
-    return response.data?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ?? [];
   }
 }

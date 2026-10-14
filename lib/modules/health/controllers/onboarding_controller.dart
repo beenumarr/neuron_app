@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../../../core/data/nigeria_locations.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../models/onboarding_payload.dart';
 import '../services/health_api_service.dart';
@@ -13,15 +14,23 @@ class OnboardingController extends ChangeNotifier {
   // Onboarding Biometric Form State
   String _name = '';
   int? _age = 30;
-  String _gender = 'male';
+  String _gender = 'male'; // Only 'male' or 'female'
   double? _weightKg = 70.0;
   double? _heightCm = 170.0;
 
   final Set<String> _selectedGoals = {'Eat healthier'};
   final Set<String> _selectedConditions = {};
+  String? _diabetesType = 'Type 2 Diabetes';
   final Set<String> _selectedAllergies = {};
   final Set<String> _selectedDietaryPreferences = {'No restrictions'};
-  String _activityLevel = 'Moderate';
+  String _activityLevel = 'Moderately Active';
+
+  // Location Fields (Nigeria-specific)
+  String? _state;
+  String? _city;
+  String? _lga;
+  String? _area;
+  String? _region;
 
   OnboardingController({
     required this.healthApiService,
@@ -39,9 +48,16 @@ class OnboardingController extends ChangeNotifier {
 
   Set<String> get selectedGoals => _selectedGoals;
   Set<String> get selectedConditions => _selectedConditions;
+  String? get diabetesType => _diabetesType;
   Set<String> get selectedAllergies => _selectedAllergies;
   Set<String> get selectedDietaryPreferences => _selectedDietaryPreferences;
   String get activityLevel => _activityLevel;
+
+  String? get state => _state;
+  String? get city => _city;
+  String? get lga => _lga;
+  String? get area => _area;
+  String? get region => _region;
 
   double? get calculatedBmi {
     if (_weightKg != null && _heightCm != null && _heightCm! > 0) {
@@ -71,7 +87,11 @@ class OnboardingController extends ChangeNotifier {
   }
 
   void setGender(String val) {
-    _gender = val;
+    if (val.toLowerCase() == 'female') {
+      _gender = 'female';
+    } else {
+      _gender = 'male';
+    }
     notifyListeners();
   }
 
@@ -106,8 +126,16 @@ class OnboardingController extends ChangeNotifier {
         _selectedConditions.remove(condition);
       } else {
         _selectedConditions.add(condition);
+        if (condition == 'Diabetes' && _diabetesType == null) {
+          _diabetesType = 'Type 2 Diabetes';
+        }
       }
     }
+    notifyListeners();
+  }
+
+  void setDiabetesType(String? type) {
+    _diabetesType = type;
     notifyListeners();
   }
 
@@ -143,6 +171,32 @@ class OnboardingController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setStateLocation(String? selectedState) {
+    _state = selectedState;
+    if (selectedState != null) {
+      _region = NigeriaLocations.getRegionForState(selectedState);
+    } else {
+      _region = null;
+    }
+    _lga = null; // Reset dependent LGA when state changes
+    notifyListeners();
+  }
+
+  void setLga(String? val) {
+    _lga = val;
+    notifyListeners();
+  }
+
+  void setCity(String? val) {
+    _city = val;
+    notifyListeners();
+  }
+
+  void setArea(String? val) {
+    _area = val;
+    notifyListeners();
+  }
+
   Future<bool> submitOnboarding() async {
     _isLoading = true;
     _errorMessage = null;
@@ -165,6 +219,8 @@ class OnboardingController extends ChangeNotifier {
           ? _selectedGoals.join(', ')
           : 'Healthy Living';
 
+      final hasDiabetes = activeConditions.any((c) => c.toLowerCase().contains('diabet'));
+
       final payload = OnboardingPayload(
         name: userName,
         age: _age ?? 30,
@@ -172,6 +228,13 @@ class OnboardingController extends ChangeNotifier {
         weightKg: _weightKg ?? 70.0,
         heightCm: _heightCm ?? 170.0,
         conditions: activeConditions,
+        diabetesType: hasDiabetes ? _diabetesType : null,
+        activityLevel: _activityLevel,
+        state: _state,
+        city: _city,
+        lga: _lga,
+        area: _area,
+        region: _region,
         allergies: _selectedAllergies.toList(),
         dietaryPreferences: activeDiets,
         goal: activeGoal,
