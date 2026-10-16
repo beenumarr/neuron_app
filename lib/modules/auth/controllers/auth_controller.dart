@@ -162,8 +162,24 @@ class AuthController extends ChangeNotifier {
     final id = await tokenStorage.getUserId();
     if (email != null && id != null) {
       _currentUser = UserModel(id: id, email: email, role: "patient");
+      _status = AuthStatus.authenticated;
+    } else {
+      debugPrint("[AuthController] Incomplete cached user metadata, resetting to unauthenticated");
+      await tokenStorage.clear();
+      _currentUser = null;
+      _healthProfile = null;
+      _status = AuthStatus.unauthenticated;
     }
-    _status = AuthStatus.authenticated;
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> resetToUnauthenticated() async {
+    await tokenStorage.clear();
+    _currentUser = null;
+    _healthProfile = null;
+    _status = AuthStatus.unauthenticated;
+    _errorMessage = null;
     _isLoading = false;
     notifyListeners();
   }

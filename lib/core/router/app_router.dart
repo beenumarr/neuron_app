@@ -25,16 +25,6 @@ class AppRouter {
         final isOnboarded = authController.isOnboarded;
         final loc = state.matchedLocation;
 
-        // While initializing or checking session, remain on the splash screen
-        if (status == AuthStatus.initial || status == AuthStatus.checkingSession) {
-          return loc == "/splash" ? null : "/splash";
-        }
-
-        // If session restoration failed, show splash with retry UI
-        if (status == AuthStatus.sessionRestorationFailed) {
-          return loc == "/splash" ? null : "/splash";
-        }
-
         final isPublicRoute = loc == "/welcome" ||
             loc == "/onboarding" ||
             loc == "/login" ||
@@ -43,6 +33,17 @@ class AppRouter {
             loc == "/reset-password" ||
             loc == "/terms" ||
             loc == "/privacy";
+
+        // While initializing or checking session, remain on the splash screen
+        if (status == AuthStatus.initial || status == AuthStatus.checkingSession) {
+          return loc == "/splash" ? null : "/splash";
+        }
+
+        // If session restoration failed, show splash with retry UI unless navigating to public routes
+        if (status == AuthStatus.sessionRestorationFailed) {
+          if (isPublicRoute) return null;
+          return loc == "/splash" ? null : "/splash";
+        }
 
         // Unauthenticated users attempting to access protected screens
         if (!isAuth) {

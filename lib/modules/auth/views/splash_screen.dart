@@ -1,3 +1,4 @@
+import "dart:async";
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:lucide_icons_flutter/lucide_icons.dart";
@@ -8,8 +9,33 @@ import "../../../core/widgets/app_button.dart";
 import "../../../core/widgets/app_logo.dart";
 import "../controllers/auth_controller.dart";
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  bool _showTimeoutOption = false;
+  Timer? _timeoutTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // After 5 seconds, provide an escape hatch if session verification is delayed
+    _timeoutTimer = Timer(const Duration(seconds: 5), () {
+      if (mounted) {
+        setState(() => _showTimeoutOption = true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timeoutTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +95,7 @@ class SplashScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "We could not reach the server to verify your session. You can retry or continue with cached data.",
+                          "We could not reach the server to verify your session. You can retry or continue to sign in with your account.",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: 12,
@@ -85,6 +111,12 @@ class SplashScreen extends StatelessWidget {
                     text: "Retry Connection",
                     icon: LucideIcons.refreshCw,
                     onPressed: () => authController.initialize(),
+                  ),
+                  const SizedBox(height: 12),
+                  AppButton(
+                    text: "Continue to Sign In",
+                    variant: AppButtonVariant.outline,
+                    onPressed: () => authController.resetToUnauthenticated(),
                   ),
                 ] else ...[
                   const SizedBox(
@@ -104,6 +136,21 @@ class SplashScreen extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  if (_showTimeoutOption) ...[
+                    const SizedBox(height: 28),
+                    TextButton(
+                      onPressed: () => authController.resetToUnauthenticated(),
+                      child: Text(
+                        "Taking longer than expected? Continue to Sign In",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.teal,
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ],
             ),

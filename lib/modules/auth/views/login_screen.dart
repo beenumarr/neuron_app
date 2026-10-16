@@ -25,7 +25,23 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _passwordError;
 
   @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(_onFieldChanged);
+    _passwordController.addListener(_onFieldChanged);
+  }
+
+  void _onFieldChanged() {
+    final authController = context.read<AuthController>();
+    if (authController.errorMessage != null) {
+      authController.clearError();
+    }
+  }
+
+  @override
   void dispose() {
+    _emailController.removeListener(_onFieldChanged);
+    _passwordController.removeListener(_onFieldChanged);
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -144,23 +160,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
                     ),
-                    child: Column(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            const Icon(LucideIcons.alertCircle, color: AppColors.danger, size: 20),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                authController.errorMessage!,
-                                style: AppTypography.caption.copyWith(
-                                  color: AppColors.danger,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                        const Icon(LucideIcons.alertCircle, color: AppColors.danger, size: 20),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            authController.errorMessage!,
+                            style: AppTypography.caption.copyWith(
+                              color: AppColors.danger,
+                              fontWeight: FontWeight.w600,
                             ),
-                          ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => authController.clearError(),
+                          child: const Icon(LucideIcons.x, color: AppColors.danger, size: 16),
                         ),
                       ],
                     ),
