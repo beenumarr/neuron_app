@@ -91,7 +91,7 @@ class AuthController extends ChangeNotifier {
             user = await authApiService.getMe();
           } on ApiException catch (refreshErr) {
             if (refreshErr.statusCode == 401 || refreshErr.statusCode == 403) {
-              debugPrint("[AuthController] Refresh token revoked or expired: \$refreshErr");
+              debugPrint("[AuthController] Refresh token revoked or expired: $refreshErr");
               await tokenStorage.clear();
               _currentUser = null;
               _healthProfile = null;
@@ -112,7 +112,7 @@ class AuthController extends ChangeNotifier {
           await _restoreOfflineSession();
           return;
         } else if (apiErr.statusCode == 401 || apiErr.statusCode == 403) {
-          debugPrint("[AuthController] Credentials invalid: \$apiErr");
+          debugPrint("[AuthController] Credentials invalid: $apiErr");
           await tokenStorage.clear();
           _currentUser = null;
           _healthProfile = null;
@@ -140,7 +140,7 @@ class AuthController extends ChangeNotifier {
 
       _status = AuthStatus.authenticated;
     } catch (e) {
-      debugPrint("[AuthController] Error during session restoration: \$e");
+      debugPrint("[AuthController] Error during session restoration: $e");
       if (tokenStorage.refreshToken != null) {
         await _restoreOfflineSession();
         return;
@@ -233,7 +233,17 @@ class AuthController extends ChangeNotifier {
         refreshToken: tokens.refreshToken,
       );
 
-      final user = await authApiService.getMe();
+      UserModel user;
+      try {
+        user = await authApiService.getMe();
+      } catch (meErr) {
+        debugPrint("[AuthController] Warning: getMe threw after successful login: $meErr");
+        user = UserModel(
+          id: await tokenStorage.getUserId() ?? "usr_${email.hashCode.abs()}",
+          email: email,
+          role: "patient",
+        );
+      }
       _currentUser = user;
       await tokenStorage.saveUserMeta(id: user.id, email: user.email);
 

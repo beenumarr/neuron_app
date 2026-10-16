@@ -28,8 +28,17 @@ void main() {
     await tokenStorage.clear();
 
     final apiClient = ApiClient(tokenStorage: tokenStorage);
-    // Explicitly target local backend
-    apiClient.updateBaseUrl('http://127.0.0.1:8000');
+    // Use local backend if running on 127.0.0.1:8000, otherwise use configured baseUrl
+    bool isLocal = false;
+    try {
+      final socket = await Socket.connect('127.0.0.1', 8000, timeout: const Duration(milliseconds: 500));
+      socket.destroy();
+      isLocal = true;
+    } catch (_) {}
+
+    if (isLocal) {
+      apiClient.updateBaseUrl('http://127.0.0.1:8000');
+    }
 
     final authService = AuthApiService(apiClient: apiClient);
     final healthService = HealthApiService(apiClient: apiClient);

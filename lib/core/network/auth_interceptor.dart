@@ -30,7 +30,7 @@ class AuthInterceptor extends QueuedInterceptor {
         options.path.contains("/api/v1/auth/reset-password");
 
     if (token != null && token.isNotEmpty && !isAuthEndpoint) {
-      options.headers["Authorization"] = "Bearer \$token";
+      options.headers["Authorization"] = "Bearer $token";
     }
 
     options.headers["Content-Type"] = "application/json";
@@ -42,10 +42,15 @@ class AuthInterceptor extends QueuedInterceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     final is401 = err.response?.statusCode == 401;
-    final isAuthEndpoint = err.requestOptions.path.contains("/api/v1/auth/");
+    final isNonRefreshableAuthEndpoint =
+        err.requestOptions.path.contains("/api/v1/auth/login") ||
+        err.requestOptions.path.contains("/api/v1/auth/register") ||
+        err.requestOptions.path.contains("/api/v1/auth/refresh") ||
+        err.requestOptions.path.contains("/api/v1/auth/forgot-password") ||
+        err.requestOptions.path.contains("/api/v1/auth/reset-password");
 
-    if (is401 && !isAuthEndpoint && tokenStorage.refreshToken != null) {
-      debugPrint("[AuthInterceptor] 401 received for \${err.requestOptions.path}. Attempting token refresh...");
+    if (is401 && !isNonRefreshableAuthEndpoint && tokenStorage.refreshToken != null) {
+      debugPrint("[AuthInterceptor] 401 received for ${err.requestOptions.path}. Attempting token refresh...");
 
       if (_isRefreshing) {
         // Queue this request until ongoing refresh is done
@@ -55,7 +60,7 @@ class AuthInterceptor extends QueuedInterceptor {
 
         if (newToken != null) {
           final retryOptions = err.requestOptions;
-          retryOptions.headers["Authorization"] = "Bearer \$newToken";
+          retryOptions.headers["Authorization"] = "Bearer $newToken";
           try {
             final response = await dio.fetch(retryOptions);
             return handler.resolve(response);
@@ -109,14 +114,14 @@ class AuthInterceptor extends QueuedInterceptor {
 
           // Retry the original request
           final retryOptions = err.requestOptions;
-          retryOptions.headers["Authorization"] = "Bearer \$newAccessToken";
+          retryOptions.headers["Authorization"] = "Bearer $newAccessToken";
           final retriedResponse = await dio.fetch(retryOptions);
           return handler.resolve(retriedResponse);
         } else {
           throw Exception("Refresh returned non-200 status");
         }
       } catch (refreshErr) {
-        debugPrint("[AuthInterceptor] Refresh failed: \$refreshErr");
+        debugPrint("[AuthInterceptor] Refresh failed: $refreshErr");
 
         for (final c in _refreshCompleters) {
           c.complete(null);
